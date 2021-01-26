@@ -15,7 +15,8 @@ async function user() {
                 "customerId" VARCHAR(255),
                 "subscriptionId" VARCHAR(255),
                 "expiryDate" BIGINT,
-                "machineId" VARCHAR(255)
+                "machineId" VARCHAR(255),
+                "id" UUID,
             )`
         )
         await pool.end()
