@@ -10,6 +10,7 @@ const { pool } = require('../../utils')
 const fs = require('fs');
 const getPort = require('get-port');
 
+
 function find(name,query,cb) {
     mongoose.connection.db.collection(name, function(err, col) {
         if(err) console.log(err)
@@ -144,6 +145,8 @@ JWT_SECRET=29c09becdab446f694b0de21146ce601230e594b08bdc11ab64fab8261e7c07fd0eb6
         await pool.query(
             `CREATE DATABASE ${dashId}`
         ) 
+        
+
         
         return res.status(200).json({message:"success"}).end()
     }).catch((error) => {

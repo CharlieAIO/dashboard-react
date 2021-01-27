@@ -46,11 +46,11 @@ const LicenseTable = () => {
 
                             <div className="ml-4">
                                 <div className="text-sm font-medium text-gray-900">
-                                    {user.discordName}
+                                {user.discordName == "empty" ? "Unbound" : user.discordName}
                                 </div>
 
                                 <div className="text-sm text-gray-500">
-                                    {user.discordId}
+                                {user.discordId == 123456789 ? "Unbound" : user.discordId}
                                 </div>
                                 
                             </div>
@@ -69,7 +69,7 @@ const LicenseTable = () => {
              
 
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        XXX
+                    {user.dateJoined == 0 ? "Not joined" : new Date(user.dateJoined * 1000).constructor()}
                     </td>
 
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

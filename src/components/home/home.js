@@ -39,7 +39,7 @@ class Home extends Component {
                                             Total Licenses
                                           </dt>
                                           <dd className="order-1 text-5xl font-extrabold text-yellow-500">
-                                            420
+                                            421
                                           </dd>
                                         </div>
                                         <div className="flex flex-col border-t border-b border-gray-100 p-6 text-center sm:border-0">

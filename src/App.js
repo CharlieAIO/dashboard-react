@@ -18,7 +18,7 @@ class App extends Component {
 
             {/* <div className="container mx-auto"> */}
               <Switch>
-                <Route exact path='/' component={SiteHome} />
+                {/* <Route exact path='/' component={SiteHome} /> */}
                 <Route exact path='/home' component={Home} />
                 <Route exact path='/licenses' component={Licenses}/>
                 <Route exact path='/users' component={Users}/>

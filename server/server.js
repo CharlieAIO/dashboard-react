@@ -25,6 +25,7 @@ app.use(
     })
 )
 
+app.use(express.static(__dirname + '../../build'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookies.express());
@@ -39,5 +40,7 @@ app.use(`/api/v${process.env.API_VERSION}/accounts`,require('./routes/api/accoun
 app.use(`/discord/`,require('./routes/discord/discord'));
 app.use(`/discord/`,require('./routes/discord/auth'));
 app.use(`/stripe/`,require('./routes/stripe/stripe'));
+
+app.use(`/`,require('./routes/routes.js'));
 
 app.listen(process.env.PORT_SERVER, () => console.log(`http://127.0.0.1:${process.env.PORT_SERVER}`))

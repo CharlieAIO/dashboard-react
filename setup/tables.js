@@ -7,7 +7,7 @@ async function user() {
             `CREATE TABLE users 
             (
                 "key" VARCHAR(255),
-                "keyType" VARCHAR(255),
+                "plan" VARCHAR(255),
                 "discordId" BIGINT,
                 "discordName" VARCHAR(255),
                 "discordImage" VARCHAR(255),
@@ -16,7 +16,9 @@ async function user() {
                 "subscriptionId" VARCHAR(255),
                 "expiryDate" BIGINT,
                 "machineId" VARCHAR(255),
-                "id" UUID,
+                "dateCreated" BIGINT,
+                "dateJoined" BIGINT,
+                "id" UUID
             )`
         )
         await pool.end()
@@ -24,7 +26,7 @@ async function user() {
         console.log(e)
     }
 }
-
+user()
 
 async function restocks() {
     try{

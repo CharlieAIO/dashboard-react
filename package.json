@@ -21,6 +21,7 @@
     "express-session": "^1.17.1",
     "get-port": "^5.1.1",
     "hex2dec": "^1.1.2",
+    "html": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.13",
     "node-fetch": "^2.6.1",
@@ -49,7 +50,7 @@
     "start": "npm run build:css && react-scripts start",
     "build": "npm run build:css && react-scripts build",
     "server": "nodemon server/server.js",
-    "client": "",
+    "main": "npm run build:css && react-scripts build && npm run server",
     "build:css": "postcss src/static/styles/tailwind.css -o src/static/styles/main.css",
     "dev": "concurrently \"npm run server\" \"npm run start\""
   },
