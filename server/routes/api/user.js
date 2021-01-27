@@ -26,7 +26,7 @@ router.post('/add', async (req, res) => {
         for(var i in req.body)
             query.push(req.body [i])
         
-            query[10] = Date.now()  //Date Created
+            query[10] = Math.floor(Date.now() / 1000)  //Date Created
             query[11] = 0 //Date Joined
             query[12] = uuidv4()
 
@@ -50,7 +50,7 @@ router.post('/bind', async (req, res) => {
         var result = await pool.query(`SELECT * FROM users WHERE "key" = ${req.body.key}`).rows[0]
         await pool.query(
             'UPDATE users SET discordId = $1, discordName =  $2, discordImage = $3, email = $4, dateJoined = $5 WHERE key = $6 ',
-            [req.body.discordId, req.body.discordName, req.body.discordImage, req.body.email, Date.now(), req.body.key]
+            [req.body.discordId, req.body.discordName, req.body.discordImage, req.body.email, Math.floor(Date.now() / 1000), req.body.key]
         ) 
         return res.status(200).json({response:"bound"})
 

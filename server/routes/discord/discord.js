@@ -1,13 +1,37 @@
 const express = require('express');
 const router = express.Router();
-const {pool, generate} = require('../../utils.js')
 const Discord = require('discord.js');
+const DiscordOauth2 = require("discord-oauth2");
 const client = new Discord.Client();
+const fetch = require('node-fetch');
 
+const oauth = new DiscordOauth2({
+	clientId: process.env.CLIENT_ID,
+	clientSecret: process.env.CLIENT_SECRET,
+	redirectUri: process.env.REDIRECT_URI,
+});
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
+
+router.get('/data', async (req, res) => {
+    var user = await oauth.getUser(req.cookies.get('key')) 
+    // var response = await fetch(process.env.domain + '/api/v1/user/?id=' + user.id,{
+        // method:'get',
+    // })
+
+
+    return res.json({
+        email:user.email,
+        key:'On20a7sFfh8bZ1c1RrJUyIsSOmFZg5',
+        dateJoined:Math.floor(Date.now() / 1000),
+        discordImage:`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`,
+        name:user.username,
+        discrim:user.discriminator
+    })
+})
+
 
 router.get('/guild/data/:guild', async (req, res) => {
     const guildData = await client.guilds.fetch(req.params.guild)

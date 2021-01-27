@@ -3,7 +3,7 @@ const colors = require('tailwindcss/colors')
 module.exports = {
   purge: [],
   presets: [],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: 'class', // or 'media' or 'class'
   theme: {
     screens: {
       sm: '640px',
@@ -26,18 +26,17 @@ module.exports = {
       indigo: colors.indigo,
       purple: colors.violet,
       pink: colors.pink,
-      other_light: {
-        100: '#CDDAEC',
-        200: '#B6C3D4',
-        300: '#98C0F3',
-        400: '#5E7EA8',
-        500: '#3F4C5C',
-  
+      other: {
+        100: '#4c9aed', //primary colour (background)
+        200:'#0f3e70', //secondary colour (originally indigo-600)
+        300:'#093059', //darker secondary (originally indigo-700)
+        400:'#031221' // for menu text
       },
-      other_orange: {
-        100: '#F4DBAA',
-        200: '#D5C098',
-        300: '#F8CC7A'
+      darkOther: {
+        100: '#061325', //primary colour (background)
+        200:'#0d284d', //secondary colour (originally indigo-600)
+        300:'#143c73', //darker secondary (originally indigo-700)
+        400:'#c1f4f7' // for menu text
       }
     },
     spacing: {

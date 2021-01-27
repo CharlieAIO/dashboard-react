@@ -2,12 +2,14 @@ import '../../static/styles/main.css';
 import React, { useState,useEffect } from 'react';
 import { AiOutlineClose, AiOutlineUser, AiOutlineMail } from 'react-icons/ai';
 import Select from 'react-select';
+import DatePicker from "react-datepicker";
 
 const LicenseModal = () => {
 
     const [email, setEmail] = useState("")
     const [plan, setPlan] = useState("")
     const [availablePlans, setAvailablePlans] = useState([])
+    const [startDate, setStartDate] = useState(new Date());
 
 
 
@@ -44,7 +46,7 @@ const LicenseModal = () => {
                         plan:plan,
                         discordId:123456789,
                         discordName:"empty",
-                        discordImage:"https://variety.com/wp-content/uploads/2018/05/discord-logo.jpg",
+                        discordImage:"",
                         email:email,
                         customerId:"empty",
                         subscriptionId:"empty",
@@ -85,7 +87,7 @@ const LicenseModal = () => {
                 <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
 
-                <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+                <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6 dark:bg-darkOther-200" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
                 <form onSubmit={submitHandler}>
                     <div>
 
@@ -98,7 +100,7 @@ const LicenseModal = () => {
                         </div>
 
                         <div className="mt-3 text-center sm:mt-5">
-                            <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+                            <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="modal-headline">
                                 Create a license...
                             </h3>
 
@@ -108,9 +110,9 @@ const LicenseModal = () => {
                                 <div>
 
                                     <fieldset >
-                                        <legend className="block text-sm font-medium text-gray-700">Email</legend>
+                                        <legend className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</legend>
                                         
-                                        <div className="mt-1 bg-white rounded-md shadow-sm ">
+                                        <div className="mt-1 bg-white rounded-md shadow-sm dark:bg-darkOther-200">
                                             <div>
                                                 <label  className="block text-sm font-medium text-gray-700"></label>
                                                 
@@ -122,7 +124,7 @@ const LicenseModal = () => {
 
                                                     </div>
 
-                                                    <input  name="email" id="email" autoComplete="off" className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="you@example.com" onChange={e => setEmail(e.target.value)} />
+                                                    <input  name="email" id="email" autoComplete="off" className="dark:bg-darkOther-200 focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="you@example.com" onChange={e => setEmail(e.target.value)} />
                                                 
                                                 </div>
                                 
@@ -131,12 +133,36 @@ const LicenseModal = () => {
                                         </div>
                                     </fieldset>
 
-                                    <fieldset className="mt-6 bg-white">
-                                        <legend className="block text-sm font-medium text-gray-700">Plan</legend>
+                                    <fieldset className="hidden" >
+                                        <legend className="block text-sm font-medium text-gray-700 dark:text-gray-300">Expiry Date</legend>
+                                        
+                                        <div className="mt-1 bg-white rounded-md shadow-sm dark:bg-darkOther-200">
+                                            <div>
+                                                <label  className="block text-sm font-medium text-gray-700"></label>
+                                                
+                                                <div className="mt-1 relative rounded-md shadow-sm">
+
+                                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+
+                                                        {/* <AiOutlineMail className="h-5 w-5 text-gray-400"/> */}
+
+                                                    </div>
+
+                                                    <DatePicker selected={startDate} onChange={date => setStartDate(date)}/>
+                                                
+                                                </div>
+                                
+                                            </div>
+
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset className="mt-6 bg-white dark:bg-darkOther-200">
+                                        <legend className="block text-sm font-medium text-gray-700 dark:text-gray-300">Plan</legend>
                                         <div className="mt-1 rounded-md shadow-sm -space-y-px">
                                             <div>
                                                 <label className="sr-only">plans</label>
-                                                <Select name="restockPlan" value={availablePlans.value} options={availablePlans} className="focus:ring-indigo-500 focus:border-indigo-500 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md" onChange={(e)=> { setPlan(e.value)}}/>
+                                                <Select name="restockPlan" value={availablePlans.value} options={availablePlans} className="focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md" onChange={(e)=> { setPlan(e.value)}}/>
                                             </div>
                                         </div>
                                     </fieldset>
@@ -146,7 +172,7 @@ const LicenseModal = () => {
                     </div>
 
                     <div className="mt-5 sm:mt-6">
-                        <button name="license-modal" type="submit" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm">
+                        <button name="license-modal" type="submit" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-other-200 text-base font-medium text-white hover:bg-other-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-other-200 sm:text-sm dark:focus:ring-darkOther-200 dark:hover:bg-darkOther-200 dark:bg-darkOther-100">
                             Create
                         </button>
                     </div>

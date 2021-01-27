@@ -57,8 +57,10 @@ const RestockModal = () => {
                     }
                 })
                 .then(response => {
-                    document.querySelector('#button-create').classList.remove('bg-indigo-600')
-                    document.querySelector('#button-create').classList.remove('hover:bg-indigo-700')
+                    console.log(document.querySelector('#button-create').classList)
+                    document.querySelector('#button-create').classList.remove('bg-other-200')
+                    document.querySelector('#button-create').classList.remove('hover:bg-other-300')
+                    document.querySelector('#button-create').classList.remove('dark:bg-darkOther-200')
         
                     document.querySelector('#button-create').classList.add('bg-green-500')
                     document.querySelector('#button-create').classList.add('hover:bg-green-600')
@@ -93,13 +95,14 @@ const RestockModal = () => {
                 <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
 
-                <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+                <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6 dark:bg-darkOther-200" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
 
                     <div>
 
                     <button type="button" onClick={() => {
-                        document.querySelector('#button-create').classList.add('bg-indigo-600')
-                        document.querySelector('#button-create').classList.add('hover:bg-indigo-700')
+                        document.querySelector('#button-create').classList.remove('bg-other-200')
+                        document.querySelector('#button-create').classList.remove('dark:bg-darkOther-200')
+                        document.querySelector('#button-create').classList.remove('hover:bg-other-300')
             
                         document.querySelector('#button-create').classList.remove('bg-green-500')
                         document.querySelector('#button-create').classList.remove('hover:bg-green-600')
@@ -116,7 +119,7 @@ const RestockModal = () => {
                     </div>
 
                     <div className="mt-3 text-center sm:mt-5">
-                        <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="modal-headline">
                           Create a Restock
                         </h3>
 
@@ -124,35 +127,35 @@ const RestockModal = () => {
 
                             <div>
                                 <fieldset >
-                                    <legend className="block text-sm font-medium text-gray-700 text-left">Password</legend>
-                                    <div className="mt-1 bg-white rounded-md shadow-sm ">
+                                    <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">Password</legend>
+                                    <div className="mt-1 bg-white rounded-md shadow-sm dark:bg-darkOther-200">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700"></label>
-                                            <input  name="password" id="password" autoComplete="off" className="focus:ring-indigo-500 focus:border-indigo-500 block w-full font-medium text-md rounded-md py-2" placeholder="passsword" onChange={e => setPassword(e.target.value)} />
+                                            <input  name="password" id="password" autoComplete="off" className="dark:bg-darkOther-200 focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 block w-full font-medium text-md rounded-md py-2" placeholder="passsword" onChange={e => setPassword(e.target.value)} />
                                         </div>
                                     </div>
                                 </fieldset>
 
-                                <fieldset className="mt-2 bg-white">
-                                    <legend className="block text-sm font-medium text-gray-700 text-left">Stock</legend>
-                                    <div className="mt-1 bg-white rounded-md shadow-sm ">
+                                <fieldset className="mt-2 bg-white dark:bg-darkOther-200">
+                                    <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">Stock</legend>
+                                    <div className="mt-1 rounded-md shadow-sm ">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700"></label>
-                                            <input  name="stock"  autoComplete="off" className="focus:ring-indigo-500 focus:border-indigo-500 block w-full font-medium text-md rounded-md py-2" placeholder="10" onChange={e => setStock(e.target.value)} />
+                                            <input  name="stock"  autoComplete="off" className="dark:bg-darkOther-200 focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 block w-full font-medium text-md rounded-md py-2" placeholder="10" onChange={e => setStock(e.target.value)} />
                                         </div>
                                     </div>
                                 </fieldset>
   
   
 
-                                <fieldset className="mt-2 bg-white">
-                                    <div className="mt-1 bg-white rounded-md shadow-sm ">
+                                <fieldset className="mt-2 bg-white dark:bg-darkOther-200">
+                                    <div className="mt-1 bg-white rounded-md shadow-sm dark:bg-darkOther-200">
                                         <div>
-                                            <legend className="block text-sm font-medium text-gray-700 text-left">Plan</legend>
+                                            <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">Plan</legend>
                                             <div className="mt-1 rounded-md shadow-sm -space-y-px">
                                                 <div>
                                                     <label className="sr-only">Plan</label>
-                                                    <Select name="restockPlan" value={restockPlan.value} options={plans} className="focus:ring-indigo-500 focus:border-indigo-500 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md" onChange={(e)=> { setRestockPlan(e.value)}}/>
+                                                    <Select name="restockPlan" value={restockPlan.value} options={plans} className="focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md" onChange={(e)=> { setRestockPlan(e.value)}}/>
                                                     
 
                                                 </div>
@@ -168,7 +171,7 @@ const RestockModal = () => {
                 </div>
 
                 <div className="mt-5 sm:mt-6">
-                  <button type="submit" id="button-create" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm">
+                  <button type="submit" id="button-create" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-other-200 text-base font-medium text-white hover:bg-other-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-other-200 sm:text-sm dark:focus:ring-darkOther-200 dark:hover:bg-darkOther-200 dark:bg-darkOther-100">
                     Create
                   </button>
                 </div>

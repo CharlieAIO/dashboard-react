@@ -6,6 +6,7 @@ import chroma from 'chroma-js';
 import currencyOptions from '../../static/data/currencies.json'
 import { Switch } from '@headlessui/react'
 
+
 import { AiOutlineClose } from 'react-icons/ai';
 import { IoPricetagOutline } from 'react-icons/io5';
 
@@ -162,7 +163,7 @@ const PlanModal = () => {
                             <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
             
-                            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+                            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6 dark:bg-darkOther-200" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
                         
                                 <div>
                                     <button onClick={() => {
@@ -178,7 +179,7 @@ const PlanModal = () => {
         
 
                                 <div className="mt-3 text-center sm:mt-5">  
-                                    <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+                                    <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="modal-headline">
                                     Create a Plan...
                                     </h3>
         
@@ -186,14 +187,14 @@ const PlanModal = () => {
                                         
                                         <div>
 
-                                            <fieldset className="mt-2 bg-white">
+                                            <fieldset className="mt-2 bg-white dark:bg-darkOther-200">
                                                 <div className="md:grid md:grid-cols-2">
                                                 <div className="">
-                                                        <legend className="block text-sm font-medium text-gray-700 text-left">Plan Name</legend>
+                                                        <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">Plan Name</legend>
                                                         <div className="mt-1 rounded-md shadow-sm -space-y-px">
                                                             <div>
                                                             <label className="block text-sm font-medium text-gray-700"></label>
-                                                            <input  name="planName" id="name" autoComplete="off" className="focus:ring-indigo-500 focus:border-indigo-500 block w-full font-medium text-md rounded-md py-2" 
+                                                            <input  name="planName" id="name" autoComplete="off" className="dark:bg-darkOther-200 focus:ring-other-200 focus:border-other-200 block w-full font-medium text-md rounded-md py-2 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200" 
                                                             placeholder="Member" value={planName} onChange={e => setplanName(e.target.value)} />                                                         
                                                             
                                                             </div>
@@ -201,11 +202,11 @@ const PlanModal = () => {
                                                     </div>
                                                     
                                                     <div className="">
-                                                        <legend className="block text-sm font-medium text-gray-700 text-left">Type</legend>
+                                                        <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">Type</legend>
                                                         <div className="mt-1 rounded-md shadow-sm -space-y-px">
                                                             <div>
                                                                 <label className="sr-only">type</label>
-                                                                <Select defaultValue={planOptions[0]}  placeholder="Plan Type" id="type" value={planType} name="planType" options={planOptions} className="focus:ring-indigo-500 focus:border-indigo-500 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md "
+                                                                <Select defaultValue={planOptions[0]}  placeholder="Plan Type" id="type" value={planType} name="planType" options={planOptions} className="focus:ring-other-200 focus:border-other-200 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md dark:focus:border-darkOther-200 dark:focus:ring-darkOther-200"
                                                                 onChange={e => setplanType(e.value)} value={planOptions.filter(function(planOptions) {return planOptions.value === planType})}/>
                                                             </div>
                                                         </div>
@@ -215,16 +216,16 @@ const PlanModal = () => {
                 
                                             </fieldset>
 
-                                            {planType == "recurring" ? <fieldset className="mt-2 bg-white" id="interval-options">
-                                                <legend className="block text-sm font-medium text-gray-700 text-left">Interval</legend>
-                                                <div className="mt-1 bg-white rounded-md shadow-sm ">
+                                            {planType == "recurring" ? <fieldset className="mt-2 bg-white dark:bg-darkOther-200" id="interval-options">
+                                                <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">Interval</legend>
+                                                <div className="mt-1 bg-white rounded-md shadow-sm dark:bg-darkOther-200">
                                                     <div>
                                                         <div className="mt-1 relative rounded-md shadow-sm">
                                                             <div className="mt-1 flex rounded-md shadow-sm">
-                                                                <span className="inline-flex items-center px-3 rounded-l-md border-r-2 border-gray-200 bg-gray-50 text-gray-800 sm:text-sm mr-2">
+                                                                <span className="inline-flex items-center px-3 rounded-l-md border-r-2 border-gray-200 bg-gray-50 text-gray-800 sm:text-sm mr-2 dark:bg-darkOther-100 dark:text-white">
                                                                     every
                                                                 </span>
-                                                                <input name="interval" id="interval" type="number" placeholder="Interval Count" autoComplete="off" className="block w-full font-medium text-md rounded-md py-2 " value={interval} onChange={e => setinterval(e.target.value)}/>
+                                                                <input name="interval" id="interval" type="text" placeholder="Interval Count" autoComplete="off" className="dark:bg-darkOther-200 block w-full font-medium text-md rounded-md py-2 " value={interval} onChange={e => setinterval(e.target.value)}/>
                                                             </div>
 
                                                             <div className="absolute inset-y-0 right-0 flex items-center">
@@ -239,17 +240,17 @@ const PlanModal = () => {
                                             </fieldset> : <div></div>}
                                         
 
-                                            <fieldset className="mt-4 bg-white">
-                                                <legend className="block text-sm font-medium text-gray-700 text-left">Price</legend>
-                                                <div className="mt-1 bg-white rounded-md shadow-sm ">
+                                            <fieldset className="mt-4 bg-white dark:bg-darkOther-200">
+                                                <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">Price</legend>
+                                                <div className="mt-1 bg-white rounded-md shadow-sm dark:bg-darkOther-200">
                                                     <div>
                                                         <div className="mt-1 relative rounded-md shadow-sm">
-                                                            <input type="text" name="price" id="price" className="focus:ring-indigo-500 focus:border-indigo-500 block w-full font-medium text-md  rounded-md py-2" 
+                                                            <input type="text" name="price" id="price" className="dark:bg-darkOther-200 focus:ring-other-200 focus:border-other-200 block w-full font-medium text-md  rounded-md py-2 dark:focus:border-darkOther-200 dark:focus:ring-darkOther-200" 
                                                             placeholder="0.00" value={price} autoComplete="off" onChange={e => setprice(e.target.value)}/>
 
                                                             <div className="absolute inset-y-0 right-0 flex items-center">
                                                                 <label className="sr-only">Currency</label>
-                                                                <Select defaultValue={currencyOptions[0]}  id="type" value={priceCurrency} name="priceCurrency" placeholder="Currency" options={currencyOptions} className="px-3 w-48"
+                                                                <Select defaultValue={currencyOptions[0]}  id="type" value={priceCurrency} name="priceCurrency" placeholder="Currency" options={currencyOptions} className="px-3 w-48 dark:bg-darkOther-200"
                                                                 onChange={e => setpriceCurrency(e.value)} isSearchable value={currencyOptions.filter(function(currencyOptions) {return currencyOptions.value === priceCurrency})}/>
                                                             </div>
                                                         </div>
@@ -258,13 +259,13 @@ const PlanModal = () => {
                                             
                                             </fieldset>
         
-                                            <fieldset className="mt-2 bg-white" id="interval-fieldset">
+                                            <fieldset className="mt-2 bg-whit dark:bg-darkOther-200" id="interval-fieldset">
                                                     <div className="">
-                                                        <legend className="block text-sm font-medium text-gray-700 text-left">Roles</legend>
+                                                        <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">Roles</legend>
                                                         <div className="mt-1 rounded-md shadow-sm -space-y-px">
                                                             <div>
                                                                 <label className="sr-only">roles</label>
-                                                                <Select id="roles" value={planRole}  placeholder="Roles" closeMenuOnSelect={false} styles={colourStyles} name="planRole" isSearchable components={makeAnimated()} isMulti options={availableRoles} className="focus:ring-indigo-500 focus:border-indigo-500 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md "
+                                                                <Select id="roles" value={planRole}  placeholder="Roles" closeMenuOnSelect={false} styles={colourStyles} name="planRole" isSearchable components={makeAnimated()} isMulti options={availableRoles} className="focus:ring-other-200 focus:border-other-200 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md dark:focus:border-darkOther-200 dark:focus:ring-darkOther-200"
                                                                     onChange={e => setplanRole(e)} />
                                                                                                                                     
                                                             
@@ -274,9 +275,9 @@ const PlanModal = () => {
                                             
                                             </fieldset>
 
-                                            <fieldset className="mt-2 bg-white" id="interval-fieldset">
+                                            <fieldset className="mt-2 bg-white dark:bg-darkOther-200" id="interval-fieldset">
                                                     <div className="">
-                                                        <legend className="block text-sm font-medium text-gray-700 text-left">{unbinding ? "Unbinding Enabled" : "Unbinding Disabled"}</legend>
+                                                        <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">{unbinding ? "Unbinding Enabled" : "Unbinding Disabled"}</legend>
                                                         <div className="mt-1 rounded-md shadow-sm -space-y-px">
                                                             <div className="text-left">
                                                                 <label className="sr-only">allow unbinding</label>
@@ -306,7 +307,7 @@ const PlanModal = () => {
                             </div>
 
                             <div className="mt-5 sm:mt-6">
-                                <button  name="license-modal" type="submit" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm">
+                                <button  name="license-modal" type="submit" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-other-200 text-base font-medium text-white hover:bg-other-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-other-200 sm:text-sm dark:focus:ring-darkOther-200 dark:hover:bg-darkOther-200 dark:bg-darkOther-100">
                                     Create
                                 </button>
                             </div>
