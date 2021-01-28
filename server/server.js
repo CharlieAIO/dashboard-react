@@ -43,4 +43,6 @@ app.use(`/stripe/`,require('./routes/stripe/stripe'));
 
 app.use(`/`,require('./routes/routes.js'));
 
+
+
 app.listen(process.env.PORT_SERVER, () => console.log(`http://127.0.0.1:${process.env.PORT_SERVER}`))

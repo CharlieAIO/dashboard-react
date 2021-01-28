@@ -27,15 +27,15 @@ module.exports = {
       purple: colors.violet,
       pink: colors.pink,
       other: {
-        100: '#4c9aed', //primary colour (background)
+        100: '#87bffa', //primary colour (background)
         200:'#0f3e70', //secondary colour (originally indigo-600)
         300:'#093059', //darker secondary (originally indigo-700)
         400:'#031221' // for menu text
       },
       darkOther: {
         100: '#061325', //primary colour (background)
-        200:'#0d284d', //secondary colour (originally indigo-600)
-        300:'#143c73', //darker secondary (originally indigo-700)
+        200:'#0e1c2f', //secondary colour (originally indigo-600)
+        300:'#09121f', //darker secondary (originally indigo-700)
         400:'#c1f4f7' // for menu text
       }
     },

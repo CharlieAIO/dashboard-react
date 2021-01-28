@@ -19,6 +19,7 @@ const AdminSearch = () =>  {
         
     }
 
+
     useEffect(() =>{
         const abortController = new AbortController();
         fetchData()

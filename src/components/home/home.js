@@ -28,9 +28,9 @@ const Home = () => {
 
                         <div className="mx-auto px-4 sm:px-6 md:px-8 w-full ">
                             <div className="relative w-full">
-                                <div className="overflow-hidden shadow divide-y mb-5">
-                                    <dl className="shadow-lg md:grid md:grid-cols-3 bg-white">
-                                        <div className="flex flex-col border-b border-gray-200 p-6 text-center sm:border-0 dark:bg-darkOther-200">
+                                <div className="overflow-hidden shadow divide-y mb-5 rounded-lg">
+                                    <dl className="shadow-lg md:grid md:grid-cols-3">
+                                        <div className="flex flex-col border-b border-gray-200 p-6 text-center sm:border-0 dark:bg-darkOther-200 bg-white">
                                           <dt className="order-2 mt-2 text-lg leading-6 font-medium text-gray-900 dark:text-white">
                                             Total Licenses
                                           </dt>
@@ -38,7 +38,7 @@ const Home = () => {
                                             421
                                           </dd>
                                         </div>
-                                        <div className="flex flex-col border-t border-b border-gray-100 p-6 text-center sm:border-0 dark:bg-darkOther-200">
+                                        <div className="flex flex-col border-t border-b border-gray-100 p-6 text-center sm:border-0 dark:bg-darkOther-200 bg-white">
                                           <dt className="order-2 mt-2 text-lg leading-6 font-medium text-gray-900 dark:text-white">
                                             Monthly Revenue
                                           </dt>
@@ -46,7 +46,7 @@ const Home = () => {
                                             $21730
                                           </dd>
                                         </div>
-                                        <div className="flex flex-col border-t border-gray-100 p-6 text-center sm:border-0 white dark:bg-darkOther-200">
+                                        <div className="flex flex-col border-t border-gray-100 p-6 text-center sm:border-0 white dark:bg-darkOther-200 bg-white">
                                           <dt className="order-2 mt-2 text-lg leading-6 font-medium text-gray-900 dark:text-white">
                                             Customers Today
                                           </dt>
@@ -61,10 +61,10 @@ const Home = () => {
 
                             <dl className="lg:grid md:grid-cols-2 gap-4 sm:rounded-lg">
     
-                                <div className="flex flex-col  p-6 text-center bg-white mt-5 w-full dark:bg-darkOther-200" style={{'min-height': '400px', 'max-height': '800px'}}>
+                                <div className="flex flex-col  p-6 text-center bg-white mt-5 w-full dark:bg-darkOther-200 rounded-lg" style={{'min-height': '400px', 'max-height': '800px'}}>
                                     <div className="sm:grid sm:grid-cols-2">
                                         <div className="text-left">
-                                        <h1 className="text-md font-medium text-other-200 dark:text-darkOther-200">Plans</h1>
+                                        <h1 className="text-md font-medium text-other-200 dark:text-white">Plans</h1>
                                         </div>
                                         <div className="text-right">
                                             <button name="plan-modal" id="plan-button-hide" type="button" className="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md dark:text-white bg-other-100 dark:bg-other-200 text-other-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-other-200 dark:focus:ring-darkOther-200" onClick={() => {
@@ -87,10 +87,10 @@ const Home = () => {
     
 
 
-                                <div className="flex flex-col  p-6 text-center bg-white mt-5 dark:bg-darkOther-200" style={{'min-height': '400px', 'max-height': '800px'}}>
+                                <div className="flex flex-col  p-6 text-center bg-white mt-5 dark:bg-darkOther-200 rounded-lg" style={{'min-height': '400px', 'max-height': '800px'}}>
                                     <div className="sm:grid sm:grid-cols-2">
                                         <div className="text-left">
-                                            <h1 className="text-md font-medium text-other-200 dark:text-darkOther-200">Restocks</h1>
+                                            <h1 className="text-md font-medium text-other-200 dark:text-white">Restocks</h1>
                                         </div>
                                         <div className="text-right">
                                             <button name="restock-modal" id="restock-button-hide" type="button" className="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md dark:text-white bg-other-100 dark:bg-other-200 text-other-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-other-200 dark:focus:ring-darkOther-200" onClick={() => {

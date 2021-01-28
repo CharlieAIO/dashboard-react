@@ -45,6 +45,9 @@ router.get('/auth/callback' , async (req, res) => {
 
 })
 
+
+
+
 router.get('/bot/callback', async (req, res) => {
     var key;
     try{
@@ -122,13 +125,9 @@ router.get('/bot/callback', async (req, res) => {
             }
         }
 
-        var token = jwt.sign({user:ownerId,guild:guildId},process.env.JWT_SECRET,{
-            expiresIn:300
-        })
         res.json({
             user:user,
-            guild:guildData,
-            token:token
+            guild:guildData
         })
 
 

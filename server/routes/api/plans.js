@@ -83,23 +83,17 @@ router.post('/add', async (req, res) => {
 
 // Delete a restock
 router.get('/delete/:id', async (req, res) => {
-    if(req.get('authorization') == process.env.API_KEY) 
-    {
-        try{
-            await pool.query(
-                `DELETE FROM plans WHERE "id" = '${req.params.id}'`
-            ) 
-            return res.status(200).end()
 
-        }catch(e){
-            return res.status(400).end()
-        }
+    try{
+        await pool.query(
+            `DELETE FROM plans WHERE "id" = '${req.params.id}'`
+        ) 
+        return res.status(200).end()
+
+    }catch(e){
+        return res.status(400).end()
     }
 
-    else
-    {
-        return res.status(403).end()
-    }
 })
 /////////////////////////////////////////
 

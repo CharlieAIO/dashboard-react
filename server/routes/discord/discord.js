@@ -4,6 +4,7 @@ const Discord = require('discord.js');
 const DiscordOauth2 = require("discord-oauth2");
 const client = new Discord.Client();
 const fetch = require('node-fetch');
+const jwt = require('jsonwebtoken');
 
 const oauth = new DiscordOauth2({
 	clientId: process.env.CLIENT_ID,
@@ -31,7 +32,6 @@ router.get('/data', async (req, res) => {
         discrim:user.discriminator
     })
 })
-
 
 router.get('/guild/data/:guild', async (req, res) => {
     const guildData = await client.guilds.fetch(req.params.guild)
@@ -72,6 +72,5 @@ router.get('/guild/roles', async (req, res) => {
 })
 
 
-client.login(process.env.BOT_TOKEN);
 
 module.exports = router
