@@ -28,9 +28,11 @@ const AdminNavigation = () =>  {
             // dark mode on
             console.log(document.documentElement)
             document.documentElement.classList.add('dark');
+            localStorage.setItem("mode","#0e1c2f")
         }else{
             // dark mode off
             document.documentElement.classList.remove('dark');
+            localStorage.setItem("mode","white")
         }
     }
 

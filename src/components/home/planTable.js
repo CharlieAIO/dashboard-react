@@ -13,7 +13,7 @@ const PlanTable = () => {
     const [plans, setPlans] = useState([])
 
     async function fetchPlans(){
-        const res = await fetch('/api/v1/plans');
+        const res = await fetch('/plans');
         res.json()
         .then(res => {setPlans(res)})
         .catch(err =>  {});
@@ -42,12 +42,7 @@ const PlanTable = () => {
 
 
     const deletePlan =  async (id) => {
-        await fetch('/api/v1/plans/delete/' + id, {
-            method:'get',
-            headers: {
-                'x-access-token':'Bearer ' + localStorage.getItem('token')
-            }
-        })
+        await fetch('/plans/delete/' + id)
 
     }
 

@@ -15,7 +15,7 @@ const AdminSearch = () =>  {
         const res = await fetch('/discord/data');
         res.json()
         .then(res => {setUserImage(res.discordImage)})
-        .catch(err =>  {});
+        .catch(err =>  { console.log(err) });
         
     }
 

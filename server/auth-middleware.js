@@ -2,8 +2,16 @@ const jwt = require('jsonwebtoken');
 
 module.exports = () => {
     return(req, res, next) => {
+        if(req.headers['user-agent'] == 'node-fetch/1.0 (+https://github.com/bitinn/node-fetch)') {}
+        else return res.status(403).send("unauthorized")
 
-        const token = req.headers['x-access-token'].slice(7)
+        
+        var token
+        try{
+            token = req.headers['authorization'].slice(7)
+        }catch{
+            return res.status(403).send("unauthorized")
+        }
         if(!token) {
             return res.status(403).send("unauthorized")
         } else {

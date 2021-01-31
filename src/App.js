@@ -8,6 +8,8 @@ import Users from './components/users/users'
 import Settings from './components/settings/settings'
 import SiteHome from './components/siteHomePage/home'
 import Dashboard from './components/userDashboard/dashboard'
+import Bind from './components/bindPage/bindPage'
+
 
 class App extends Component {
   render() {
@@ -20,6 +22,7 @@ class App extends Component {
               <Switch>
                 {/* <Route exact path='/' component={SiteHome} /> */}
                 <Route exact path='/dashboard' component={Dashboard} />
+                <Route exact path='/bind' component={Bind} />
 
                 <Route exact path='/home' component={Home} />
                 <Route exact path='/licenses' component={Licenses}/>

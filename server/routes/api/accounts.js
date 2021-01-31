@@ -18,6 +18,7 @@ function find(name,query,cb) {
     })
 }
 
+
 router.get('/data', async (req, res) => {
     res.json({
         name:process.env.APP_NAME,
@@ -99,7 +100,7 @@ router.post('/add/dashboard', async (req, res) => {
         id:dashId,
         settings:{
             payments:{
-                failedPaymentOption:"empty"
+                failedPaymentOption:"1"
             }
         },
         staff:[],

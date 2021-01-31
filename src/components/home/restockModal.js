@@ -13,7 +13,7 @@ const RestockModal = () => {
     const [restockPlan, setRestockPlan] = useState("")
 
     async function fetchPlans(){
-        const res = await fetch('/api/v1/plans/data');
+        const res = await fetch('/plans/data');
         res.json()
         .then(res => {setPlans(res)})
         .catch(err =>  {});
@@ -31,6 +31,11 @@ const RestockModal = () => {
 
     }, [])
 
+    const colourStyle = {
+        control: styles => ({ ...styles, backgroundColor: localStorage.getItem('mode') }),
+
+    }
+
 
 
 
@@ -41,7 +46,7 @@ const RestockModal = () => {
             if(password.length > 0 && stock.length > 0) {
 
     
-                await fetch('/api/v1/restocks/add', {
+                await fetch('/restocks/add', {
                     method:'POST',
                     body:JSON.stringify({
                         password:password,
@@ -53,7 +58,6 @@ const RestockModal = () => {
                     }),
                     headers: {
                         "Content-Type": "application/json",
-                        authorization:1
                     }
                 })
                 .then(response => {
@@ -155,7 +159,7 @@ const RestockModal = () => {
                                             <div className="mt-1 rounded-md shadow-sm -space-y-px">
                                                 <div>
                                                     <label className="sr-only">Plan</label>
-                                                    <Select name="restockPlan" value={restockPlan.value} options={plans} className="focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md" onChange={(e)=> { setRestockPlan(e.value)}}/>
+                                                    <Select name="restockPlan" value={restockPlan.value} options={plans} styles={colourStyle} className="focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md" onChange={(e)=> { setRestockPlan(e.value)}}/>
                                                     
 
                                                 </div>

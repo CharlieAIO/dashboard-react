@@ -27,7 +27,7 @@ module.exports = {
       purple: colors.violet,
       pink: colors.pink,
       other: {
-        100: '#87bffa', //primary colour (background)
+        100: '#E9F1F3', //primary colour (background)
         200:'#0f3e70', //secondary colour (originally indigo-600)
         300:'#093059', //darker secondary (originally indigo-700)
         400:'#031221' // for menu text

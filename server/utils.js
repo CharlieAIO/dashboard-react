@@ -1,6 +1,8 @@
 const { Pool } = require('pg');
 require('dotenv').config({ path: '../.env' })
-
+const nodemailer = require("nodemailer");
+const handlebars = require("handlebars");
+const mongoose = require('mongoose');
 
 const pool = new Pool({
     user: process.env.DB_USERNAME,
@@ -34,9 +36,73 @@ function generateNoNumbers(length) {
     return result;
 }
 
+function sendEmail(key,email) {
+    var readHTMLFile = function (path, callback) {
+        fs.readFile(path, { encoding: "utf-8" }, function (
+          err,
+          html
+        ) {
+          if (err) {
+            throw err;
+            callback(err);
+          } else {
+            callback(null, html);
+          }
+        });
+    };
+
+    readHTMLFile(__dirname + "./email.html", function (
+        err,
+        html
+    ) {
+
+        var template = handlebars.compile(html);
+        var replacements = {
+            key: key,
+            name:process.env.APP_NAME,
+            url:process.env.domain
+        };
+        var htmlToSend = template(replacements);
+    
+        var transporter = nodemailer.createTransport({
+        host: "mail.privateemail.com",
+        port: 587,
+        auth: {
+            user: process.env.SENDER_EMAIL,
+            pass: process.env.SENDER_PASSWORD,
+        },
+        });
+    
+        var mailOptions = {
+        from: process.env.SENDER_EMAIL,
+        to: email,
+        subject: process.env.APP_NAME,
+        text: "License Receipt",
+        html: htmlToSend,
+        };
+    
+        transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log("Email sent: " + info.response);
+        }
+        });
+
+    });
+
+
+    
+}
+
+
+
+
 // pool.connect()
 module.exports = {
     pool:pool,
     generate:generate,
-    generateNoNumbers:generateNoNumbers
+    generateNoNumbers:generateNoNumbers,
+    sendEmail:sendEmail,
+    // checkIfStaff:checkIfStaff
 }

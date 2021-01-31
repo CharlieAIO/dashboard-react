@@ -18,7 +18,8 @@ async function user() {
                 "machineId" VARCHAR(255),
                 "dateCreated" BIGINT,
                 "dateJoined" BIGINT,
-                "id" UUID
+                "id" UUID,
+                "expired" BOOLEAN
             )`
         )
         await pool.end()

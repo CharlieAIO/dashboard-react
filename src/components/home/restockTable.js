@@ -14,7 +14,7 @@ const RestockTable = () => {
     const [restocks, setRestocks] = useState([])
 
     async function fetchRestocks(){
-        const res = await fetch('/api/v1/restocks');
+        const res = await fetch('/restocks');
         res.json()
         .then(res => {setRestocks(res);})
         .catch(err =>  {console.log(err)});
@@ -39,7 +39,7 @@ const RestockTable = () => {
     }, [])
 
     const deleteRestock = async (id) => {
-        var response = await fetch('/api/v1/restocks/delete/' + id, {
+        var response = await fetch('/restocks/delete/' + id, {
             method:'get',
             headers: {
                 authorization:1

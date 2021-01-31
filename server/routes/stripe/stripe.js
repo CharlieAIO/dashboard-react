@@ -27,5 +27,4 @@ router.get('/oauth/uri', async (req, res) => {
 })
 
 let redirect = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${process.env.CLIENT_ID_STRIPE}&scope=read_write&redirect_uri=${process.env.REDIRECT_URI_STRIPE}`
-console.log(redirect)
 module.exports = router

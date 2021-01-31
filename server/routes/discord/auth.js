@@ -4,6 +4,13 @@ const router = express.Router();
 const fetch = require('node-fetch');
 const jwt = require('jsonwebtoken');
 
+const cookieConfig = {
+    httpOnly: true,
+    secure: false, //true in production
+    // maxAge: 10000000,
+    signed: true
+};
+
 const oauth = new DiscordOauth2({
 	clientId: process.env.CLIENT_ID,
 	clientSecret: process.env.CLIENT_SECRET,
@@ -21,11 +28,8 @@ router.get('/oauth', async (req, res) =>{
  
 
 router.get('/auth/callback' , async (req, res) => {
-
     let code = req.query.code;
-
     if(code == undefined) {
-        console.log(oauthURL)
         res.redirect(oauthURL)
         return
     }else{
@@ -35,8 +39,26 @@ router.get('/auth/callback' , async (req, res) => {
             grantType: "authorization_code", 
             redirectUri: process.env.REDIRECT_URI
         })
-        res.cookies.set('key',oa.access_token); //session variable
-        res.cookies.set('rt',oa.refresh_token)
+        res.cookie('key',oa.access_token, cookieConfig);
+        // req.session.key('rt',oa.refresh_token)
+        // req.session.rt = oa.refresh_token
+
+        try{
+            var user = await oauth.getUser(req.signedCookies['key']) 
+
+
+            var accessToken = jwt.sign({user:user.id, flags:user.flags},process.env.JWT_SECRET,{
+                expiresIn:"7d" //10s when using refresh 
+            })
+            var refreshToken = jwt.sign({user:user.id, flags:user.flags},process.env.JWT_SECRET,{
+                expiresIn:"7d"
+            })
+            res.cookie('jwt.access',accessToken, cookieConfig);
+
+            
+        }catch(e){
+            return res.status(403).end()
+        }
 
 
         res.redirect(`https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&scope=bot&permissions=8&response_type=code&redirect_uri=${process.env.DISCORD_BOT_CALLBACK_URI}&scope=identify email bot`)
@@ -51,13 +73,13 @@ router.get('/auth/callback' , async (req, res) => {
 router.get('/bot/callback', async (req, res) => {
     var key;
     try{
-        key = req.cookies.get('key')
+        key = req.signedCookies['key']
     }catch{
-        res.redirect('/oauth')
+        res.redirect('/discord/oauth')
     }
 
-    if(req.cookies.get('key')) {
-        var user = await oauth.getUser(req.cookies.get('key')) 
+    if(req.signedCookies['key']) {
+        var user = await oauth.getUser(req.signedCookies['key']) 
         // check if user exists
         // if user doesnt exist, create user in db
         // else pass them on to check if dashboard exists
@@ -78,14 +100,14 @@ router.get('/bot/callback', async (req, res) => {
                         avatar:user.avatar,
                         email:user.email,
                         staff:false,
-                        accessToken:req.cookies.get('key'),
-                        refresh_token:req.cookies.get('rt'),
+                        accessToken:req.signedCookies['key'],
+                        refresh_token:req.session.rt,
                     })
                 })
                 if(response.ok) ownerId = await response.json()[0]['id']
-                else return res.redirect('/oauth')
+                else return res.redirect('/discord/oauth')
             }catch(err) {
-                return res.redirect('/oauth')
+                return res.redirect('/discord/oauth')
             }
         }else{
             var responseUserJson = await JSON.parse(responseBody)[0]
@@ -118,10 +140,10 @@ router.get('/bot/callback', async (req, res) => {
                 if(resp.ok){
 
                 }else{
-                    return res.redirect('/oauth')
+                    return res.redirect('/discord/oauth')
                 }
             }catch(err){
-                return res.redirect('/oauth')
+                return res.redirect('/discord/oauth')
             }
         }
 
@@ -132,7 +154,7 @@ router.get('/bot/callback', async (req, res) => {
 
 
     } else {
-        res.redirect('/oauth')
+        res.redirect('/discord/oauth')
     }
 })
 

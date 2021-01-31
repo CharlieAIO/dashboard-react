@@ -8,7 +8,7 @@ const LicenseTable = () => {
     
 
     async function fetchUsers(){
-        const res = await fetch('/api/v1/users');
+        const res = await fetch('/users');
         res.json()
         .then(res => {setUsers(res)})
         .catch(err =>  {});

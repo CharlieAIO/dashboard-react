@@ -41,7 +41,7 @@ class Settings extends Component {
                                     <div>
                                         <label for="accountName" className="block text-sm font-medium text-gray-700 dark:text-gray-400">Account Name</label>
                                         <div className="mt-1">
-                                            <input type="text" name="accountName" id="accountName" className="dark:text-other-100 dark:bg-darkOther-100 shadow-sm focus:ring-other-200 focus:border-other-200 block w-1/2 text-md border-gray-300 rounded-md py-2 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200" placeholder="Cook Group" aria-describedby="email-description" />
+                                            <input type="text" name="accountName" id="accountName" autoComplete="off" className="dark:text-other-100 dark:bg-darkOther-100 shadow-sm focus:ring-other-200 focus:border-other-200 block w-1/2 text-md border-gray-300 rounded-md py-2 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200" placeholder="Cook Group" aria-describedby="email-description" />
                                         </div>
 
                                         <p className="mt-2 text-sm text-gray-500" id="accountName-description">This account name will be displayed on the Dashboard & in email receipts</p>
@@ -143,7 +143,7 @@ class Settings extends Component {
                                 <div>
                                     <label for="failePayments" className="block text-sm font-medium text-gray-700 dark:text-gray-400">Manage Failed Payments</label>
                                     <div className="mt-1">
-                                        <select id="failePayments" name="failePayments" className="py-5 text-gray-800 font-medium focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 dark:text-white relative block w-1/4 rounded-none rounded-t-md bg-transparent focus:z-10 sm:text-sm border-gray-300">
+                                        <select id="failePayments" name="failePayments" className="py-5 text-gray-800 font-medium focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 dark:text-white relative block w-1/2 rounded-none rounded-t-md bg-transparent focus:z-10 sm:text-sm border-gray-300">
                                             <option value="1" className="font-medium dark:text-white dark:bg-darkOther-200">Delete key & Kick user</option>
                                             <option value="2" className="font-medium dark:text-white dark:bg-darkOther-200">Remove roles & Allow user to renew</option>
                                         </select>

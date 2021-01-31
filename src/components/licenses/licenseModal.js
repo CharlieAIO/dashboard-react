@@ -14,7 +14,7 @@ const LicenseModal = () => {
 
 
     async function fetchPlans(){
-        const res = await fetch('/api/v1/plans/data');
+        const res = await fetch('/plans/data');
         res.json()
         .then(res => {setAvailablePlans(res)})
         .catch(err =>  {});
@@ -32,6 +32,12 @@ const LicenseModal = () => {
 
     }, [])
 
+    const colourStyle = {
+        control: styles => ({ ...styles, backgroundColor: localStorage.getItem('mode') }),
+
+    }
+
+    
     const submitHandler = async (e) => {
         e.preventDefault()
         
@@ -40,7 +46,7 @@ const LicenseModal = () => {
             if(email.length > 0 && plan.length > 0) {
 
     
-                await fetch('/api/v1/users/add', {
+                await fetch('/users/add', {
                     method:'POST',
                     body:JSON.stringify({
                         plan:plan,
@@ -56,13 +62,11 @@ const LicenseModal = () => {
                     }),
                     headers: {
                         "Content-Type": "application/json",
-                        authorization:1
                     }
                 })
                 .then(response => {
-
-                    setPlan("")
-                    setEmail("")
+                    // setPlan("")
+                    // setEmail("")
                 }).catch(err => console.log(err))
             }else{
                 return
@@ -162,7 +166,7 @@ const LicenseModal = () => {
                                         <div className="mt-1 rounded-md shadow-sm -space-y-px">
                                             <div>
                                                 <label className="sr-only">plans</label>
-                                                <Select name="restockPlan" value={availablePlans.value} options={availablePlans} className="focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md" onChange={(e)=> { setPlan(e.value)}}/>
+                                                <Select styles={colourStyle} name="restockPlan" value={availablePlans.value} options={availablePlans} className="focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md" onChange={(e)=> { setPlan(e.value)}}/>
                                             </div>
                                         </div>
                                     </fieldset>

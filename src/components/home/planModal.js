@@ -33,7 +33,7 @@ const PlanModal = () => {
     const [interval, setinterval] = useState("")
     const [intervalType, setintervalType] = useState("")
     const [unbinding, setunbinding] = useState(true)
-
+    // const [selectColor, setSelectColor] = useState(true)
 
     async function fetchPlans(){
         const res = await fetch('/discord/guild/roles');
@@ -48,6 +48,7 @@ const PlanModal = () => {
         fetchPlans()
 
 
+
         return () => {
             abortController.abort();
         };
@@ -55,7 +56,7 @@ const PlanModal = () => {
     }, [])
 
     const colourStyles = {
-        control: styles => ({ ...styles, backgroundColor: 'white' }),
+        control: styles => ({ ...styles, backgroundColor: localStorage.getItem('mode')  }),
         option: (styles, { data, isDisabled, isFocused, isSelected }) => {
           const color = chroma(data.color);
           return {
@@ -102,7 +103,11 @@ const PlanModal = () => {
             color: 'white',
           },
         }),
-    };
+    }
+    const colourStyle = {
+        control: styles => ({ ...styles, backgroundColor: localStorage.getItem('mode') }),
+
+    }
 
 
     
@@ -110,7 +115,7 @@ const PlanModal = () => {
         e.preventDefault()
 
         if(planName.length > 0 && planType.length > 0 && interval.length > 0) {
-            var response = await fetch('/api/v1/plans/add', {
+            var response = await fetch('/plans/add', {
                 method:'post',
                 body:JSON.stringify({
                     planName:planName,
@@ -206,7 +211,8 @@ const PlanModal = () => {
                                                         <div className="mt-1 rounded-md shadow-sm -space-y-px">
                                                             <div>
                                                                 <label className="sr-only">type</label>
-                                                                <Select defaultValue={planOptions[0]}  placeholder="Plan Type" id="type" value={planType} name="planType" options={planOptions} className="focus:ring-other-200 focus:border-other-200 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md dark:focus:border-darkOther-200 dark:focus:ring-darkOther-200"
+                                                                
+                                                                <Select defaultValue={planOptions[0]} styles={colourStyle} placeholder="Plan Type" id="type" value={planType} name="planType" options={planOptions} className="focus:ring-other-200 focus:border-other-200 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md dark:focus:border-darkOther-200 dark:focus:ring-darkOther-200"
                                                                 onChange={e => setplanType(e.value)} value={planOptions.filter(function(planOptions) {return planOptions.value === planType})}/>
                                                             </div>
                                                         </div>
@@ -230,7 +236,7 @@ const PlanModal = () => {
 
                                                             <div className="absolute inset-y-0 right-0 flex items-center">
                                                                 <label className="sr-only">Interval Type</label>
-                                                                <Select defaultValue={intervalTypeOptions[3]}  id="type" value={intervalType} name="intervalType" options={intervalTypeOptions} placeholder="Interval" className="px-3 w-32"
+                                                                <Select defaultValue={intervalTypeOptions[3]} styles={colourStyle} id="type" value={intervalType} name="intervalType" options={intervalTypeOptions} placeholder="Interval" className="px-3 w-32"
                                                                 onChange={e => setintervalType(e.value)} value={intervalTypeOptions.filter(function(intervalTypeOptions) {return intervalTypeOptions.value === intervalType})}/>
                                                             </div>
 
@@ -250,7 +256,7 @@ const PlanModal = () => {
 
                                                             <div className="absolute inset-y-0 right-0 flex items-center">
                                                                 <label className="sr-only">Currency</label>
-                                                                <Select defaultValue={currencyOptions[0]}  id="type" value={priceCurrency} name="priceCurrency" placeholder="Currency" options={currencyOptions} className="px-3 w-48 dark:bg-darkOther-200"
+                                                                <Select defaultValue={currencyOptions[0]} styles={colourStyle}  id="type" value={priceCurrency} name="priceCurrency" placeholder="Currency" options={currencyOptions} className="px-3 w-48 dark:bg-darkOther-200"
                                                                 onChange={e => setpriceCurrency(e.value)} isSearchable value={currencyOptions.filter(function(currencyOptions) {return currencyOptions.value === priceCurrency})}/>
                                                             </div>
                                                         </div>
