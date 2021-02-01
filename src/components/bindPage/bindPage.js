@@ -1,6 +1,5 @@
 import '../../static/styles/main.css'; 
 import React, { useState, useEffect } from 'react';
-
 import UserNav from '../userNav'
 import { IoKeyOutline } from 'react-icons/io5'
 import { BiLogInCircle } from 'react-icons/bi'
@@ -11,6 +10,7 @@ const BindPage = () => {
     const [discrim, setDiscrim] = useState("")
     const [key, setKey] = useState("")
     const [discordImage, setDiscordImage] = useState("")
+    const [loaded, setLoaded] = useState(false)
 
     async function fetchData(){
         const res = await fetch('/discord/data');
@@ -19,6 +19,7 @@ const BindPage = () => {
             setDiscordImage(res.discordImage)
             setName(res.name)
             setDiscrim(res.discrim)
+            setLoaded(true)
         })
         .catch(err =>  {console.log(err)});
         
@@ -65,7 +66,8 @@ const BindPage = () => {
         return (
             <>
                 {/* <UserNav /> */}
-                <div className="flex flex-col w-0 flex-1 overflow-hidden">
+                <div className="flex flex-col w-0 flex-1 overflow-y-auto">
+                    <UserNav />
                     <div className="m-auto">
 
                         <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
@@ -74,22 +76,29 @@ const BindPage = () => {
                             </div>
                             <div class="px-4 py-5 sm:p-6">
 
-                                <div className="mt-1 relative">
+                                {loaded ? <div className="mt-1 relative">
 
-                                    <div className="pl-3 flex items-center">
+                                <div className="pl-3 flex items-center">
 
-                                        {discordImage ? <img src={discordImage} className="rounded-full h-16 w-auto text-other-200 font-medium" alt=""/> : <FaUserCircle className="h-14 w-auto text-other-200 font-medium"/>}
+                                    {discordImage ? <img src={discordImage} className="rounded-full h-16 w-auto text-other-200 font-medium" alt=""/> : <FaUserCircle className="h-14 w-auto text-other-200 font-medium"/>}
 
-                                        <h1 className="font-medium text-gray-900 text-2xl ml-3">{name}</h1>#<p className="font-normal text-other-200 text-md">{discrim}</p>
-
-                                    </div>
-
+                                    <h1 className="font-medium text-gray-900 text-2xl ml-3">{name}</h1>#<p className="font-normal text-other-200 text-md">{discrim}</p>
 
                                 </div>
-                                
+
+
+                                </div> : <div className="pl-3 flex items-center">
+
+                                {discordImage ? <img src={discordImage} className="rounded-full h-16 w-auto text-other-200 font-medium" alt=""/> : <FaUserCircle className="h-14 w-auto text-other-200 font-medium"/>}
+
+                                <h1 className="font-medium text-gray-900 text-2xl ml-3">Loading...</h1>
+
+                                </div>
+
+                                }
+                                                                
 
                                 <div>
-                                    {/* <label for="email" class="block text-sm font-medium text-gray-700">Search candidates</label> */}
                                     <form onSubmit={submitHandler}>
                                     <div class="mt-1 flex rounded-md shadow-sm">
 

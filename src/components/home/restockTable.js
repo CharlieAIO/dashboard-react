@@ -4,7 +4,6 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 import ProgressBar from "@ramonak/react-progress-bar";
 
 
-
 import { AiOutlineDelete, AiOutlineCopy } from 'react-icons/ai';
 import { BsThreeDots } from 'react-icons/bs';
 
@@ -61,9 +60,7 @@ const RestockTable = () => {
                     <td className="px-6 py-3 max-w-0 whitespace-nowrap text-sm font-medium text-gray-900 dark:bg-darkOther-200 dark:text-white">
                         <div className="flex items-center lg:pl-2">
                             {/* <div className="flex-shrink-0 w-2.5 h-2.5 rounded-full bg-pink-600" aria-hidden="true"></div> */}
-                                <a href="#" className="truncate">
-                                {restock.planId}
-                                </a>
+                            {restock.planName}
                         </div>
                     </td>
 
@@ -88,7 +85,7 @@ const RestockTable = () => {
                                     document.querySelector('#copy-hide-' + restock.id).classList.add('text-green-500')}>
                                     <button className="w-full" type='button' id={"restock-options-dropdown-copy-" + restock.id}>
                                         <AiOutlineCopy className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" id={'copy-hide-'+ restock.id}/>
-                                        Copy Link
+                                        Copy Restock
                                     </button>
                                     </CopyToClipboard>
 
@@ -118,17 +115,17 @@ const RestockTable = () => {
                 <thead className="bg-gray-200 rounded-md dark:bg-darkOther-100">
                     <tr className="border-gray-200">
 
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        <span className="lg:pl-2">Plan</span>
-                    </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider select-none">
+                            <span className="lg:pl-2">Plan</span>
+                        </th>
 
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-widerr">
-                        Stock
-                    </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-widerr select-none">
+                            Stock
+                        </th>
 
-                    <th className="md:table-cell px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Options
-                    </th>
+                        <th className="md:table-cell px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider select-none">
+                            Options
+                        </th>
 
                     </tr>
                 </thead>

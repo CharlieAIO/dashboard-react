@@ -16,7 +16,6 @@ const AdminNavigation = () =>  {
         var response = await fetch('/api/v1/accounts/data')
         if(response.ok) {
             var responseBody = await response.json()
-            console.log(responseBody)
 
             setAppName(responseBody.name)
             setAppImage(responseBody.serverImage)
@@ -63,7 +62,7 @@ const AdminNavigation = () =>  {
                         </div>
                         
                         <div className="flex-shrink-0 flex items-center px-4">
-                        <img alt={appName} className="h-16 w-auto rounded-full" src={appImage} alt={appName} /> <span className="text-2xl font-medium text-other-200 ml-2 text-20 dark:text-other-100">{appName}</span>
+                        <img alt={appName} className="h-16 w-auto rounded-full select-none" src={appImage} alt={appName} /> <span className="text-2xl font-medium text-other-200 ml-2 text-20 dark:text-other-100 select-none">{appName}</span>
                         </div>
     
                         <div className="mt-5 flex-1 h-0 overflow-y-auto " >
@@ -135,7 +134,7 @@ const AdminNavigation = () =>  {
                 <div className="flex flex-col w-64">
                 <div className="flex flex-col flex-grow pt-5 pb-4 bg-other-100 dark:bg-darkOther-100 overflow-y-auto">
                     <div className="flex items-center flex-shrink-0 px-4">
-                        <img alt={appName} className="h-16 w-auto rounded-full" src={appImage} alt={appName} /> <span className="text-2xl font-medium text-other-200 ml-2 text-20 dark:text-other-100">{appName}</span>
+                        <img alt={appName} className="h-16 w-auto rounded-full select-none" src={appImage} alt={appName} /> <span className="text-2xl font-medium text-other-200 ml-2 text-20 dark:text-other-100 select-none">{appName}</span>
                     </div>
                     <div className="mt-5 flex-grow flex flex-col">
                     <nav className="flex-1 px-2 bg-other-100 dark:bg-darkOther-100 space-y-1">

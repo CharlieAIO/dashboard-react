@@ -95,7 +95,7 @@ const LicenseModal = () => {
                 <form onSubmit={submitHandler}>
                     <div>
 
-                    <button onClick={() => {
+                    <button type="button" onClick={() => {
                         document.querySelector('#license-modal').classList.contains('hidden') ? document.querySelector('#license-modal').classList.remove('hidden') : document.querySelector('#license-modal').classList.add('hidden')
                     }}><AiOutlineClose className="text-red-500 h-6 w-6" /></button>
 
@@ -176,7 +176,7 @@ const LicenseModal = () => {
                     </div>
 
                     <div className="mt-5 sm:mt-6">
-                        <button name="license-modal" type="submit" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-other-200 text-base font-medium text-white hover:bg-other-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-other-200 sm:text-sm dark:focus:ring-darkOther-200 dark:hover:bg-darkOther-200 dark:bg-darkOther-100">
+                        <button name="license-modal" type="submit" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-other-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-other-200 sm:text-sm dark:focus:ring-darkOther-200 dark:hover:bg-darkOther-200 dark:bg-darkOther-100">
                             Create
                         </button>
                     </div>

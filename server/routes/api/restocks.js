@@ -66,7 +66,7 @@ router.post('/add', authorize(),async (req, res) => {
                 query.push(req.body [i])
 
             await pool.query(
-                'INSERT INTO restocks values ($1,$2,$3,$4,$5,$6)',
+                'INSERT INTO restocks values ($1,$2,$3,$4,$5,$6,$7)',
                 query
             ) 
 

@@ -19,16 +19,20 @@ const UserNav = () =>  {
     // render() {
         return (
 
-            <div className="h-16 mt-5">
-                        
-                        <div className="flex-1 px-4 flex justify-between bg-other-100">
-                            <div className="flex-1 flex">
-                                <h1 className="text-color-900 font-medium text-xl">VenetiaCLI</h1>
-                            </div>
-            
+            <>
+            <nav>
+                <div className="">
+                    <div className="h-16 text-left">
 
+                        <div className="text-left">
+                            <img className="block h-24 w-auto" src="https://venetiacli.io/images/logo.png"/>
                         </div>
-            </div>
+
+                    </div>
+                </div>
+
+            </nav>
+            </>
         )
 }
 

@@ -72,7 +72,7 @@ router.post('/add', authorize(),async (req, res) => {
                 query[13] = false
     
             await pool.query(
-                'INSERT INTO users values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)',
+                'INSERT INTO users values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)',
                 query
             ) 
             return res.status(200).json({response:"added"})
@@ -93,6 +93,7 @@ router.post('/bind', authorize(),async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
         try{
             var result = await pool.query(`SELECT * FROM users WHERE "key" = '${req.body.key}'`)
+            
             if(result.rows.length > 0) {
                 if(result.rows[0].discordId.toString() == '123456789')
                 await pool.query(
@@ -118,12 +119,12 @@ router.post('/bind', authorize(),async (req, res) => {
 // Unbind User from Database
 router.post('/unbind', async (req, res) => {
     try{
-        var result = await pool.query(`SELECT * FROM users WHERE "key" = '${req.body.key}'`).rows
-        if(result.length > 0) {
-            if(result[0].discordId.toString() != '123456789')
+        var results = await pool.query(`SELECT * FROM users WHERE "key" = '${req.body.key}'`)
+        if(results.rows.length > 0) {
+            if(results[0].discordId.toString() != '123456789')
             await pool.query(
                 'UPDATE users SET "discordId" = $1, "discordName" =  $2, "discordImage" = $3, "email" = $4, "dateJoined" = $5 WHERE "key" = $6 ',
-                [123456789, 'empty', '', 'empty', 0, results[0].key]
+                [123456789, 'empty', '', 'empty', 0, results.rows[0].key]
             ) 
             return res.status(200).json({response:"unbound"})
         }
@@ -141,22 +142,63 @@ router.get('/delete/:id', async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
 
         try{
-            var result = await pool.query(`SELECT * FROM users WHERE "discordId" = ${req.params.id}`).rows
-            if(result.length > 0) {
+            var result = await pool.query(`SELECT * FROM users WHERE "discordId" = ${req.params.id}`)
+            if(result.rows.length > 0) {
                 if(result[0].discordId.toString() != '123456789')
+                {
+                    await pool.query(
+                        `DELETE FROM users WHERE "discordId" = ${req.params.id}`
+                    )
+                    
+                    var deleted
+                    try{
+                        deleted = await stripe.customers.del(result.rows[0].customerId)
+                    }catch{}
+    
+                    if(deleted.deleted == true) return res.status(200).json({response:"deleted"})
+                    else return res.status(400).end()
+                }
+                return res.status(400).end()
+            }
+            return res.status(400).end()
+    
+        }catch(e){
+            return res.status(400).end()
+        }
+
+    } else {
+        return res.status(403).end()
+    }
+
+})
+/////////////////////////////////////////
+
+
+// Delete User from Database
+router.get('/delete/uuid/:id', async (req, res) => {
+    if(req.get('apikey') == process.env.API_KEY) {
+
+        try{
+            var result = await pool.query(`SELECT * FROM users WHERE "id" = '${req.params.id}'`)
+            if(result.rows.length > 0) {
                 await pool.query(
-                    `DELETE FROM users WHERE "discordId" = ${req.params.id}`
+                    `DELETE FROM users WHERE "id" = '${req.params.id}'`
                 )
                 
-                const deleted = await stripe.customers.del(
-                    result[0].customerId
-                );
-                if(deleted.deleted == true) return res.status(200).json({response:"deleted"})
+                var deleted = true
+                try{
+                    deleted = await stripe.customers.del(result.rows[0].customerId).deleted
+                }catch{
+                    {}
+                }
+                
+                if(deleted == true) return res.status(200).json({response:"deleted"})
                 else return res.status(400).end()
             }
             return res.status(400).end()
     
         }catch(e){
+            console.log(e)
             return res.status(400).end()
         }
 
@@ -172,9 +214,9 @@ router.get('/disable/:id', async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
 
         try{
-            var result = await pool.query(`SELECT * FROM users WHERE "discordId" = ${req.params.id}`).rows
-            if(result.length > 0) {
-                if(result[0].discordId.toString() != '123456789')
+            var result = await pool.query(`SELECT * FROM users WHERE "discordId" = ${req.params.id}`)
+            if(result.rows.length > 0) {
+                if(result.rows[0].discordId.toString() != '123456789')
                 await pool.query(
                     'UPDATE users SET expired = $1',
                     [true]

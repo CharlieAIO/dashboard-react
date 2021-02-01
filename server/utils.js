@@ -3,6 +3,7 @@ require('dotenv').config({ path: '../.env' })
 const nodemailer = require("nodemailer");
 const handlebars = require("handlebars");
 const mongoose = require('mongoose');
+const fs = require('fs')
 
 const pool = new Pool({
     user: process.env.DB_USERNAME,
@@ -51,7 +52,7 @@ function sendEmail(key,email) {
         });
     };
 
-    readHTMLFile(__dirname + "./email.html", function (
+    readHTMLFile(__dirname + "\\email.html", function (
         err,
         html
     ) {

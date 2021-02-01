@@ -11,6 +11,7 @@ const RestockModal = () => {
     const [password, setPassword] = useState("")
     const [stock, setStock] = useState("")
     const [restockPlan, setRestockPlan] = useState("")
+    const [planName, setPlanName] = useState("")
 
     async function fetchPlans(){
         const res = await fetch('/plans/data');
@@ -44,8 +45,6 @@ const RestockModal = () => {
         
         try{
             if(password.length > 0 && stock.length > 0) {
-
-    
                 await fetch('/restocks/add', {
                     method:'POST',
                     body:JSON.stringify({
@@ -55,6 +54,7 @@ const RestockModal = () => {
                         planId:restockPlan,
                         restockMethod:'regular',
                         id:uuidv4(),
+                        planName:planName
                     }),
                     headers: {
                         "Content-Type": "application/json",
@@ -118,12 +118,12 @@ const RestockModal = () => {
                         <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
 
 
-                            <AiOutlineShoppingCart className="h-6 w-6 text-green-600"/>
+                            <AiOutlineShoppingCart className="h-6 w-6 text-green-600 select-none"/>
 
                     </div>
 
                     <div className="mt-3 text-center sm:mt-5">
-                        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="modal-headline">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white select-none" id="modal-headline">
                           Create a Restock
                         </h3>
 
@@ -131,7 +131,7 @@ const RestockModal = () => {
 
                             <div>
                                 <fieldset >
-                                    <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">Password</legend>
+                                    <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300 select-none">Password</legend>
                                     <div className="mt-1 bg-white rounded-md shadow-sm dark:bg-darkOther-200">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700"></label>
@@ -141,7 +141,7 @@ const RestockModal = () => {
                                 </fieldset>
 
                                 <fieldset className="mt-2 bg-white dark:bg-darkOther-200">
-                                    <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">Stock</legend>
+                                    <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300 select-none">Stock</legend>
                                     <div className="mt-1 rounded-md shadow-sm ">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700"></label>
@@ -155,11 +155,14 @@ const RestockModal = () => {
                                 <fieldset className="mt-2 bg-white dark:bg-darkOther-200">
                                     <div className="mt-1 bg-white rounded-md shadow-sm dark:bg-darkOther-200">
                                         <div>
-                                            <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">Plan</legend>
+                                            <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300 select-none">Plan</legend>
                                             <div className="mt-1 rounded-md shadow-sm -space-y-px">
                                                 <div>
-                                                    <label className="sr-only">Plan</label>
-                                                    <Select name="restockPlan" value={restockPlan.value} options={plans} styles={colourStyle} className="focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md" onChange={(e)=> { setRestockPlan(e.value)}}/>
+                                                    <label className="sr-only select-none">Plan</label>
+                                                    <Select name="restockPlan" value={restockPlan.value} options={plans} styles={colourStyle} className="focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md" onChange={(e)=> { 
+                                                        setRestockPlan(e.value)
+                                                        setPlanName(e.label)
+                                                    }}/>
                                                     
 
                                                 </div>
@@ -175,7 +178,7 @@ const RestockModal = () => {
                 </div>
 
                 <div className="mt-5 sm:mt-6">
-                  <button type="submit" id="button-create" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-other-200 text-base font-medium text-white hover:bg-other-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-other-200 sm:text-sm dark:focus:ring-darkOther-200 dark:hover:bg-darkOther-200 dark:bg-darkOther-100">
+                  <button type="submit" id="button-create" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-other-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-other-200 sm:text-sm dark:focus:ring-darkOther-200 dark:hover:bg-darkOther-200 dark:bg-darkOther-100">
                     Create
                   </button>
                 </div>

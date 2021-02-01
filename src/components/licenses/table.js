@@ -35,13 +35,72 @@ const LicenseTable = () => {
 
     }, [])
 
+    const submitEmailHandler = async (e, key,email) => {
+        e.preventDefault()
+
+        try{
+
+            await fetch('/users/email', {
+                method:'POST',
+                body:JSON.stringify({
+                    email:email,
+                    key:key
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+            .then(response => {
+            }).catch(err => console.log(err))
+        }catch(err){
+            console.log(err)
+            return;
+        }
+
+    }
+    const submitUnbindHandler = async (e, id) => {
+        e.preventDefault()
+        
+        try{
+
+            await fetch('/users/unbind/' +id, {
+                method:'get'
+            })
+            .then(response => {
+                {}
+            }).catch(err => console.log(err))
+        }catch(err){
+            console.log(err)
+            return;
+        }
+
+    }
+    const submitRevokeHandler = async (e, id) => {
+        e.preventDefault()
+        
+        try{
+
+            await fetch('/users/revoke/' + id, {
+                method:'get'
+            })
+            .then(response => {
+                // setPlan("")
+                // setEmail("")
+            }).catch(err => console.log(err))
+        }catch(err){
+            console.log(err)
+            return;
+        }
+
+    }
+
 
     const renderTableRows = () => {
         return users.map(user => {
             var date = new Date(user.dateCreated * 1000)
             return (
     
-                <tr key={user.uuid}>
+                <tr key={user.id}>
                     <td className="px-6 py-4 whitespace-nowrap dark:bg-darkOther-200">
                         {/* <div className="flex items-center"> */}
 
@@ -77,17 +136,17 @@ const LicenseTable = () => {
 
                     <td className="px-6 py-4 whitespace-nowrap dark:bg-darkOther-200">
                         
-                        <button className="ml-2 text-gray-600 hover:text-gray-900" id={`${user.uuid}-dropdown-button-hide`} onClick={() => {
-                            document.querySelector(`#dropdown-${user.uuid}`).classList.contains('hidden') ? document.querySelector(`#dropdown-${user.uuid}`).classList.remove('hidden') : document.querySelector(`#dropdown-${user.uuid}`).classList.add('hidden')
-                        }}> <BsThreeDots className="h-4 w-4" id={`${user.uuid}-icon-hide`} />
+                        <button className="ml-2 text-gray-600 hover:text-gray-900" id={`${user.id}-dropdown-button-hide`} onClick={() => {
+                            document.querySelector(`#dropdown-${user.id}`).classList.contains('hidden') ? document.querySelector(`#dropdown-${user.id}`).classList.remove('hidden') : document.querySelector(`#dropdown-${user.id}`).classList.add('hidden')
+                        }}> <BsThreeDots className="h-4 w-4" id={`${user.id}-icon-hide`} />
                         </button>
 
-                        <div id={`dropdown-${user.uuid}`} className="dark:bg-darkOther-200 hidden mx-1 ml-24 mt-24 origin-top-right absolute top-2 w-48 mt-1 rounded-md shadow-lg z-2 bg-white ring-1 ring-black ring-opacity-5" aria-orientation="vertical" aria-labelledby="user-menu">
+                        <div id={`dropdown-${user.id}`} className="dark:bg-darkOther-200 hidden mx-1 ml-24 mt-24 origin-top-right absolute top-2 w-48 mt-1 rounded-md shadow-lg z-2 bg-white ring-1 ring-black ring-opacity-5" aria-orientation="vertical" aria-labelledby="user-menu">
 
-                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-darkOther-300" role="menuitem" id="hide">Unbind from User</a>
-                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-darkOther-300" role="menuitem" id="hide">Revoke & Delete</a>
-                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-darkOther-300" role="menuitem" id="hide">Send receipt via email</a>
-                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-darkOther-300" role="menuitem" id="hide">Extend license</a>
+                            <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-darkOther-300 w-full" role="menuitem" id={`hide-${user.id}`} onClick={(e) => submitUnbindHandler(e, user.id)}>Unbind from User</button>
+                            <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-darkOther-300 w-full" role="menuitem" id={`hide-${user.id}`} onClick={(e) => submitRevokeHandler(e, user.id)}>Revoke & Delete</button>
+                            <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-darkOther-300 w-full" role="menuitem" id={`hide-${user.id}`} onClick={(e) => submitEmailHandler(e, user.key, user.email)}>Send receipt via email</button>
+                            <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-darkOther-300 w-full" role="menuitem" id={`hide-${user.id}`} onClick={(e) => {}}>Extend license</button>
                     
                         </div>
 
@@ -108,23 +167,23 @@ const LicenseTable = () => {
                 <thead className="bg-gray-200 dark:bg-darkOther-100">
 
                     <tr>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider select-none">
                         Key
                         </th>
 
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider select-none">
                         User
                         </th>
 
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider select-none">
                         Plan
                         </th>
 
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider select-none">
                         Created
                         </th>
 
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider select-none">
                             Options
                         </th>
                     </tr>

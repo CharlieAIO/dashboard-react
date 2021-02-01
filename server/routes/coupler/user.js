@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fetch = require('node-fetch');
 const DiscordOauth2 = require("discord-oauth2");
+const {sendEmail} = require('../../utils')
 
 const oauth = new DiscordOauth2({
 	clientId: process.env.CLIENT_ID,
@@ -60,7 +61,9 @@ router.post('/add', async (req,res) => {
         return res.status(400).end()
     }
     if(response.status == 403) return res.status(403).send("unauthorized")
-    return res.status(200).json(await response.json())
+    var data = await response.json()
+    if(data) return res.status(200).json(data)
+    else return res.status(403).send("unauthorized")
 })
 
 router.post('/bind', async (req,res) => {
@@ -90,6 +93,35 @@ router.post('/bind', async (req,res) => {
         return res.status(400).end()
     }
 })
+
+router.post('/email', async (req,res) => {
+    try{
+        sendEmail(req.body.key, req.body.email)
+        
+    }catch(e){
+        console.log(e)
+        return res.status(400).end()
+    }
+})
+
+router.get('/revoke/:id', async (req,res) => {
+    try{
+        var id = req.params.id
+        var response = await fetch(process.env.domain + '/api/v1/users/delete/uuid/' + id,{
+            headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`},
+            method:'get'
+            
+        })
+        if(response.status == 403) return res.status(403).send("unauthorized")
+        var text = await response.text()
+        if(text.includes("deleted")) return res.status(200).json(text)
+        else return res.status(400).end()
+    }catch(e){
+        console.log(e)
+        return res.status(400).end()
+    }
+})
+
 
 
 module.exports = router

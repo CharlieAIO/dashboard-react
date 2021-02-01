@@ -39,7 +39,8 @@ async function restocks() {
                 "stockRemaining" BIGINT,
                 "planId" VARCHAR(255),
                 "restockMethod" VARCHAR(255),
-                "id" UUID
+                "id" UUID,
+                "planName" VARCHAR(255)
             )`
         )
         await pool.end()
