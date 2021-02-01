@@ -59,9 +59,9 @@ const Home = () => {
                             </div>
                         
 
-                            <dl className="lg:grid md:grid-cols-2 gap-4 sm:rounded-lg">
+                            <dl className="lg:grid md:grid-cols-2 sm:grid-cols-1 gap-4 sm:rounded-lg">
     
-                                <div className="flex flex-col  p-6 text-center bg-white mt-5 w-full dark:bg-darkOther-200 rounded-lg" style={{'min-height': '400px', 'max-height': '800px'}}>
+                                <div className="flex flex-col p-6 text-center bg-white mt-5 dark:bg-darkOther-200 rounded-lg" style={{'min-height': '400px', 'max-height': '800px'}}>
                                     <div className="sm:grid sm:grid-cols-2">
                                         <div className="text-left">
                                         <h1 className="text-md font-medium text-other-200 dark:text-white">Plans</h1>
@@ -70,7 +70,7 @@ const Home = () => {
                                             <button name="plan-modal" id="plan-button-hide" type="button" className="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md dark:text-white bg-other-100 dark:bg-other-200 text-other-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-other-200 dark:focus:ring-darkOther-200" onClick={() => {
                                                 document.querySelector('#plan-modal').classList.contains('hidden') ? document.querySelector('#plan-modal').classList.remove('hidden') : document.querySelector('#plan-modal').classList.add('hidden')
                                             }}>
-                                                <FaPlus className="-ml-0.5 mr-2 h-4 w-4 text-white" id='hide' />
+                                                <FaPlus className="-ml-0.5 mr-2 h-4 w-4 dark:text-white text-other-500" id='hide' />
                                                 New Plan
                                             </button>
                                         </div>
@@ -87,8 +87,8 @@ const Home = () => {
     
 
 
-                                <div className="flex flex-col  p-6 text-center bg-white mt-5 dark:bg-darkOther-200 rounded-lg" style={{'min-height': '400px', 'max-height': '800px'}}>
-                                    <div className="sm:grid sm:grid-cols-2">
+                                <div className="flex flex-col p-6 text-center bg-white mt-5 dark:bg-darkOther-200 rounded-lg" style={{'min-height': '400px', 'max-height': '800px'}}>
+                                    <div className="grid-cols-2 sm:grid sm:grid-cols-2">
                                         <div className="text-left">
                                             <h1 className="text-md font-medium text-other-200 dark:text-white">Restocks</h1>
                                         </div>
@@ -96,7 +96,7 @@ const Home = () => {
                                             <button name="restock-modal" id="restock-button-hide" type="button" className="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md dark:text-white bg-other-100 dark:bg-other-200 text-other-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-other-200 dark:focus:ring-darkOther-200" onClick={() => {
                                                 document.querySelector('#restock-modal').classList.contains('hidden') ? document.querySelector('#restock-modal').classList.remove('hidden') : document.querySelector('#restock-modal').classList.add('hidden')
                                             }}>
-                                            <FaPlus className="-ml-0.5 mr-2 h-4 w-4 text-white" id='hide' />
+                                            <FaPlus className="-ml-0.5 mr-2 h-4 w-4 dark:text-white text-other-500" id='hide' />
                                             New Restock
                                             </button>
                                         </div>
@@ -114,7 +114,7 @@ const Home = () => {
 
       
     
-                        </dl>
+                            </dl>
                     </div>
     
 

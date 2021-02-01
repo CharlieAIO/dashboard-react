@@ -45,9 +45,9 @@ const AdminNavigation = () =>  {
 
                 <div className="md:hidden">
                     
-                    <div className="fixed inset-0 flex z-40">
+                    <div className="fixed inset-0 flex z-40" id="mob-screen">
     
-                    <div className="fixed inset-0" aria-hidden="true" id="mob-screen">
+                    <div className="fixed inset-0" aria-hidden="true">
                         <div className="absolute inset-0 bg-gray-600 opacity-75"></div>
                     </div>
     
@@ -68,59 +68,60 @@ const AdminNavigation = () =>  {
     
                         <div className="mt-5 flex-1 h-0 overflow-y-auto " >
                         <nav className="px-2 space-y-1 ">
-                            <NavLink to='/home' activeClassName="dark:text-other-100 text-darkOther-100" className="text-white">
-                                <span className="hover:text-other-100 dark:hover:text-other-100 hover:text-darkOther-100 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                <AiOutlineHome className="hover:text-other-20 mr-3 h-6 w-6" id='hide'/>
+                            <NavLink to='/home' activeClassName="text-green-500 dark:text-green-500" className="dark:text-white">
+                                <span className="hover:text-green-400 dark:hover:text-green-400 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <AiOutlineHome className="hover:text-green-400 dark:hover:text-green-400 mr-3 h-6 w-6" id='hide'/>
                                 Home
                                 </span>
                             </NavLink>
                 
-                            <NavLink to='/licenses' activeClassName="dark:text-other-100 text-darkOther-100" className="text-white">
-                                <span className="hover:text-other-100 dark:hover:text-other-100 hover:text-darkOther-100 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                <IoKeyOutline className="hover:text-other-200 mr-3 h-6 w-6"/>
+                            <NavLink to='/licenses' activeClassName="dark:text-yellow-500 text-yellow-500" className="dark:text-white">
+                                <span className="hover:text-yellow-400 dark:hover:text-yellow-400 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <IoKeyOutline className="hover:text-yellow-400 dark:hover:text-yellow-400 mr-3 h-6 w-6"/>
                                 Licenses
                                 </span>
                             </NavLink>
                 
-                            <NavLink to='/users' activeClassName="dark:text-other-100 text-darkOther-100" className="text-white">
-                                <span className="hover:text-other-100 dark:hover:text-other-100 hover:text-darkOther-100 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                <FiUsers className="hover:text-other-200 mr-3 h-6 w-6" />
+                            <NavLink to='/users' activeClassName="dark:text-blue-500 text-blue-500" className="dark:text-white">
+                                <span className="hover:text-blue-400 dark:hover:text-blue-400 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <FiUsers className="hover:text-blue-400 dark:hover:text-blue-400 mr-3 h-6 w-6" />
                                 Users
                                 </span>
                             </NavLink>
                 
-                            <NavLink to='/settings' activeClassName="dark:text-other-100 text-darkOther-100" className="text-white">
-                                <span className="hover:text-other-100 dark:hover:text-other-100 hover:text-darkOther-100 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                <FiSettings className="hover:text-other-200 mr-3 h-6 w-6" />
+                            <NavLink to='/settings' activeClassName="dark:text-purple-500 text-purple-500" className="dark:text-white">
+                                <span className="hover:text-purple-400 dark:hover:text-purple-400 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <FiSettings className="hover:text-purple-400 dark:hover:text-purple-400 mr-3 h-6 w-6" />
                                 Settings
                                 </span>
                             </NavLink>
                 
-                            <span className="text-white hover:text-other-100 dark:hover:text-other-100 hover:text-darkOther-100 group flex items-center px-2 py-2 text-sm font-medium rounded-md ">
-                            <BiExport className="hover:text-other-200 mr-3 h-6 w-6 " />
+                            <span className="text-orange-500 dark:text-white hover:text-orange-400 dark:hover:text-orange-400 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                            <BiExport className="hover:text-orange-500 dark:hover:text-orange-400 mr-3 h-6 w-6" />
                             Export
                             </span>
 
-                            <div class="flex items-center">
-                            <Switch 
-                            checked={darkMode}
-                            onChange={e => {
-                                setDarkMode(e)
-                                changeDarkMode(e)
-                            }}
-                            as="button" 
-                            className={`${darkMode ? "bg-green-400" : "bg-gray-200"} relative inline-flex flex-shrink-0 h-4 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none`}>
+                            <div className="grid border-t w-1/2">
+                                <div className="">
+                                    <Switch 
+                                    checked={darkMode}
+                                    onChange={e => {
+                                        setDarkMode(e)
+                                        changeDarkMode(e)
+                                    }}
+                                    as="button" 
+                                    className={`${darkMode ? "bg-darkOther-100" : "bg-other-100"} shadow-md border-gray-300 border-1 mt-2 inline-flex flex-shrink-0 h-5 w-10 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none`}>
 
-                                {darkMode ? 
-                                <span aria-hidden="true" className="pointer-events-none translate-x-0 inline-block h-3 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"></span> : 
-                                <span aria-hidden="true" className="pointer-events-none translate-x-5 inline-block h-3 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"></span>
-                                }
+                                        {darkMode ?
+                                         
+                                        <BiMoon aria-hidden="true" className="pointer-events-none translate-x-0 inline-block h-4 w-auto rounded-full text-other-100 shadow transform ring-0 transition ease-in-out duration-200 " />: 
+                                        <BiSun aria-hidden="true" className="pointer-events-none translate-x-5 inline-block h-4 w-auto rounded-full text-yellow-500 shadow transform ring-0 transition ease-in-out duration-200" />
+                                        }
 
-                            </Switch>
-                
-                            <span class="ml-3" id="toggleLabel">
-                                <span class="text-sm font-medium text-darkOther-100 dark:text-white">{darkMode ? "Dark Mode" : "Light Mode"}</span>
-                            </span>
+                                    </Switch>
+                                </div>
+                    
+                          
                             </div>
                         </nav>
                         </div>
@@ -139,36 +140,36 @@ const AdminNavigation = () =>  {
                     <div className="mt-5 flex-grow flex flex-col">
                     <nav className="flex-1 px-2 bg-other-100 dark:bg-darkOther-100 space-y-1">
                         
-                            <NavLink to='/home' activeClassName="dark:text-other-100 text-darkOther-100" className="text-white">
-                                <span className="hover:text-other-100 dark:hover:text-other-100 hover:text-darkOther-100 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                <AiOutlineHome className="hover:text-other-20 mr-3 h-6 w-6" id='hide'/>
+                            <NavLink to='/home' activeClassName="text-green-500 dark:text-green-500" className="dark:text-white">
+                                <span className="hover:text-green-400 dark:hover:text-green-400 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <AiOutlineHome className="hover:text-green-400 dark:hover:text-green-400 mr-3 h-6 w-6" id='hide'/>
                                 Home
                                 </span>
                             </NavLink>
                 
-                            <NavLink to='/licenses' activeClassName="dark:text-other-100 text-darkOther-100" className="text-white">
-                                <span className="hover:text-other-100 dark:hover:text-other-100 hover:text-darkOther-100 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                <IoKeyOutline className="hover:text-other-200 mr-3 h-6 w-6"/>
+                            <NavLink to='/licenses' activeClassName="dark:text-yellow-500 text-yellow-500" className="dark:text-white">
+                                <span className="hover:text-yellow-400 dark:hover:text-yellow-400 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <IoKeyOutline className="hover:text-yellow-400 dark:hover:text-yellow-400 mr-3 h-6 w-6"/>
                                 Licenses
                                 </span>
                             </NavLink>
                 
-                            <NavLink to='/users' activeClassName="dark:text-other-100 text-darkOther-100" className="text-white">
-                                <span className="hover:text-other-100 dark:hover:text-other-100 hover:text-darkOther-100 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                <FiUsers className="hover:text-other-200 mr-3 h-6 w-6" />
+                            <NavLink to='/users' activeClassName="dark:text-blue-500 text-blue-500" className="dark:text-white">
+                                <span className="hover:text-blue-400 dark:hover:text-blue-400 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <FiUsers className="hover:text-blue-400 dark:hover:text-blue-400 mr-3 h-6 w-6" />
                                 Users
                                 </span>
                             </NavLink>
                 
-                            <NavLink to='/settings' activeClassName="dark:text-other-100 text-darkOther-100" className="text-white">
-                                <span className="hover:text-other-100 dark:hover:text-other-100 hover:text-darkOther-100 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                <FiSettings className="hover:text-other-200 mr-3 h-6 w-6" />
+                            <NavLink to='/settings' activeClassName="dark:text-purple-500 text-purple-500" className="dark:text-white">
+                                <span className="hover:text-purple-400 dark:hover:text-purple-400 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <FiSettings className="hover:text-purple-400 dark:hover:text-purple-400 mr-3 h-6 w-6" />
                                 Settings
                                 </span>
                             </NavLink>
                 
-                            <span className="text-white hover:text-other-100 dark:hover:text-other-100 hover:text-darkOther-100 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                            <BiExport className="hover:text-other-200 mr-3 h-6 w-6" />
+                            <span className="text-orange-500 dark:text-white hover:text-orange-400 dark:hover:text-orange-400 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                            <BiExport className="hover:text-orange-500 dark:hover:text-orange-400 mr-3 h-6 w-6" />
                             Export
                             </span>
 

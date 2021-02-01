@@ -49,13 +49,13 @@ class Users extends Component {
                 <main className="flex-1 relative overflow-y-auto focus:outline-none" id="main" tabIndex='0'>
 
                     {/* style="min-height: 650px;max-height: 650px;" */}
-                    <div className="bg-gray-100 overflow-hidden shadow rounded-lg divide-y mr-12 mt-5 dark:bg-darkOther-200">
+                    <div className="bg-white overflow-hidden shadow rounded-lg divide-y mr-12 mt-5 dark:bg-darkOther-200">
 
                         <div className="px-4 py-5 sm:px-6">
 
                             <dl className="sm:grid sm:grid-cols-2">
 
-                                <div className="flex flex-col p-2  bg-gray-100 mr-5 dark:bg-darkOther-200">
+                                <div className="flex flex-col p-2  bg-white mr-5 dark:bg-darkOther-200">
 
                                     <h1  className="dark:text-white">Users</h1>
 
@@ -65,7 +65,7 @@ class Users extends Component {
                                             <AiOutlineSearch className="h-5 w-5 text-gray-900 dark:text-other-100"/>
                                         </div>   
                                                                                
-                                        <input id="searchInput" onKeyUp={filter} autoComplete="off" className="dark:text-white dark:bg-darkOther-200 bg-gray-100 block w-full h-full pl-8 pr-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm" placeholder="Search by Key" type="search" name="search" />
+                                        <input id="searchInput" onKeyUp={filter} autoComplete="off" className="dark:text-white dark:bg-darkOther-200 bg-white block w-full h-full pl-8 pr-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm" placeholder="Search by Key" type="search" name="search" />
                                     
                                     </div>
         

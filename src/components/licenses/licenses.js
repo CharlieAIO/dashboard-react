@@ -51,13 +51,13 @@ class Licenses extends Component {
             
                 <main className="flex-1 relative overflow-y-auto focus:outline-none" id="main" tabIndex='0'>
 
-                    <div className="bg-gray-100 overflow-hidden shadow rounded-lg divide-y mr-12 mt-5 dark:bg-darkOther-200">
+                    <div className="bg-white overflow-hidden shadow rounded-lg divide-y mr-12 mt-5 dark:bg-darkOther-200">
 
                         <div className="px-4 py-5 sm:px-6">
 
                             <dl className="sm:grid sm:grid-cols-2">
 
-                                <div className="flex flex-col p-2  bg-gray-100 mr-5 dark:bg-darkOther-200">
+                                <div className="flex flex-col p-2  bg-white mr-5 dark:bg-darkOther-200">
 
                                     <h1 className="dark:text-white">Licenses</h1>
 
@@ -67,7 +67,7 @@ class Licenses extends Component {
                                             <AiOutlineSearch className="h-5 w-5 text-gray-900 dark:text-other-100"/>
                                         </div>   
                                                                                
-                                        <input id="searchInput" onKeyUp={filter} autoComplete="off" className="dark:text-white dark:bg-darkOther-200 bg-gray-100 block w-full h-full pl-8 pr-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm" placeholder="Search by DiscordName/DiscordID" type="search" name="search" />
+                                        <input id="searchInput" onKeyUp={filter} autoComplete="off" className="dark:text-white dark:bg-darkOther-200 bg-white block w-full h-full pl-8 pr-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm" placeholder="Search by DiscordName/DiscordID" type="search" name="search" />
                                     
                                     </div>
         
@@ -79,7 +79,7 @@ class Licenses extends Component {
                                     <button name="license-modal" id="license-button-hide" type="button" className="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white dark:text-white bg-other-100 dark:bg-other-200 text-other-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-other-200 dark:focus:ring-darkOther-200" onClick={() => {
                                                 document.querySelector('#license-modal').classList.contains('hidden') ? document.querySelector('#license-modal').classList.remove('hidden') : document.querySelector('#license-modal').classList.add('hidden')
                                             }}>
-                                        <FaPlus className="-ml-0.5 mr-2 h-4 w-4 text-white"/>
+                                        <FaPlus className="-ml-0.5 mr-2 h-4 w-4 dark:text-white text-other-500"/>
                                         New License
                                     </button>
 

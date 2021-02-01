@@ -222,28 +222,62 @@ const PlanModal = () => {
                 
                                             </fieldset>
 
-                                            {planType == "recurring" ? <fieldset className="mt-2 bg-white dark:bg-darkOther-200" id="interval-options">
+                                            {planType == "recurring" ?  <fieldset className="mt-2 bg-white dark:bg-darkOther-200">
+                                                <div className="md:grid md:grid-cols-2">
+                                                <div className="">
+                                                        <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">Interval</legend>
+                                                        <div className="mt-1 rounded-md shadow-sm -space-y-px">
+                                                            <div className="mt-1 flex rounded-md shadow-sm -space-y-px">
+                                                                <span className="inline-flex items-center px-3 rounded-l-md border-r-2 border-gray-200 bg-gray-50 text-gray-800 sm:text-sm mr-2 dark:bg-darkOther-100 dark:text-white">
+                                                                    every
+                                                                </span>
+                                                                <input name="interval" id="interval" type="text" placeholder="Count" autoComplete="off" className="dark:bg-darkOther-200 block w-full font-medium text-md rounded-md py-2 " value={interval} onChange={e => setinterval(e.target.value)}/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div className="">
+                                                        <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">Interval Type</legend>
+                                                        <div className="mt-1 rounded-md shadow-sm -space-y-px">
+                                                            <div>
+                                                                <label className="sr-only">Interval Type</label>
+                                                                
+                                                                <Select defaultValue={intervalTypeOptions[3]} styles={colourStyle} id="type" value={intervalType} name="intervalType" options={intervalTypeOptions} placeholder="Interval" 
+                                                                className="focus:ring-other-200 focus:border-other-200 relative block w-full rounded-none rounded-t-md focus:z-10 font-medium text-md dark:focus:border-darkOther-200 dark:focus:ring-darkOther-200"
+                                                                onChange={e => setintervalType(e.value)} value={intervalTypeOptions.filter(function(intervalTypeOptions) {return intervalTypeOptions.value === intervalType})}/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                
+                                                </div>
+                
+                                            </fieldset> : <div></div> }
+
+                                            {/* {planType == "recurring" ? <fieldset className="mt-2 bg-white dark:bg-darkOther-200" id="interval-options">
                                                 <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">Interval</legend>
                                                 <div className="mt-1 bg-white rounded-md shadow-sm dark:bg-darkOther-200">
-                                                    <div>
-                                                        <div className="mt-1 relative rounded-md shadow-sm">
-                                                            <div className="mt-1 flex rounded-md shadow-sm">
+
+                                                    <div className="md:grid-cols-1 lg:grid-cols-1 sm:grid-cols-2 gap-2">
+
+                                                        <div className="relative rounded-md shadow-sm">
+                                                            <div className="mt-1 flex rounded-md shadow-sm -space-y-px">
                                                                 <span className="inline-flex items-center px-3 rounded-l-md border-r-2 border-gray-200 bg-gray-50 text-gray-800 sm:text-sm mr-2 dark:bg-darkOther-100 dark:text-white">
                                                                     every
                                                                 </span>
                                                                 <input name="interval" id="interval" type="text" placeholder="Interval Count" autoComplete="off" className="dark:bg-darkOther-200 block w-full font-medium text-md rounded-md py-2 " value={interval} onChange={e => setinterval(e.target.value)}/>
                                                             </div>
 
-                                                            <div className="absolute inset-y-0 right-0 flex items-center">
+                                                            <div className="inset-y-0 right-0 flex items-center -space-y-px">
                                                                 <label className="sr-only">Interval Type</label>
                                                                 <Select defaultValue={intervalTypeOptions[3]} styles={colourStyle} id="type" value={intervalType} name="intervalType" options={intervalTypeOptions} placeholder="Interval" className="px-3 w-32"
                                                                 onChange={e => setintervalType(e.value)} value={intervalTypeOptions.filter(function(intervalTypeOptions) {return intervalTypeOptions.value === intervalType})}/>
                                                             </div>
 
                                                         </div>
+
                                                     </div>
                                                 </div>
-                                            </fieldset> : <div></div>}
+                                            </fieldset> : <div></div>} */}
                                         
 
                                             <fieldset className="mt-4 bg-white dark:bg-darkOther-200">

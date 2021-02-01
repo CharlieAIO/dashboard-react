@@ -63,14 +63,10 @@ const PlanTable = () => {
 
                     <td className="px-6 py-3 text-sm text-gray-800 dark:text-white font-medium dark:bg-darkOther-200">
                         <div className="flex items-center space-x-2">
-                            <span className="flex-shrink-0 text-xs leading-5 font-medium"> {currencyToSymbolMap[plan.currency]}{plan.price}</span>
+                            <span className="flex-shrink-0 text-xs leading-5 font-medium"> {currencyToSymbolMap[plan.currency]}{plan.price} / {plan.intervalType}</span>
                         </div>
                     </td>
-                    <td className="px-6 py-3 text-sm text-gray-800 font-medium dark:bg-darkOther-200 dark:text-white">
-                        <div className="flex items-center space-x-2">
-                            <span className="flex-shrink-0 text-xs leading-5 font-medium">{plan.intervalType}</span>
-                        </div>
-                    </td>
+
 
 
                     <td className="pr-6 dark:bg-darkOther-200 dark:text-white">
@@ -118,12 +114,9 @@ const PlanTable = () => {
                         </th>
 
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Price
-                        </th>
-
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Interval
                         </th>
+
 
 
                         <th className="md:table-cell px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">

@@ -29,7 +29,7 @@ class Settings extends Component {
                     <section aria-labelledby="section1">
 
                         <div className="shadow sm:rounded-md sm:overflow-hidden mt-8 shadow-lg w-3/4">
-                            <div className="bg-gray-100 py-4 px-4 sm:p-6 dark:bg-darkOther-200">
+                            <div className="bg-white py-4 px-4 sm:p-6 dark:bg-darkOther-200">
                                 <div>
                                     <h1 className="text-lg font-medium text-other-300 dark:text-white">General Settings</h1>
                                 </div>
@@ -37,7 +37,7 @@ class Settings extends Component {
                         </div>
 
                         <div className="shadow sm:rounded-md sm:overflow-hidden mt-3 w-3/4">
-                            <div className="bg-gray-100 py-4 px-4 sm:p-6 dark:bg-darkOther-200">
+                            <div className="bg-white py-4 px-4 sm:p-6 dark:bg-darkOther-200">
                                     <div>
                                         <label for="accountName" className="block text-sm font-medium text-gray-700 dark:text-gray-400">Account Name</label>
                                         <div className="mt-1">
@@ -54,7 +54,7 @@ class Settings extends Component {
                         </div>
 
                         <div className="shadow sm:rounded-md sm:overflow-hidden mt-3 w-3/4">
-                            <div className="bg-gray-100 py-4 px-4 sm:p-6 dark:bg-darkOther-200">
+                            <div className="bg-white py-4 px-4 sm:p-6 dark:bg-darkOther-200">
                                 <div>
                                     <label for="domain" className="block text-sm font-medium text-gray-700 dark:text-gray-400">Dashboard Domain</label>
                                     <div className="mt-1">
@@ -71,7 +71,7 @@ class Settings extends Component {
                         </div>
 
                         <div className="shadow sm:rounded-md sm:overflow-hidden mt-3 w-3/4">
-                            <div className="bg-gray-100 py-4 px-4 sm:p-6 dark:bg-darkOther-200">
+                            <div className="bg-white py-4 px-4 sm:p-6 dark:bg-darkOther-200">
                                 <div>
                                     <label for="supportEmail" className="block text-sm font-medium text-gray-700 dark:text-gray-400">Support email</label>
                                     <div className="mt-1">
@@ -90,7 +90,7 @@ class Settings extends Component {
 
                     <section aria-labelledby="section2">
                         <div className="shadow sm:rounded-md sm:overflow-hidden mt-8 shadow-lg w-3/4">
-                            <div className="bg-gray-100 py-4 px-4 sm:p-6 dark:bg-darkOther-200">
+                            <div className="bg-white py-4 px-4 sm:p-6 dark:bg-darkOther-200">
                                 <div>
                                     <h1 className="text-lg font-medium text-other-300 dark:text-white">Branding Settings</h1>
                                 </div>
@@ -98,7 +98,7 @@ class Settings extends Component {
                         </div>
 
                         <div className="shadow sm:rounded-md sm:overflow-hidden mt-3 w-3/4">
-                            <div className="bg-gray-100 py-4 px-4 sm:p-6 dark:bg-darkOther-200">
+                            <div className="bg-white py-4 px-4 sm:p-6 dark:bg-darkOther-200">
                                 <div>
                                     <label for="logo" className="block text-sm font-medium text-gray-700 dark:text-gray-400">Logo</label>
                                     <div className="mt-1">
@@ -117,7 +117,7 @@ class Settings extends Component {
 
                     <section aria-labelledby="section3">
                         <div className="shadow sm:rounded-md sm:overflow-hidden mt-8 shadow-lg w-3/4">
-                            <div className="bg-gray-100 py-4 px-4 sm:p-6 dark:bg-darkOther-200">
+                            <div className="bg-white py-4 px-4 sm:p-6 dark:bg-darkOther-200">
                                 <div>
                                     <h1 className="text-lg font-medium text-other-300  dark:text-white">Stripe Settings</h1>
                                 </div>
@@ -125,7 +125,7 @@ class Settings extends Component {
                         </div>
 
                         <div className="shadow sm:rounded-md sm:overflow-hidden mt-3 w-3/4">
-                            <div className="bg-gray-100 py-4 px-4 sm:p-6 dark:bg-darkOther-200">
+                            <div className="bg-white py-4 px-4 sm:p-6 dark:bg-darkOther-200">
                                 <div>
                                     <label for="failePayments" className="block text-sm font-medium text-gray-700 dark:text-gray-400">Setup Stripe Intergation</label>
                                     <div className="mt-1">
@@ -139,7 +139,7 @@ class Settings extends Component {
                         </div>
 
                         <div className="shadow sm:rounded-md sm:overflow-hidden mt-3 w-3/4 mb-12">
-                            <div className="bg-gray-100 py-4 px-4 sm:p-6 dark:bg-darkOther-200">
+                            <div className="bg-white py-4 px-4 sm:p-6 dark:bg-darkOther-200">
                                 <div>
                                     <label for="failePayments" className="block text-sm font-medium text-gray-700 dark:text-gray-400">Manage Failed Payments</label>
                                     <div className="mt-1">
