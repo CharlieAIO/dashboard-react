@@ -23,25 +23,13 @@ router.get('/users', async (req, res) => {
 router.get('/settings', async (req, res) => {
     return res.sendFile(path.resolve(__dirname, `../../build/index.html`));
 })
-
 router.get('/bind', async (req, res) => {
     return res.sendFile(path.resolve(__dirname, `../../build/index.html`));
 })
-
-
+router.get('/purchase', async (req, res) => {
+    return res.sendFile(path.resolve(__dirname, `../../build/index.html`));
+})
 router.get('/dashboard', async (req, res) => {
-    // const response = await fetch(process.env.domain + '/discord/data', {
-    //     headers:{ key: req.signedCookies['key'], authorization:`Bearer ${req.signedCookies['jwt.access']}` },
-    // });
-    // if(response.ok) {
-    //     var resData = await response.json()
-    //     if(resData.key == "n/a") {
-    //         return res.redirect('/bind')
-    //     }
-    //     return res.sendFile(path.resolve(__dirname, `../../build/index.html`));
-    // } else {
-    //     return res.redirect('/bind')
-    // }
     return res.sendFile(path.resolve(__dirname, `../../build/index.html`));
 })
 

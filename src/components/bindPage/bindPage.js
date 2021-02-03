@@ -4,8 +4,10 @@ import UserNav from '../userNav'
 import { IoKeyOutline } from 'react-icons/io5'
 import { BiLogInCircle } from 'react-icons/bi'
 import { FaUserCircle } from 'react-icons/fa'
+import  { useHistory  } from 'react-router-dom'
 
 const BindPage = () => {
+    let history = useHistory()
     const [name, setName] = useState("")
     const [discrim, setDiscrim] = useState("")
     const [key, setKey] = useState("")
@@ -52,8 +54,9 @@ const BindPage = () => {
             })
             if(response.ok) {
                 setKey("")
+                history.push('/dashboard')
 
-                return
+            
             }else{
                 return
             }

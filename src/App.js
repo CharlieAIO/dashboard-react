@@ -9,6 +9,7 @@ import Settings from './components/settings/settings'
 import SiteHome from './components/siteHomePage/home'
 import Dashboard from './components/userDashboard/dashboard'
 import Bind from './components/bindPage/bindPage'
+import PurchasePage from './components/purchasePage/purchase'
 
 
 class App extends Component {
@@ -23,6 +24,7 @@ class App extends Component {
                 {/* <Route exact path='/' component={SiteHome} /> */}
                 <Route exact path='/dashboard' component={Dashboard} />
                 <Route exact path='/bind' component={Bind} />
+                <Route exact path='/purchase' component={PurchasePage} />
 
                 <Route exact path='/home' component={Home} />
                 <Route exact path='/licenses' component={Licenses}/>

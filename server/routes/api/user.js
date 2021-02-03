@@ -4,6 +4,8 @@ const {pool, generate} = require('../../utils.js')
 const authorize = require('../../auth-middleware')
 const { v4: uuidv4 } = require('uuid');
 const mongoose = require('mongoose');
+const Stripe = require('stripe');
+const stripe = Stripe(process.env.STRIPE_SECRET);
 
 function find(name,query,cb) {
     mongoose.connection.db.collection(name, function(err, col) {
@@ -44,22 +46,11 @@ router.get('/', authorize(),async (req, res) => {
 })
 
 // Add User to Database
-router.post('/add', authorize(),async (req, res) => {
+router.post('/add',async (req, res) => {
 
     if(req.get('apikey') == process.env.API_KEY) {
         // console.log(req.data.user)
         // check if user is admin/staff
-        find('users', `discord: { id: "${req.data.user}"}`, function (err, data) {
-            if(err){
-                return null;
-            }
-            if(data[0].discord.id.normalize() === req.data.user.normalize()) {
-                {}
-            }else {
-                return res.status(403).end()
-            }
-        });
-
         try{
             var query = []
             query[0] = generate(30)
@@ -75,7 +66,7 @@ router.post('/add', authorize(),async (req, res) => {
                 'INSERT INTO users values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)',
                 query
             ) 
-            return res.status(200).json({response:"added"})
+            return res.status(200).json({response:"added", key:query[0]})
     
         }catch(e){
             return res.status(400).end()
@@ -117,16 +108,35 @@ router.post('/bind', authorize(),async (req, res) => {
 /////////////////////////////////////////
 
 // Unbind User from Database
-router.post('/unbind', async (req, res) => {
+router.post('/unbind', authorize(),async (req, res) => {
     try{
         var results = await pool.query(`SELECT * FROM users WHERE "key" = '${req.body.key}'`)
+        
         if(results.rows.length > 0) {
-            if(results[0].discordId.toString() != '123456789')
-            await pool.query(
-                'UPDATE users SET "discordId" = $1, "discordName" =  $2, "discordImage" = $3, "email" = $4, "dateJoined" = $5 WHERE "key" = $6 ',
-                [123456789, 'empty', '', 'empty', 0, results.rows[0].key]
-            ) 
-            return res.status(200).json({response:"unbound"})
+            if(results.rows[0].discordId.toString() != '123456789') {
+                await pool.query(
+                    'UPDATE users SET "discordId" = $1, "discordName" =  $2, "discordImage" = $3, "email" = $4, "dateJoined" = $5 WHERE "key" = $6 ',
+                    [123456789, 'empty', '', 'empty', 0, results.rows[0].key]
+                ) 
+
+                try {
+                    const paymentMethods = await stripe.paymentMethods.list({
+                        customer: results.rows[0].customerId,
+                        type: 'card',
+                        limit:100
+                    });
+                    for(var i = 0; i < paymentMethods.data.length; i++)
+                    {
+                        await stripe.paymentMethods.detach(paymentMethods.data[i].id);
+                    }
+                }catch(e){
+                    console.log(e)
+                }
+                return res.status(200).json({response:"unbound"})
+            }
+            else {
+                return res.status(400).end()
+            }
         }
         return res.status(400).end()
 

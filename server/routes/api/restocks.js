@@ -87,20 +87,10 @@ router.post('/add', authorize(),async (req, res) => {
 
 
 // Retrieve a restock
-router.get('/get/:password', authorize(),async (req, res) => {
+router.get('/get/:password',async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
         // console.log(req.data.user)
         // check if user is admin/staff
-        find('users', `discord: { id: "${req.data.user}"}`, function (err, data) {
-            if(err){
-                return null;
-            }
-            if(data[0].discord.id.normalize() === req.data.user.normalize()) {
-                {}
-            }else {
-                return res.status(403).end()
-            }
-        });
 
         try{
             var response = await pool.query(

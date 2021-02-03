@@ -46,6 +46,26 @@ router.get('/', authorize(),async (req, res) => {
 
 })
 
+router.get('/get/:id',async (req, res) => {
+
+    if(req.get('apikey') == process.env.API_KEY) {
+
+        try{
+            var results;
+            if (req.query.name) results = await pool.query(`SELECT * FROM plans WHERE "planId" = ${req.params.id}`)
+            else results = await pool.query('SELECT * FROM plans')
+
+            return res.status(200).json(results.rows)
+        }catch(e){
+            return res.status(400).end()
+        }
+    } else {
+        return res.status(403).end()
+    }
+
+})
+
+
 router.get('/data',authorize(), async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
         // console.log(req.data.user)

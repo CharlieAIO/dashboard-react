@@ -26,13 +26,18 @@ router.get('/data', async (req, res) => {
         if(response.ok) {
             var responseBody = await response.json()
             var key = ''
+            var cusId = ''
             try{
                 key = responseBody[0].key
+                cusId = responseBody[0].customerId
             }catch{
                 key = 'n/a'
+                cusId = 'n/a'
+
             }
 
             return res.json({
+                customerId:cusId,
                 email:user.email,
                 key:key,
                 dateJoined:Math.floor(Date.now() / 1000),

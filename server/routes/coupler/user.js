@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const fetch = require('node-fetch');
 const DiscordOauth2 = require("discord-oauth2");
-const {sendEmail} = require('../../utils')
+const {sendEmail} = require('../../utils');
+const { json } = require('body-parser');
 
 const oauth = new DiscordOauth2({
 	clientId: process.env.CLIENT_ID,
@@ -115,6 +116,28 @@ router.get('/revoke/:id', async (req,res) => {
         if(response.status == 403) return res.status(403).send("unauthorized")
         var text = await response.text()
         if(text.includes("deleted")) return res.status(200).json(text)
+        else return res.status(400).end()
+    }catch(e){
+        console.log(e)
+        return res.status(400).end()
+    }
+})
+
+
+router.get('/unbind/:key', async (req,res) => {
+    try{
+        var key = req.params.key
+        var response = await fetch(process.env.domain + '/api/v1/users/unbind',{
+            headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`, "Content-Type": "application/json"},
+            method:'post',
+            body:JSON.stringify({
+                key:key
+            })
+            
+        })
+        var text = await response.text()
+        if(response.status == 403) return res.status(403).send("unauthorized")
+        if(text.includes("unbound")) return res.status(200).end()
         else return res.status(400).end()
     }catch(e){
         console.log(e)

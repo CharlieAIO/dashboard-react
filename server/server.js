@@ -49,8 +49,10 @@ app.use(`/plans`,require('./routes/coupler/plans'));
 
 app.use(`/discord/`,require('./routes/discord/discord'));
 app.use(`/discord/`,require('./routes/discord/auth'));
+
 app.use(`/stripe/`,require('./routes/stripe/stripe'));
 app.use(`/stripe/`,require('./routes/stripe/webhooks'));
+app.use(`/stripe/`,require('./routes/stripe/payment'));
 
 app.use(`/`,require('./routes/routes.js'));
 

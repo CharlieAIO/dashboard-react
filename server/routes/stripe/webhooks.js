@@ -16,15 +16,18 @@ var defaultColor = '0x242121'
   
 
 router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
-    
-    var customerId;
-    if(req.body.data.object.id) customerId = req.body.data.object.id
+    var searchId;
+    var query;
+    if(req.body.data.object.id) {
+        searchId = req.body.data.object.id
+        if (req.body.data.object.object == 'subscription') query = 'subscriptionId'
+        if (req.body.data.object.object == 'customer') query = 'customerId'
+    }
     var customer = req.body.data.object.customer;
-
     var user;
     var roles = []
     try{
-        var results = await pool.query(`SELECT * FROM users WHERE "customerId" = '${customerId}'`)
+        var results = await pool.query(`SELECT * FROM users WHERE "${query}" = '${searchId}'`)
         if(results.rows[0].discordId != 123456789) user = results.rows[0]
         else res.status(404).end('user doesnt exist')
 
@@ -38,21 +41,24 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
         return res.status(404).end('user doesnt exist')
     }
 
-    var response = fetch(process.env.domain + '/api/v1/accounts/dashboard/' + process.env.GUILD_ID, {
+    var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/' + process.env.GUILD_ID, {
         headers:{ apikey: process.env.API_KEY },
         method:'get',
     })
     while(!response.ok) {
-        response = fetch(process.env.domain + '/api/v1/accounts/dashboard/' + process.env.GUILD_ID, {
+        response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/' + process.env.GUILD_ID, {
             headers:{ apikey: process.env.API_KEY },
             method:'get',
         })
     }
-    var account = response.json()[0]
+
+    var account = await response.json()
+    account = account[0]
     
 
     var userID = user.discordId
-    var guild = (await client.guilds.fetch(process.env.GUILD_ID))
+    var guild = (await client2.guilds.fetch(process.env.GUILD_ID))
+
     switch (req.body.type) {
 
         // Case
@@ -195,6 +201,26 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
             break;
         //////////////
 
+         // Case
+         case "customer.subscription.updated":
+            try{
+                var embed = new MessageEmbed()
+                .setTitle("Invincible Services Dashboard")
+                .setColor(successColor)
+                .setDescription(
+                "Subscription Updated"
+                );
+                var user = await client2.users.fetch(userID.toString())
+                if(user) user.send(embed);
+
+                //add roles
+            }catch{
+
+            }
+            break;
+        //////////////
+
+
 
         // Case
         case "customer.subscription.deleted":
@@ -212,7 +238,7 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
                 var guildUser = guild.member(userID);;
                 if(account.settings.payments.failedPaymentOption.toString() == "1") {
                     // Delete key & Kick User
-                    fetch(process.env.domain + '/api/v1/users/delete/' + userID, {
+                    await fetch(process.env.domain + '/api/v1/users/delete/' + userID, {
                         headers:{ apikey: process.env.API_KEY },
                         method:'get',
                     })
@@ -223,7 +249,7 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
                 }
                 if(account.settings.payments.failedPaymentOption.toString() == "2") {
                     // Remove Roles & Allow User to renew
-                    fetch(process.env.domain + '/api/v1/users/disable/' + userID, {
+                    await fetch(process.env.domain + '/api/v1/users/disable/' + userID, {
                         headers:{ apikey: process.env.API_KEY },
                         method:'get',
                     })

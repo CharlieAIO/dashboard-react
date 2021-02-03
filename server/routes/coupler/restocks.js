@@ -9,11 +9,26 @@ router.get('/', async (req,res) => {
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
+        var body = await response.json()
     }catch{
         return res.status(400).end()
     }
     if(response.status == 403) return res.status(403).send("unauthorized")
-    return res.status(200).json(await response.json())
+    return res.status(200).json(body)
+})
+
+router.get('/get/:pswd', async (req,res) => {
+    try{
+        var response = await fetch(process.env.domain + '/api/v1/restocks/get/' + req.params.pswd,{
+            headers:{ apikey: process.env.API_KEY},
+            method:'get'
+        })
+        var body = await response.json()
+    }catch{
+        return res.status(400).end()
+    }
+    if(response.status == 403) return res.status(403).send("unauthorized")
+    return res.status(200).json(body)
 })
 
 
@@ -32,11 +47,12 @@ router.post('/add', async (req,res) => {
                 planName:req.body.planName
             }),
         })
+        var body = await response.json()
     }catch{
         return res.status(400).end()
     }
     if(response.status == 403) return res.status(403).send("unauthorized")
-    return res.status(200).json(await response.json())
+    return res.status(200).json(body)
 })
 
 router.get('/delete/:id', async (req,res) => {
@@ -45,11 +61,12 @@ router.get('/delete/:id', async (req,res) => {
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
+        var body = await response.json()
     }catch{
         return res.status(400).end()
     }
     if(response.status == 403) return res.status(403).send("unauthorized")
-    return res.status(200).json(await response.json())
+    return res.status(200).json(body)
 })
 
 
