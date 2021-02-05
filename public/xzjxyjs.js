@@ -13,5 +13,5 @@ window.addEventListener('click', (event) => {
       }
 
     }
-  })
+})
   

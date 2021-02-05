@@ -32,15 +32,16 @@ router.get('/data', async (req,res) => {
 
 router.post('/add', async (req,res) => {
     try{
+
         var response = await fetch(process.env.domain + '/api/v1/plans/add',{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`, "Content-Type": "application/json" },
             method:'post',
             body:JSON.stringify({
                 planName:req.body.planName,
                 price:req.body.price,
-                currency:req.body.priceCurrency,
-                type:planType,
-                role:req.body.planRole,
+                currency:req.body.currency,
+                type:req.body.type,
+                role:req.body.role,
                 interval:req.body.interval,
                 intervalType:req.body.intervalType,
                 planId:'',
@@ -48,7 +49,8 @@ router.post('/add', async (req,res) => {
                 unbinding:req.body.unbinding
             }),
         })
-    }catch{
+    }catch(e){
+        console.log(e)
         return res.status(400).end()
     }
     if(response.status == 403) return res.status(403).send("unauthorized")

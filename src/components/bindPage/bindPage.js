@@ -23,7 +23,10 @@ const BindPage = () => {
             setDiscrim(res.discrim)
             setLoaded(true)
         })
-        .catch(err =>  {console.log(err)});
+        .catch(err =>  {
+            if(res.status == 403) history.push('/discord/oauth')
+        });
+        
         
     }
 

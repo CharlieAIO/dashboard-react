@@ -13,6 +13,9 @@ var successColor = '0x45e670'
 var failedColor = '0xe63427'
 var defaultColor = '0x242121'
 
+client2.on("ready", () => {
+    console.log(`Logged in as ${client2.user.tag}!`);
+});
   
 
 router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
@@ -30,6 +33,7 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
         var results = await pool.query(`SELECT * FROM users WHERE "${query}" = '${searchId}'`)
         if(results.rows[0].discordId != 123456789) user = results.rows[0]
         else res.status(404).end('user doesnt exist')
+
 
         var results2 = await pool.query(`SELECT * FROM plans WHERE "planId" = '${user.plan}'`)
         var resultRoles = JSON.parse(results2.rows[0].role)
@@ -153,9 +157,9 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
                 })
 
                 // remove roles
-                var guildUser = guild.member(userID);
+                var guildUser = await guild.members.fetch(userID);
                 for(var i =0; i<roles.length; i++) {
-                    guildUser.roles.remove(i).catch(e => {})
+                    guildUser.roles.remove(roles[i]).then({}).catch(e => {})
                 }
             }catch{
 
@@ -204,16 +208,28 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
          // Case
          case "customer.subscription.updated":
             try{
-                var embed = new MessageEmbed()
-                .setTitle("Invincible Services Dashboard")
-                .setColor(successColor)
-                .setDescription(
-                "Subscription Updated"
-                );
-                var user = await client2.users.fetch(userID.toString())
-                if(user) user.send(embed);
+                if(req.body.data.object.cancel_at == null) {
+                    var embed = new MessageEmbed()
+                    .setTitle("Invincible Services Dashboard")
+                    .setColor(successColor)
+                    .setDescription(
+                    "Subscription renewed"
+                    );
+                    var user = await client2.users.fetch(userID.toString())
+                    if(user) user.send(embed);
+                }
+                else {
+                    var embed = new MessageEmbed()
+                    .setTitle("Invincible Services Dashboard")
+                    .setColor(defaultColor)
+                    .setDescription(
+                    "Subscription will not be renewed"
+                    );
+                    var user = await client2.users.fetch(userID.toString())
+                    if(user) user.send(embed);
 
-                //add roles
+                }
+
             }catch{
 
             }
@@ -235,15 +251,15 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
                 if(user) user.send(embed);
 
                 //disable user
-                var guildUser = guild.member(userID);;
+                var guildUser = await guild.members.fetch(userID);
                 if(account.settings.payments.failedPaymentOption.toString() == "1") {
                     // Delete key & Kick User
-                    await fetch(process.env.domain + '/api/v1/users/delete/' + userID, {
+                    var r = await fetch(process.env.domain + '/api/v1/users/delete/' + userID, {
                         headers:{ apikey: process.env.API_KEY },
                         method:'get',
                     })
                     for(var i =0; i<roles.length; i++) {
-                        guildUser.roles.remove(i).catch(e => {})
+                        guildUser.roles.remove(roles[i]).then({}).catch(e => {})
                     }
                     guildUser.kick().catch(e => {})
                 }
@@ -255,8 +271,9 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
                     })
     
                     // remove roles
+                    
                     for(var i =0; i<roles.length; i++) {
-                        guildUser.roles.remove(i).catch(e => {})
+                        guildUser.roles.remove(roles[i]).then({}).catch( (e) => console.log(e))
                     }
                 }
             }catch{

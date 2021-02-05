@@ -16,7 +16,10 @@ module.exports = () => {
             return res.status(403).send("unauthorized")
         } else {
             jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-                if(err) return res.status(403).send("unauthorized")
+                if(err) {
+                    console.log(err)
+                    return res.status(403).send("unauthorized")
+                }
 
                 else {
                     req.data = decoded

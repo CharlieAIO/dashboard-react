@@ -105,6 +105,8 @@ router.get('/guild/roles', async (req, res) => {
 
 })
 
+
+
 client.login(process.env.BOT_TOKEN)
 
 module.exports = router

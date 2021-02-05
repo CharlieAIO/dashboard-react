@@ -5,7 +5,11 @@ const authorize = require('../../auth-middleware')
 const { v4: uuidv4 } = require('uuid');
 const mongoose = require('mongoose');
 const Stripe = require('stripe');
+const { Client } = require("discord.js");
+
 const stripe = Stripe(process.env.STRIPE_SECRET);
+
+const client3 = new Client();
 
 function find(name,query,cb) {
     mongoose.connection.db.collection(name, function(err, col) {
@@ -91,7 +95,18 @@ router.post('/bind', authorize(),async (req, res) => {
                     'UPDATE users SET "discordId" = $1, "discordName" =  $2, "discordImage" = $3, "email" = $4, "dateJoined" = $5 WHERE "key" = $6 ',
                     [req.body.discordId, req.body.discordName, req.body.discordImage, req.body.email, Math.floor(Date.now() / 1000), req.body.key]
                 ) 
-                return res.status(200).json({response:"bound"})
+
+                var results2 = await pool.query(`SELECT * FROM plans WHERE "planId" = '${result.rows[0].plan}'`)
+                var roles = []
+                if(results2.rows.length > 0) {
+                    var r = JSON.parse(results2.rows[0].role)
+                    for(var i = 0; i < r.length; i++) {
+                        roles.push(r[i].value)
+                    }
+                }
+
+                
+                return res.status(200).json({response:"bound", roles:roles})
             }
             return res.status(400).end()
     
@@ -114,6 +129,23 @@ router.post('/unbind', authorize(),async (req, res) => {
         
         if(results.rows.length > 0) {
             if(results.rows[0].discordId.toString() != '123456789') {
+
+
+                try{
+                    var results2 = await pool.query(`SELECT * FROM plans WHERE "planId" = '${results.rows[0].plan}'`)
+                    var resultRoles = JSON.parse(results2.rows[0].role)
+                    var guild = (await client3.guilds.fetch(process.env.GUILD_ID))
+                    for(var i =0; i < resultRoles.length; i++)
+                    {
+                        var guildUser = await guild.members.fetch(results.rows[0].discordId);
+                        for(var i =0; i<resultRoles.length; i++) {
+                            guildUser.roles.remove(resultRoles[i].value).then({}).catch(e => console.log(e))
+                        }
+                    }
+                }catch(e){
+                    console.log(e)
+                }
+
                 await pool.query(
                     'UPDATE users SET "discordId" = $1, "discordName" =  $2, "discordImage" = $3, "email" = $4, "dateJoined" = $5 WHERE "key" = $6 ',
                     [123456789, 'empty', '', 'empty', 0, results.rows[0].key]
@@ -164,6 +196,8 @@ router.get('/delete/:id', async (req, res) => {
                     try{
                         deleted = await stripe.customers.del(result.rows[0].customerId)
                     }catch{}
+
+
     
                     if(deleted.deleted == true) return res.status(200).json({response:"deleted"})
                     else return res.status(400).end()
@@ -245,4 +279,6 @@ router.get('/disable/:id', async (req, res) => {
 
 })
 /////////////////////////////////////////
+
+client3.login(process.env.BOT_TOKEN)
 module.exports = router

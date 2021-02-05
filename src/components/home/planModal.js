@@ -11,6 +11,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { IoPricetagOutline } from 'react-icons/io5';
 
 var planOptions = [
+    {label:'Recurring & Onetime Payment', value:'recurring+onetime-payment'},
     {label:'Recurring', value:'recurring'},
     {label:'Lifetime', value:'lifetime'},
     {label:'Rental', value:'rental'}
@@ -117,6 +118,7 @@ const PlanModal = () => {
         e.preventDefault()
 
         if(planName.length > 0 && planType.length > 0 && interval.length > 0) {
+
             var response = await fetch('/plans/add', {
                 method:'post',
                 body:JSON.stringify({
@@ -224,7 +226,7 @@ const PlanModal = () => {
                 
                                             </fieldset>
 
-                                            {planType == "recurring" ?  <fieldset className="mt-2 bg-white dark:bg-darkOther-200">
+                                            {planType == "recurring" || planType == "recurring+onetime-payment" ?  <fieldset className="mt-2 bg-white dark:bg-darkOther-200">
                                                 <div className="md:grid md:grid-cols-2">
                                                 <div className="">
                                                         <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300 select-none">Interval</legend>

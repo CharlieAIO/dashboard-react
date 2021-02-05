@@ -12,7 +12,6 @@ import { IoPricetagOutline } from 'react-icons/io5';
 
 
 const PlanEditModal = (currentPlanData) => {
-    console.log(JSON.parse(currentPlanData.role))
 
     const [availableRoles, setavailableRoles] = useState([])
     const [planName, setplanName] = useState("")

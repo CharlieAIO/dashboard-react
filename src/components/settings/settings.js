@@ -2,14 +2,22 @@ import '../../static/styles/main.css';
 import React, { useState, useEffect } from 'react';
 import AdminNavigation from '../adminNav';
 import AdminSearchbar from '../adminSearch';
+import SquareLoader from "react-spinners/SquareLoader";
+import Select from 'react-select';
 
 import { FaStripe } from 'react-icons/fa'
+
+const failedPaymentOptions = [
+    {"value":"1", "label":"Delete Key & Kick User"},
+    {"value":"2", "label":"Remove roles & allow user to renew"}
+]
 
 const Settings = () => {
     const [accountName, setAccountName] = useState("")
     const [supportEmail, setSupportEmail] = useState("")
     const [imageURL, setImageURL] = useState("")
     const [failedPayment, setFailedPayments] = useState("")
+    const [loaded, setLoaded] = useState(false)
 
 
     const openIntergrate = () => {
@@ -17,22 +25,52 @@ const Settings = () => {
     }
 
     const accountHandle = async () => {
-
+        var response = await fetch('/accounts/dashboard/name/' + accountName)
     } 
     const supportHandle = async () => {
-
+        var response = await fetch('/accounts/dashboard/supportEmail/' + supportEmail)
     } 
     const logoHandle = async () => {
-
+        var response = await fetch('/accounts/dashboard/logo/' + btoa(imageURL))
     } 
     const failedPaymentHandle = async () => {
-
+        var response = await fetch('/accounts/dashboard/payment/' + failedPayment)
+        
     } 
+
+    async function fetchData(){
+        const res = await fetch('/accounts/dashboard');
+        res.json()
+        .then(res => {
+            setAccountName(res[0].name)
+            setSupportEmail(res[0].supportEmail)
+            setImageURL(res[0].branding.logoUrl)
+            setFailedPayments(res[0].settings.payments.failedPaymentOption)
+            setLoaded(true)
+        })
+        .catch(err =>  {
+        });
+        
+    }
+
+    useEffect(() =>{
+        const abortController = new AbortController();
+        localStorage.setItem('pswd',window.location.search.split('?password=')[1])
+        fetchData()
+
+        return () => {
+            abortController.abort();
+        };
+
+    }, [])
 
 
         return (
             <>
+                
                 <AdminNavigation />
+                {
+                loaded ? 
                 <div className="flex flex-col w-0 flex-1 overflow-hidden">
                 <AdminSearchbar />
                 <main className="flex-1 relative overflow-y-auto focus:outline-none">
@@ -58,7 +96,7 @@ const Settings = () => {
                                         <div>
                                             <label for="accountName" className="block text-sm font-medium text-gray-700 dark:text-gray-400 select-none">Account Name</label>
                                             <div className="mt-1">
-                                                <input type="text" onChange={e => setAccountName(e.target.value)} autoComplete="off" className="dark:text-other-100 dark:bg-darkOther-100 shadow-sm focus:ring-other-200 focus:border-other-200 block w-1/2 text-md border-gray-300 rounded-md py-2 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200" placeholder="Cook Group" aria-describedby="email-description" />
+                                                <input type="text" defaultValue={accountName} onChange={e => setAccountName(e.target.value)} autoComplete="off" className="dark:text-other-100 dark:bg-darkOther-100 shadow-sm focus:ring-other-200 focus:border-other-200 block w-1/2 text-md border-gray-300 rounded-md py-2 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200" placeholder="Cook Group" aria-describedby="email-description" />
                                             </div>
 
                                             <p className="mt-2 text-sm text-gray-500 select-none" id="accountName-description">This account name will be displayed on the Dashboard & in email receipts</p>
@@ -94,7 +132,7 @@ const Settings = () => {
                                     <div>
                                         <label for="supportEmail" className="block text-sm font-medium text-gray-700 dark:text-gray-400 select-none">Support email</label>
                                         <div className="mt-1">
-                                            <input type="text" onChange={e => setSupportEmail(e.target.value)} className="dark:text-other-100 dark:bg-darkOther-100 shadow-sm focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 block w-1/2 text-md border-gray-300 rounded-md py-2" placeholder="help@cookgroup.com" aria-describedby="supportEmail-description" />
+                                            <input type="text" defaultValue={supportEmail} onChange={e => setSupportEmail(e.target.value)} className="dark:text-other-100 dark:bg-darkOther-100 shadow-sm focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 block w-1/2 text-md border-gray-300 rounded-md py-2" placeholder="help@cookgroup.com" aria-describedby="supportEmail-description" />
                                         </div>
                                         <p className="mt-2 text-sm text-gray-500 select-none" id="supportEmail-description">This will be displayed to all your users if they require assistance</p>
                                     </div>
@@ -123,7 +161,7 @@ const Settings = () => {
                                     <div>
                                         <label for="logo" className="block text-sm font-medium text-gray-700 dark:text-gray-400 select-none">Logo</label>
                                         <div className="mt-1">
-                                        <input type="text" onChange={e => setImageURL(e.target.value)} className="dark:text-other-100 dark:bg-darkOther-100 shadow-sm focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 block w-1/2 text-md border-gray-300 rounded-md py-2" placeholder="help@cookgroup.com" aria-describedby="logo-description" />
+                                        <input type="text" defaultValue={imageURL} onChange={e => setImageURL(e.target.value)} className="dark:text-other-100 dark:bg-darkOther-100 shadow-sm focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 block w-1/2 text-md border-gray-300 rounded-md py-2" placeholder="help@cookgroup.com" aria-describedby="logo-description" />
                                         </div>
                                         <p className="mt-2 text-sm text-gray-500 select-none" id="logo-description">Enter an image URL here</p>
                                     </div>
@@ -166,10 +204,9 @@ const Settings = () => {
                                     <div>
                                         <label for="failePayments" className="block text-sm font-medium text-gray-700 dark:text-gray-400 select-none">Manage Failed Payments</label>
                                         <div className="mt-1">
-                                            <select onChange={e => setFailedPayments(e.value)} className="py-5 text-gray-800 font-medium focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 dark:text-white relative block w-1/2 rounded-none rounded-t-md bg-transparent focus:z-10 sm:text-sm border-gray-300">
-                                                <option value="1" className="font-medium dark:text-white dark:bg-darkOther-200">Delete key & Kick user</option>
-                                                <option value="2" className="font-medium dark:text-white dark:bg-darkOther-200">Remove roles & Allow user to renew</option>
-                                            </select>
+                                            <Select defaultValue={failedPaymentOptions[3]} id="type" value={failedPayment} name="intervalType" options={failedPaymentOptions} placeholder="Failed Payment" 
+                                            className="py-5 text-gray-800 font-medium focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 dark:text-white relative block w-1/2 rounded-none rounded-t-md bg-transparent focus:z-10 sm:text-sm border-gray-300"
+                                            onChange={e => setFailedPayments(e.value)} value={failedPaymentOptions.filter(function(failedPaymentOptions) {return failedPaymentOptions.value === failedPayment})}/>
                                         </div>
                                         <p className="mt-2 text-sm text-gray-500 select-none" id="failePayments-description">Select how you want to deal with failed payments from users</p>
                                     </div>
@@ -187,7 +224,14 @@ const Settings = () => {
 
                 </div>
                 </main>
-                </div>
+                </div> : 
+                
+                <div className="m-auto">
+                        
+                    <SquareLoader color={'#302f2f'} loading={true} size={25} />
+                        
+                    </div> 
+                }
             
             </>
         )

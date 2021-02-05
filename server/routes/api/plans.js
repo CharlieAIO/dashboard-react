@@ -166,6 +166,7 @@ router.post('/add', authorize(),async (req, res) => {
             }
 
         }catch(e){
+            console.log(e)
             return res.status(400).end()
         }
         

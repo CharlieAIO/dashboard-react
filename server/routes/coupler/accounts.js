@@ -2,10 +2,93 @@ const express = require('express');
 const router = express.Router();
 const fetch = require('node-fetch');
 
-
-router.get('/', async (req,res) => {
+router.get('/user/data', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/restocks',{
+        var response = await fetch(process.env.domain + '/api/v1/accounts/data',{
+            headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
+            method:'get',
+        })
+    }catch{
+        return res.status(400).end()
+    }
+    if(response.status == 403) return res.status(403).send("unauthorized")
+    return res.status(200).json(await response.json())
+})
+
+
+router.get('/dashboard', async (req,res) => {
+    try{
+        var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/' + process.env.GUILD_ID,{
+            headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
+            method:'get',
+        })
+    }catch{
+        return res.status(400).end()
+    }
+    if(response.status == 403) return res.status(403).send("unauthorized")
+    return res.status(200).json(await response.json())
+})
+
+router.get('/dashboard/name/:option', async (req,res) => {
+    try{
+        var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/name/' + req.params.option,{
+            headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
+            method:'get',
+        })
+    }catch{
+        return res.status(400).end()
+    }
+    if(response.status == 403) return res.status(403).send("unauthorized")
+    var d = await respons.json()
+    return res.status(200).json(d)
+})
+
+
+router.get('/dashboard/supportEmail/:option', async (req,res) => {
+    try{
+        var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/supportEmail/' + req.params.option,{
+            headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
+            method:'get',
+        })
+    }catch{
+        return res.status(400).end()
+    }
+    if(response.status == 403) return res.status(403).send("unauthorized")
+    return res.status(200).json(await response.json())
+})
+
+
+router.get('/dashboard/logo/:option', async (req,res) => {
+    try{
+        var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/logo/' + req.params.option,{
+            headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
+            method:'get',
+        })
+    }catch{
+        return res.status(400).end()
+    }
+    if(response.status == 403) return res.status(403).send("unauthorized")
+    return res.status(200).json(await response.json())
+})
+
+
+router.get('/dashboard/payment/:option', async (req,res) => {
+    try{
+        var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/payment/' + req.params.option,{
+            headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
+            method:'get',
+        })
+    }catch{
+        return res.status(400).end()
+    }
+    if(response.status == 403) return res.status(403).send("unauthorized")
+    return res.status(200).json(await response.json())
+})
+
+
+router.get('/stats', async (req,res) => {
+    try{
+        var response = await fetch(process.env.domain + '/api/v1/accounts/stats',{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })

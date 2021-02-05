@@ -12,6 +12,34 @@ import { FaPlus } from 'react-icons/fa';
 
 
 const Home = () => {
+    const [totalLicense, setTotalLicense] = useState(0)
+    const [monthlyRev, setMonthlyRev] = useState("$0")
+    const [newCustomers, setNewCustomers] = useState(0)
+
+    async function fetchPlans(){
+        const res = await fetch('/accounts/stats');
+        res.json()
+        .then(res => {
+            setTotalLicense(res.totalCustomers)
+            setMonthlyRev(res.revenue)
+            setNewCustomers(res.customersMonth)
+            
+        })
+        .catch(err =>  {console.log(err)});
+        
+    }
+
+    useEffect(() =>{
+        const abortController = new AbortController();
+        fetchPlans()
+
+
+
+        return () => {
+            abortController.abort();
+        };
+
+    }, [])
 
         return (
             <>
@@ -35,7 +63,7 @@ const Home = () => {
                                             Total Licenses
                                           </dt>
                                           <dd className="order-1 text-5xl font-extrabold text-yellow-500 select-none">
-                                            421
+                                            {totalLicense}
                                           </dd>
                                         </div>
                                         <div className="flex flex-col border-t border-b border-gray-100 p-6 text-center sm:border-0 dark:bg-darkOther-200 bg-white">
@@ -43,15 +71,15 @@ const Home = () => {
                                             Monthly Revenue
                                           </dt>
                                           <dd className="order-1 text-5xl font-extrabold text-green-500 select-none">
-                                            $21730
+                                            {monthlyRev}
                                           </dd>
                                         </div>
                                         <div className="flex flex-col border-t border-gray-100 p-6 text-center sm:border-0 white dark:bg-darkOther-200 bg-white">
                                           <dt className="order-2 mt-2 text-lg leading-6 font-medium text-gray-900 dark:text-white select-none">
-                                            Customers Today
+                                            New Customers 
                                           </dt>
                                           <dd className="order-1 text-5xl font-extrabold text-blue-500 select-none">
-                                            23
+                                            {newCustomers}
                                           </dd>
                                         </div>
                                     </dl>

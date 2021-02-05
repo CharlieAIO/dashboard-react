@@ -86,7 +86,17 @@ router.post('/bind', async (req,res) => {
         })
         if(response.status == 403) return res.status(403).send("unauthorized")
         var text = await response.text()
-        if(text.includes("bound")) return res.status(200).json(text)
+        if(text.includes("bound")) {
+            oauth.addMember({
+                accessToken: req.signedCookies['key'],
+                botToken: process.env.BOT_TOKEN,
+                guildId: process.env.GUILD_ID,
+                userId: user.id,
+                roles: JSON.parse(text).roles
+            }).then(console.log).catch(e => console.log(e))
+    
+            return res.status(200).json(text)
+        }
         else return res.status(400).end()
         
     }catch(e){
