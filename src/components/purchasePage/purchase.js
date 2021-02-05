@@ -4,7 +4,7 @@ import UserNav from '../userNav'
 import { IoKeyOutline } from 'react-icons/io5'
 import { BiLogInCircle } from 'react-icons/bi'
 import { FaUserCircle } from 'react-icons/fa'
-import SquareLoader from "react-spinners/SquareLoader";
+import BounceLoader from "react-spinners/BounceLoader";
 import Checkout from './checkout'
 
 
@@ -16,6 +16,7 @@ const PurchasePage = () => {
 
     const [loaded, setLoaded] = useState(false)
     const [stock, setStock] = useState(0)
+    const [name, setName] = useState("")
 
 
     async function fetchData(){
@@ -23,6 +24,7 @@ const PurchasePage = () => {
         res.json()
         .then(res => {
             setStock(parseInt(res.stockRemaining))
+            setName(res.name)
             setLoaded(true)
         })
         .catch(err =>  {
@@ -31,7 +33,13 @@ const PurchasePage = () => {
                 setStock(0)
                 clearInterval(interval)
                 setLoaded(true)
-            }else{
+            }
+            if(res.status == 400) {
+                clearInterval(interval)
+                setLoaded(true)
+                setStock(0)
+            }
+            else{
                 interval = setInterval(() => {
                     fetchData()
                 }, 1500);
@@ -62,7 +70,7 @@ const PurchasePage = () => {
 
                         <div className="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200" style={{"minWidth":"500px"}}>
                             <div className="px-4 py-5 sm:px-6">
-                                <h1 className="text-lg font-medium text-gray-700">VenetiaCLI</h1>
+                                <h1 className="text-lg font-medium text-gray-700 select-none">{name}</h1>
                             </div>
                             <div className="px-4 py-5 sm:p-6">
 
@@ -78,7 +86,7 @@ const PurchasePage = () => {
                                 <div className="mt-1 flex rounded-md w-full">
 
                                     <div className="w-full text-center">
-                                        <h1 className="text-4xl font-medium text-gray-700">OOS</h1>
+                                        <h1 className="text-4xl font-medium text-gray-700 select-none">OOS</h1>
                                     </div>
 
                                 </div>
@@ -93,7 +101,7 @@ const PurchasePage = () => {
 
                         </div> : <div className="m-auto">
                         
-                        <SquareLoader color={'#302f2f'} loading={true} size={25} />
+                        <BounceLoader color={'#302f2f'} loading={true} size={25} />
                         
                         </div>
 

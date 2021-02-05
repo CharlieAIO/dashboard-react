@@ -30,7 +30,6 @@ router.post('/checkout', q, async (req, res) => {
     
                     var planBody = await response2.json() //[0]
     
-                    console.log(req.body.paymentMethod.id)
                     var customer;
                     try{
                         customer = await stripe.customers.create({
@@ -59,6 +58,10 @@ router.post('/checkout', q, async (req, res) => {
                         }
 
                         if(subscription.status == "active") {
+                            var deductResponse = await fetch(process.env.domain + '/api/v1/restocks/deduct/' + req.body.password, {
+                                headers: {apikey: process.env.API_KEY }
+                            })
+
                             var response = await fetch(process.env.domain + '/api/v1/users/add',{
                                 headers:{ apikey: process.env.API_KEY, "Content-Type": "application/json" },
                                 method:'post',

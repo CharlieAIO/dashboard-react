@@ -85,6 +85,32 @@ router.get('/dashboard/payment/:option', async (req,res) => {
     return res.status(200).json(await response.json())
 })
 
+router.get('/dashboard/background/:option', async (req,res) => {
+    try{
+        var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/background/' + req.params.option,{
+            headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
+            method:'get',
+        })
+    }catch{
+        return res.status(400).end()
+    }
+    if(response.status == 403) return res.status(403).send("unauthorized")
+    return res.status(200).json(await response.json())
+})
+
+router.get('/dashboard/description/:option', async (req,res) => {
+    try{
+        var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/description/' + req.params.option,{
+            headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
+            method:'get',
+        })
+        console.log(response)
+    }catch{
+        return res.status(400).end()
+    }
+    if(response.status == 403) return res.status(403).send("unauthorized")
+    return res.status(200).json(await response.json())
+})
 
 router.get('/stats', async (req,res) => {
     try{

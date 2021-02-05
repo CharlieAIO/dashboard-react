@@ -1,18 +1,22 @@
 import '../../static/styles/main.css'; 
 import React, { useEffect, useState } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
-
+import BounceLoader from "react-spinners/BounceLoader";
 
 
 const LicenseTable = () => {
 
     const [users, setUsers] = useState([])
+    const [loaded, setLoaded] = useState(false)
 
     async function fetchUsers(){
         const res = await fetch('/users');
         res.json()
-        .then(res => {setUsers(res)})
-        .catch(err =>  {});
+        .then(res => {
+            setUsers(res)
+            setLoaded(true)
+        })
+        .catch(err =>  fetchUsers());
         
     }
 
@@ -121,12 +125,12 @@ const LicenseTable = () => {
                         <div className="text-sm text-gray-500 dark:text-gray-300" id="discordId">{user.discordId == 123456789 ? "Unbound" : user.discordId}</div>
                     </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap dark:bg-darkOther-200">
+                    {/* <td className="px-6 py-4 whitespace-nowrap dark:bg-darkOther-200">
                         <div className="text-sm text-gray-900" id="keyType">{user.keyType}</div>
                         <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                             Active
                         </span>
-                    </td>
+                    </td> */}
 
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:bg-darkOther-200">
                         {
@@ -141,7 +145,7 @@ const LicenseTable = () => {
                         }}> <BsThreeDots className="h-4 w-4" id={`${user.id}-icon-hide`} />
                         </button>
 
-                        <div id={`dropdown-${user.id}`} className="dark:bg-darkOther-200 hidden mx-1 ml-24 mt-24 origin-top-right absolute top-2 w-48 mt-1 rounded-md shadow-lg z-2 bg-white ring-1 ring-black ring-opacity-5" aria-orientation="vertical" aria-labelledby="user-menu">
+                        <div id={`dropdown-${user.id}`} className="dark:bg-darkOther-200 hidden mx-3 mr-10 origin-top-right absolute right-7 top-0 w-48 mt-1 rounded-md shadow-lg z-10 bg-white ring-1 ring-black ring-opacity-5">
 
                             <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-darkOther-300 w-full" role="menuitem" id={`hide-${user.id}`} onClick={(e) => submitUnbindHandler(e, user.id)}>Unbind from User</button>
                             <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-darkOther-300 w-full" role="menuitem" id={`hide-${user.id}`} onClick={(e) => submitRevokeHandler(e, user.id)}>Revoke & Delete</button>
@@ -155,6 +159,7 @@ const LicenseTable = () => {
                 </tr>
             )
             
+            
         })
     }
 
@@ -162,7 +167,7 @@ const LicenseTable = () => {
 
     return (
 
-            <table className="w-full overflow-y-auto" id="table" id='table'>
+        <table className="w-full overflow-y-auto" id="table" id='table'>
 
                 <thead className="bg-gray-200 dark:bg-darkOther-100">
 
@@ -175,9 +180,9 @@ const LicenseTable = () => {
                         User
                         </th>
 
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider select-none">
+                        {/* <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider select-none">
                         Plan
-                        </th>
+                        </th> */}
 
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider select-none">
                         Created
@@ -191,10 +196,55 @@ const LicenseTable = () => {
                 </thead>
                 
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700 min-h-full">
-                    {renderTableRows()}
+                    {
+                        loaded ? renderTableRows() : 
+                        <tr>
+                        <td className="px-6 py-4 whitespace-nowrap dark:bg-darkOther-200">
+                            {/* <div className="flex items-center"> */}
+    
+                                {/* <div className="ml-2"> */}
+    
+                                    {/* style="font-family: 'Ubuntu Mono', monospace;" */}
+                                    <div className="text-sm text-gray-700 font-mono dark:text-gray-400" id="key">
+                                    <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                                    </div>
+    
+                                {/* </div> */}
+    
+                            {/* </div> */}
+                        </td>
+    
+                        <td className="px-6 py-4 whitespace-nowrap dark:bg-darkOther-200">
+                            <div className="text-sm text-gray-900 dark:text-gray-500" id="discordName"><BounceLoader color={'#302f2f'} loading={true} size={25} /></div>
+                            <div className="text-sm text-gray-500 dark:text-gray-300" id="discordId"><BounceLoader color={'#302f2f'} loading={true} size={25} /></div>
+                        </td>
+    
+                        {/* <td className="px-6 py-4 whitespace-nowrap dark:bg-darkOther-200">
+                            <div className="text-sm text-gray-900" id="keyType">{user.keyType}</div>
+                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                Active
+                            </span>
+                        </td> */}
+    
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:bg-darkOther-200">
+                        <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                        </td>
+    
+                        <td className="px-6 py-4 whitespace-nowrap dark:bg-darkOther-200">
+                            
+                        <BounceLoader color={'#302f2f'} loading={true} size={25} />
+
+    
+                        </td>
+    
+                    </tr>
+                    }
                 </tbody>
                 
-            </table>
+        </table>
+
+            
+
 
     )
 

@@ -146,26 +146,16 @@ router.get('/delete/:id', authorize(),async (req, res) => {
 
 
 // Deduct Stock
-router.get('/deduct/:id', authorize(),async (req, res) => {
+router.get('/deduct/:pswd',async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
         // console.log(req.data.user)
         // check if user is admin/staff
-        find('users', `discord: { id: "${req.data.user}"}`, function (err, data) {
-            if(err){
-                return null;
-            }
-            if(data[0].discord.id.normalize() === req.data.user.normalize()) {
-                {}
-            }else {
-                return res.status(403).end()
-            }
-        });
 
         try{
-            var restock = await pool.query(`SELECT * FROM restocks WHERE "id" = '${req.params.id}'`)
+            var restock = await pool.query(`SELECT * FROM restocks WHERE "password" = '${req.params.pswd}'`)
             var stock = parseInt(restock.rows[0].stockRemaining) - 1;
             await pool.query(
-                `UPDATE restocks SET "stockRemaining" = ${stock} WHERE "id" = '${req.params.id}'`
+                `UPDATE restocks SET "stockRemaining" = ${stock} WHERE "password" = '${req.params.pswd}'`
             ) 
             return res.status(200).end()
 

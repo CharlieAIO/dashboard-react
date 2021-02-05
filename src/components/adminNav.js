@@ -54,7 +54,7 @@ const AdminNavigation = () =>  {
                         <div className="absolute inset-0 bg-gray-600 opacity-75"></div>
                     </div>
     
-                    <div className="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-other-100 dark:bg-darkOther-100" id="mob-nav">
+                    <div className="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-other-100 dark:bg-darkOther-100 transition-transform ease-in-out duration-200" id="mob-nav">
                         <div className="absolute top-0 right-0 -mr-12 pt-2">
                         <button className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" onClick={() => {
                             document.querySelector('#mob-nav').classList.contains('hidden') ? document.querySelector('#mob-nav').classList.remove('hidden') : document.querySelector('#mob-nav').classList.add('hidden')

@@ -64,7 +64,8 @@ async function plans() {
                 "intervalType" VARCHAR(255),
                 "planId" VARCHAR(255),
                 "id" UUID,
-                "unbindable" BOOLEAN
+                "unbindable" BOOLEAN,
+                "oneTimeAmount" BIGINT
             )`
         )
         await pool.end()

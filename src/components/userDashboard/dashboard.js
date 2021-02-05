@@ -1,7 +1,7 @@
 import '../../static/styles/main.css'; 
 import React, { useState, useEffect } from 'react';
 import  { useHistory  } from 'react-router-dom'
-
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { AiOutlineMail } from 'react-icons/ai';
 import { BiCalendar, BiExit } from 'react-icons/bi'
 import { FaUserCircle } from 'react-icons/fa'
@@ -52,6 +52,8 @@ const Dashboard = () => {
     useEffect(() =>{
         const abortController = new AbortController();
         fetchData()
+        document.querySelector('#baseBackground').classList.remove('bg-other-100')
+        document.querySelector('#baseBackground').style = "background-repeat: no-repeat; background-image: url('https://pbs.twimg.com/profile_banners/4117789367/1609617015/1500x500'); background-attachment: fixed; background-size: cover; background-size: 100% 100%;"
 
 
         return () => {
@@ -78,7 +80,7 @@ const Dashboard = () => {
 
                         <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
                             <div class="px-4 py-5 sm:px-6">
-                                <h1 className="text-lg font-medium text-gray-700">Dashboard</h1>
+                                <h1 className="text-lg font-medium text-gray-700 select-none">Dashboard</h1>
                             </div>
                             
                             {loaded ? <div class="px-4 py-5 sm:p-6">
@@ -86,11 +88,11 @@ const Dashboard = () => {
                             <div className="grid grid-cols-1 rows-2">
                                 <div className="">
 
-                                    <div className="pl-3 flex items-center">
+                                    <div className="pl-3 flex items-center select-none">
 
                                         {discordImage ? <img src={discordImage} className="rounded-full h-16 w-auto text-other-200 font-medium" alt=""/> : <FaUserCircle className="h-14 w-auto text-other-200 font-medium"/>}
 
-                                        <h1 className="font-medium text-gray-900 text-2xl ml-3">{name}</h1>#<p className="font-normal text-other-200 text-md">{discrim}</p>
+                                        <h1 className="font-medium text-gray-900 text-2xl ml-3 select-none">{name}</h1>#<p className="font-normal text-other-200 text-md select-none">{discrim}</p>
 
                                     </div>
 
@@ -117,7 +119,13 @@ const Dashboard = () => {
 
                                         </div>
 
-                                        <p  name="key" id="key" autoComplete="off" className="focus:ring-other-200 focus:border-other-200 block w-full pl-10 sm:text-sm text-gray-900 rounded-md font-normal lg:text-lg">{key}</p>
+                                        <CopyToClipboard text={key} onCopy={(e) => {
+                                            document.querySelector('#key').classList.add(['text-green-500'])
+                                            setTimeout(() => {
+                                                document.querySelector('#key').classList.remove(['text-green-500'])
+                                            }, 1500);
+                                        }}><p  name="key" id="key" autoComplete="off" className="focus:ring-other-200 focus:border-other-200 block w-full pl-10 sm:text-sm text-gray-900 rounded-md font-normal lg:text-lg">{key}</p></CopyToClipboard>
+                                      
 
                                     </div>
 
@@ -129,7 +137,7 @@ const Dashboard = () => {
 
                                         </div>
 
-                                        <p  name="joined" id="joined" autoComplete="off" className="focus:ring-other-200 focus:border-other-200 block w-full pl-10 sm:text-sm text-gray-900 rounded-md font-normal lg:text-lg"><span className="text-other-200">Joined</span> {joinDate}</p>
+                                        <p  name="joined" id="joined" autoComplete="off" className="focus:ring-other-200 focus:border-other-200 block w-full pl-10 sm:text-sm text-gray-900 rounded-md font-normal lg:text-lg select-none"><span className="text-other-200 select-none">Joined</span> {joinDate}</p>
 
                                     </div>
 
@@ -140,7 +148,7 @@ const Dashboard = () => {
                                 <div className="grid grid-cols-2 gap-4 w-full">
                                     <div className="mt-2 relative rounded-md shadow-sm rounded-lg ">
 
-                                        <button  name="joined" id="joined" className="bg-blue-400 p-3 block w-full sm:text-sm text-white rounded-md font-medium lg:text-lg" onClick={() => unbind()}>
+                                        <button  name="joined" id="joined" className="bg-other-900 p-3 block w-full sm:text-sm text-white rounded-md font-medium lg:text-lg" onClick={() => unbind()}>
                                             <div className="absolute inset-y-0 flex items-center pointer-events-none">
                                                 
                                                 <BiExit className="h-4 w-auto text-white font-medium"/>
@@ -154,7 +162,7 @@ const Dashboard = () => {
 
                                         <form method="POST" action='/stripe/customer-portal-sess'>
 
-                                            <button type="submit" name="joined" id="joined" className="bg-blue-400 p-3 block w-full sm:text-sm text-white rounded-md font-medium lg:text-lg">
+                                            <button type="submit" name="joined" id="joined" className="bg-other-900 p-3 block w-full sm:text-sm text-white rounded-md font-medium lg:text-lg">
                                                 <input type="text" name="customerId" hidden value={customerId}/>
                                             <div className="absolute inset-y-0 flex items-center pointer-events-none">
                                                 

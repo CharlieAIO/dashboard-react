@@ -2,15 +2,21 @@ import '../../static/styles/main.css';
 import React, { useState, useEffect } from 'react';
 
 import {FaUserCircle} from 'react-icons/fa'
+import BounceLoader from "react-spinners/BounceLoader";
+
 
 const LicenseTable = () => {
     const [users, setUsers] = useState([])
+    const [loaded, setLoaded] = useState(false)
     
 
     async function fetchUsers(){
         const res = await fetch('/users');
         res.json()
-        .then(res => {setUsers(res)})
+        .then(res => {
+            setUsers(res)
+            setLoaded(true)
+        })
         .catch(err =>  {});
         
     }
@@ -25,7 +31,7 @@ const LicenseTable = () => {
             abortController = new AbortController();
             fetchUsers()
 
-        }, 5000);
+        }, 4000);
 
 
         return () => {
@@ -38,6 +44,8 @@ const LicenseTable = () => {
 
     const renderTableRows = () => {
         return users.map(user => {
+            var date = new Date(user.dateJoined * 1000)
+            console.log(date)
             return (
                 <tr key={user.id}>
                     <td className="px-6 py-4 whitespace-nowra dark:bg-darkOther-200">
@@ -72,7 +80,9 @@ const LicenseTable = () => {
              
 
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:bg-darkOther-200 dark:text-gray-400">
-                    {user.dateJoined == 0 ? "Not joined" : new Date(user.dateJoined * 1000).constructor()}
+                    {user.dateJoined == 0 ? "Not joined" : 
+                        `${date.getDate()} ${['January','February','March','April','May','June','July','August','September','October','November','December'][date.getMonth()]}, ${date.getFullYear()}`
+                    }
                     </td>
 
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium dark:bg-darkOther-200">
@@ -118,7 +128,48 @@ const LicenseTable = () => {
                 </thead>
                 
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700 min-h-full">
-                    {renderTableRows()}
+                    {loaded ? renderTableRows() : 
+                    <tr>
+                        <td className="px-6 py-4 whitespace-nowra dark:bg-darkOther-200">
+                            <div className="flex items-center">
+                                <div className="flex-shrink-0 h-10 w-10">
+                                <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                                
+                                </div>
+
+                                <div className="ml-4">
+                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-400">
+                                    <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                                    </div>
+
+                                    <div className="text-sm text-gray-500 dark:text-gray-300">
+                                    <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                        </td>
+
+                        <td className="px-6 py-4 whitespace-nowrap dark:bg-darkOther-200">
+                            <div className="text-sm text-gray-900 dark:text-gray-400"><BounceLoader color={'#302f2f'} loading={true} size={25} /></div>
+                        </td>
+
+                        <td className="px-6 py-4 whitespace-nowrap dark:bg-darkOther-200">
+                            <div className="text-sm text-gray-700 font-mono dark:text-gray-400"><BounceLoader color={'#302f2f'} loading={true} size={25} /></div>
+                            <div className="text-sm text-gray-500 dark:text-gray-300"><BounceLoader color={'#302f2f'} loading={true} size={25} /></div>
+                        </td>
+                
+
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:bg-darkOther-200 dark:text-gray-400">
+                        <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                        </td>
+
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium dark:bg-darkOther-200">
+                            <span className="text-other-200 hover:text-indigo-900"></span>
+                        </td>
+
+                    </tr>}
                 </tbody>
                 
             </table>

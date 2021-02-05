@@ -148,49 +148,12 @@ router.post('/add/dashboard', async (req, res) => {
         },
         staff:[],
         branding:{
-            logoUrl:req.body.logoUrl
+            logoUrl:req.body.logoUrl,
+            backgroundUrl:'',
+            description:''
     
         }
     }).then( async  (dash) => {
-        const portNew = await getPort()
-        console.log(portNew)
-        var envData =
-`
-SESSION_SECRET=0c94eecd8e2f2d7cb9d5aa12bae58ae76522acf8603ac13bb100afb44c0b341971bf6e86cb38d8745223ecb8a71cfb6476ea3cdab1e3281ce50c5cfdbf69970d
-PORT_SERVER=${portNew}
-API_KEY=1
-API_VERSION=1
-APP_NAME=${req.body.name}
-SERVER_IMAGE=${req.body.logoUrl}
-MONGO_USER=charlie
-MONGO_PASS=FQ88O4AuyIS1DDP4
-MONGO_DB=dashboard
-DB_USERNAME=doadmin
-DB_PASSWORD=c0mzf8maodoy9yqw
-DB_NAME=${dashId}
-DB_PORT=25060
-DB_HOST=invincible-services-dashboards-db-do-user-7398952-0.b.db.ondigitalocean.com
-NODE_TLS_REJECT_UNAUTHORIZED=0
-STRIPE_PUBLIC=
-STRIPE_SECRET=
-REDIRECT_URI_STRIPE=http://127.0.0.1:4000/stripe/oauth/uri
-CLIENT_ID_STRIPE=
-CLIENT_ID=802634543621210163
-CLIENT_SECRET=9K2mfEh63Sf_GerHHSvrLSC3muzs7mjp
-REDIRECT_URI=http://127.0.0.1:4000/discord/auth/callback
-DISCORD_BOT_CALLBACK_URI=http://127.0.0.1:4000/discord/bot/callback
-BOT_TOKEN=ODAyNjM0NTQzNjIxMjEwMTYz.YAyFqw.5UOBR5jYLmSaUC-r94CXFKmkQm
-domain=http://127.0.0.1:${portNew}
-JWT_SECRET=29c09becdab446f694b0de21146ce601230e594b08bdc11ab64fab8261e7c07fd0eb6758f5fb24147836a8e1281c79ffc715be86f60ccddaed5cee6756ed9d88af4743f5591b9ce68d0697e71b64903fc427e971fb0e7c6c1e52f440cbe9965d03adf649a704f62d46b44e9de5dd4eb05cb76f889d1698fa890a2ed42d382ba0
-        `
-        await fs.writeFileSync(`${dashId}.env`, envData, async (err) => {
-            if(err)console.log(err)
-        })
-        await pool.query(
-            `CREATE DATABASE ${dashId}`
-        ) 
-        
-
         
         return res.status(200).json({message:"success"}).end()
     }).catch((error) => {
@@ -358,6 +321,83 @@ router.get('/dashboard/logo/:option', authorize(),async (req, res) => {
     }
 
 })
+router.get('/dashboard/background/:option', authorize(),async (req, res) => {
+    if(req.get('apikey') == process.env.API_KEY) {
+        // console.log(req.data.user)
+        // check if user is admin/staff
+        find('users', `discord: { id: "${req.data.user}"}`, function (err, data) {
+            if(err){
+                return null;
+            }
+            if(data[0].discord.id.normalize() === req.data.user.normalize()) {
+                {}
+            }else {
+                return res.status(403).end()
+            }
+        });
+
+        try{
+        
+            var query = { backgroundUrl: atob(req.params.option) } 
+            update('accounts', { guild: process.env.GUILD_ID }, query, function (err, data) {
+                if(err){
+                    res.send({
+                        status:400,
+                        error:err,
+                    })
+                    return;
+                }
+                return res.status(200).send(data)
+            });
+            
+        
+        }catch(e){
+            return res.status(400).end()
+        }
+    } else {
+        return res.status(403).end()
+    }
+
+})
+router.get('/dashboard/description/:option', authorize(),async (req, res) => {
+    if(req.get('apikey') == process.env.API_KEY) {
+        // console.log(req.data.user)
+        // check if user is admin/staff
+        find('users', `discord: { id: "${req.data.user}"}`, function (err, data) {
+            if(err){
+                return null;
+            }
+            if(data[0].discord.id.normalize() === req.data.user.normalize()) {
+                {}
+            }else {
+                return res.status(403).end()
+            }
+        });
+
+        try{
+        
+            var query = { description: req.params.option } 
+            update('accounts', { guild: process.env.GUILD_ID }, query, function (err, data) {
+                if(err){
+                    res.send({
+                        status:400,
+                        error:err,
+                    })
+                    return;
+                }
+                return res.status(200).send(data)
+            });
+            
+        
+        }catch(e){
+            return res.status(400).end()
+        }
+    } else {
+        return res.status(403).end()
+    }
+
+})
+
 
 router.get('/stats', authorize(),async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {

@@ -5,17 +5,21 @@ import PlanEditModal from './planEditModal'
 
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import { BsThreeDots } from 'react-icons/bs';
-
+import BounceLoader from "react-spinners/BounceLoader";
 
 const PlanTable = () => {
 
     const [plans, setPlans] = useState([])
+    const [loaded, setLoaded] = useState(false)
 
     async function fetchPlans(){
         const res = await fetch('/plans');
         res.json()
-        .then(res => {setPlans(res)})
-        .catch(err =>  {});
+        .then(res => {
+            setPlans(res)
+            setLoaded(true)
+        })
+        .catch(err =>  fetchPlans());
         
     }
 
@@ -129,7 +133,33 @@ const PlanTable = () => {
                 </thead>
                 
                 <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-500 w-full">
-                    {renderTableRows()}
+                    {loaded ? renderTableRows() : 
+                        <tr>
+
+                            <td className="px-6 py-3 max-w-0 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white dark:bg-darkOther-200">
+                                <div className="flex items-center lg:pl-2">
+                                    <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                                </div>
+                            </td>
+
+                            <td className="px-6 py-3 text-sm text-gray-800 dark:text-white font-medium dark:bg-darkOther-200">
+                                <div className="flex items-center space-x-2">
+                                    <span className="flex-shrink-0 text-xs leading-5 font-medium"> <BounceLoader color={'#302f2f'} loading={true} size={25} /> </span>
+                                </div>
+                            </td>
+
+
+
+                            <td className="pr-6 dark:bg-darkOther-200 dark:text-white">
+                                <div className="relative flex justify-end items-center">
+                                <BounceLoader color={'#302f2f'} loading={true} size={25} />
+
+                                </div>
+                            </td>
+
+
+                        </tr>
+                    }
                 </tbody>
                 
             </table>

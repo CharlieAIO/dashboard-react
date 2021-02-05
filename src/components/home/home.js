@@ -9,12 +9,13 @@ import AdminNavigation from '../adminNav';
 import AdminSearchbar from '../adminSearch';
 
 import { FaPlus } from 'react-icons/fa';
-
+import BounceLoader from "react-spinners/BounceLoader";
 
 const Home = () => {
     const [totalLicense, setTotalLicense] = useState(0)
     const [monthlyRev, setMonthlyRev] = useState("$0")
     const [newCustomers, setNewCustomers] = useState(0)
+    const [loaded, setLoaded] = useState(false)
 
     async function fetchPlans(){
         const res = await fetch('/accounts/stats');
@@ -23,9 +24,12 @@ const Home = () => {
             setTotalLicense(res.totalCustomers)
             setMonthlyRev(res.revenue)
             setNewCustomers(res.customersMonth)
+            setLoaded(true)
             
         })
-        .catch(err =>  {console.log(err)});
+        .catch(err =>  {
+            fetchPlans()
+        });
         
     }
 
@@ -46,7 +50,9 @@ const Home = () => {
                 <AdminNavigation />
                 <div className="flex flex-col w-0 flex-1 overflow-hidden">
                     <AdminSearchbar />
-                <main className="flex-1 relative overflow-y-auto focus:outline-none">
+                {
+                    loaded ?
+                    <main className="flex-1 relative overflow-y-auto focus:outline-none">
                     <div className="py-6">
                         
 
@@ -155,6 +161,15 @@ const Home = () => {
                     </footer>
 
                 </main>
+                :
+
+                <div className="m-auto">
+                        
+                    <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                        
+                </div>
+
+                }
 
                 </div>
 

@@ -51,7 +51,14 @@ const accountSchema = new Schema({
             type:String,
             required:[true, 'logoUrl required']
         }
-
+    },
+    description:{
+        type:String,
+        required:[true, 'description required']
+    },
+    backgroundUrl:{
+        type:String,
+        required:[true, 'backgroundUrl required']
     }
 })
 

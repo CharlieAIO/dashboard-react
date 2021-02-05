@@ -31,7 +31,8 @@ module.exports = {
         200:'#0f3e70', //secondary colour (originally indigo-600)
         300:'#093059', //darker secondary (originally indigo-700)
         400:'#031221', // for menu text
-        500:'#212224'
+        500:'#212224',
+        900:'#0EA5E9'
       },
       darkOther: {
         100: '#061325', //primary colour (background)
