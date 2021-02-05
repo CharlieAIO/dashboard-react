@@ -6,7 +6,7 @@ import { AiOutlineMail } from 'react-icons/ai';
 import { BiCalendar, BiExit } from 'react-icons/bi'
 import { FaUserCircle } from 'react-icons/fa'
 import { IoKeyOutline, IoCardOutline } from 'react-icons/io5'
-import { GiCancel } from 'react-icons/gi'
+import Background from '../../static/styles/background.svg'
 
 import UserNav from '../userNav'
 
@@ -21,6 +21,7 @@ const Dashboard = () => {
     const [joinDate, setJoinDate] = useState("")
     const [discordImage, setDiscordImage] = useState("")
     const [customerId, setCustomerId] = useState("")
+    const [background, setBackground] = useState("")
 
     async function fetchData(){
         const res = await fetch('/discord/data');
@@ -40,6 +41,11 @@ const Dashboard = () => {
             setName(res.name)
             setDiscrim(res.discrim)
             setCustomerId(res.customerId)
+            
+            document.querySelector('#baseBackground').classList.add('bg-darkOther-300')
+            document.querySelector('#baseBackground').style = `background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='Artboard-5' fill='%23f7f7f7' fill-opacity='0.59' fill-rule='nonzero'%3E%3Cpath d='M6 18h12V6H6v12zM4 4h16v16H4V4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");;`
+            // document.querySelector('#baseBackground').style = `background-repeat: no-repeat; background-image: url('${res.bg}'); background-attachment: fixed; background-size: cover; background-size: 100% 100%;`
+            //setBackground(res.bg)
             setLoaded(true)
             
         })
@@ -52,8 +58,8 @@ const Dashboard = () => {
     useEffect(() =>{
         const abortController = new AbortController();
         fetchData()
-        document.querySelector('#baseBackground').classList.remove('bg-other-100')
-        document.querySelector('#baseBackground').style = "background-repeat: no-repeat; background-image: url('https://pbs.twimg.com/profile_banners/4117789367/1609617015/1500x500'); background-attachment: fixed; background-size: cover; background-size: 100% 100%;"
+        //document.querySelector('#baseBackground').classList.remove('bg-other-100')
+
 
 
         return () => {
@@ -78,7 +84,7 @@ const Dashboard = () => {
                 <UserNav />
                     <div className="m-auto">
 
-                        <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+                        <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200 opacity-95">
                             <div class="px-4 py-5 sm:px-6">
                                 <h1 className="text-lg font-medium text-gray-700 select-none">Dashboard</h1>
                             </div>

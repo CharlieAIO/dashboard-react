@@ -20,11 +20,16 @@ router.get('/data', async (req, res) => {
                 headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`  || req.headers.authorization },
                 method:'get',
             })
+            var response2 = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/accounts/dashboard/${process.env.GUILD_ID}`,{
+                headers:{ apikey: process.env.API_KEY },
+                method:'get',
+            })
         }catch{
             return res.status(400).end()
         }
         if(response.ok) {
             var responseBody = await response.json()
+            var responseBody2 = await response2.json()
             var key = ''
             var cusId = ''
             try{
@@ -43,7 +48,8 @@ router.get('/data', async (req, res) => {
                 dateJoined:Math.floor(Date.now() / 1000),
                 discordImage:`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`,
                 name:user.username,
-                discrim:user.discriminator
+                discrim:user.discriminator,
+                bg:responseBody2[0].backgroundUrl
             })
         } else {
             return res.json({

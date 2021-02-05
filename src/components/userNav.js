@@ -1,20 +1,40 @@
 import '../static/styles/main.css'; 
 import React, {useState, useEffect} from 'react';
-
+import BounceLoader from "react-spinners/BounceLoader";
 
 
 
 const UserNav = () =>  {
+    const [loaded, setLoaded] = useState(false)
+    const [img, setImg] = useState("")
+
+    async function fetchData(){
+        const res = await fetch('/api/v1/accounts/data');
+        res.json()
+        .then(res => {
+            setImg(res.serverImage)
+            setLoaded(true)
+        })
+        .catch(err =>  {
+            fetchData()
+        });
+        
+    }
+
 
     useEffect(() =>{
-        const abortController = new AbortController();
-        
+        var abortController = new AbortController();
+        fetchData()
+
+
+
 
         return () => {
             abortController.abort();
         };
 
     }, [])
+
 
     // render() {
         return (
@@ -25,7 +45,7 @@ const UserNav = () =>  {
                     <div className="h-16 text-left">
 
                         <div className="text-left">
-                            <img className="block h-24 w-auto" src="https://venetiacli.io/images/logo.png"/>
+                            {loaded ? <img className="block h-24 w-auto rounded-full p-2" src={img}/> : <BounceLoader color={'#302f2f'} loading={true} size={25} /> }
                         </div>
 
                     </div>

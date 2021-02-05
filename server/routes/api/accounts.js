@@ -34,7 +34,7 @@ function update(name,f_query,a_query,cb) {
 
 
 
-router.get('/data',authorize(), async (req, res) => {
+router.get('/data', async (req, res) => {
     try{
         var query = { guild: process.env.GUILD_ID }
         find('accounts', query, function (err, data) {

@@ -2,7 +2,7 @@ import '../../static/styles/main.css';
 import React, { useState, useEffect } from 'react';
 
 import {FaUserCircle} from 'react-icons/fa'
-import BounceLoader from "react-spinners/BounceLoader";
+import SquareLoader from "react-spinners/SquareLoader";
 
 
 const LicenseTable = () => {
@@ -133,17 +133,17 @@ const LicenseTable = () => {
                         <td className="px-6 py-4 whitespace-nowra dark:bg-darkOther-200">
                             <div className="flex items-center">
                                 <div className="flex-shrink-0 h-10 w-10">
-                                <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                                <SquareLoader color={'#302f2f'} loading={true} size={25} />
                                 
                                 </div>
 
                                 <div className="ml-4">
                                     <div className="text-sm font-medium text-gray-900 dark:text-gray-400">
-                                    <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                                    <SquareLoader color={'#302f2f'} loading={true} size={25} />
                                     </div>
 
                                     <div className="text-sm text-gray-500 dark:text-gray-300">
-                                    <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                                    <SquareLoader color={'#302f2f'} loading={true} size={25} />
                                     </div>
                                     
                                 </div>
@@ -152,17 +152,17 @@ const LicenseTable = () => {
                         </td>
 
                         <td className="px-6 py-4 whitespace-nowrap dark:bg-darkOther-200">
-                            <div className="text-sm text-gray-900 dark:text-gray-400"><BounceLoader color={'#302f2f'} loading={true} size={25} /></div>
+                            <div className="text-sm text-gray-900 dark:text-gray-400"><SquareLoader color={'#302f2f'} loading={true} size={25} /></div>
                         </td>
 
                         <td className="px-6 py-4 whitespace-nowrap dark:bg-darkOther-200">
-                            <div className="text-sm text-gray-700 font-mono dark:text-gray-400"><BounceLoader color={'#302f2f'} loading={true} size={25} /></div>
-                            <div className="text-sm text-gray-500 dark:text-gray-300"><BounceLoader color={'#302f2f'} loading={true} size={25} /></div>
+                            <div className="text-sm text-gray-700 font-mono dark:text-gray-400"><SquareLoader color={'#302f2f'} loading={true} size={25} /></div>
+                            <div className="text-sm text-gray-500 dark:text-gray-300"><SquareLoader color={'#302f2f'} loading={true} size={25} /></div>
                         </td>
                 
 
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:bg-darkOther-200 dark:text-gray-400">
-                        <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                        <SquareLoader color={'#302f2f'} loading={true} size={25} />
                         </td>
 
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium dark:bg-darkOther-200">
