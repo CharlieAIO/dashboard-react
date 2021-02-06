@@ -27,7 +27,7 @@ async function user() {
         console.log(e)
     }
 }
-user()
+
 
 async function restocks() {
     try{
@@ -56,7 +56,7 @@ async function plans() {
             `CREATE TABLE plans 
             (
                 "planName" VARCHAR(255),
-                "price" BIGINT,
+                "price" VARCHAR(255),
                 "currency" VARCHAR(255),
                 "type" VARCHAR(255),
                 "role" VARCHAR(255),
@@ -65,7 +65,8 @@ async function plans() {
                 "planId" VARCHAR(255),
                 "id" UUID,
                 "unbindable" BOOLEAN,
-                "oneTimeAmount" BIGINT
+                "oneTimeAmount" VARCHAR(255),
+                "expiry" VARCHAR(255)
             )`
         )
         await pool.end()
@@ -73,7 +74,7 @@ async function plans() {
         console.log(e)
     }
 }
-
+plans()
 
 // async function plans() {
 //     try{

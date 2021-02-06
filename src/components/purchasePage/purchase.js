@@ -16,7 +16,7 @@ const PurchasePage = () => {
 
     const [loaded, setLoaded] = useState(false)
     const [stock, setStock] = useState(0)
-    const [name, setName] = useState("")
+    const [name, setName] = useState("Purchase")
 
 
     async function fetchData(){
@@ -25,9 +25,18 @@ const PurchasePage = () => {
         .then(res => {
             setStock(parseInt(res.stockRemaining))
             setName(res.name)
+
+            // if(res.bg == "" || res.bg == "empty" || res.bg == undefined || res.bg == null) {
+                // document.querySelector('#baseBackground').style = `background-repeat: no-repeat; background-image: url('${res.bg}'); background-attachment: fixed; background-size: cover; background-size: 100% 100%;`
+            // } else {
+            document.querySelector('#baseBackground').classList.add('bg-darkOther-300')
+            document.querySelector('#baseBackground').style = `background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='199' viewBox='0 0 100 199'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M0 199V0h1v1.99L100 199h-1.12L1 4.22V199H0zM100 2h-.12l-1-2H100v2z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");`
+            // }
             setLoaded(true)
         })
         .catch(err =>  {
+            document.querySelector('#baseBackground').classList.add('bg-darkOther-300')
+            document.querySelector('#baseBackground').style = `background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='199' viewBox='0 0 100 199'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M0 199V0h1v1.99L100 199h-1.12L1 4.22V199H0zM100 2h-.12l-1-2H100v2z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");`
             var interval;
             if(res.status == 404) {
                 setStock(0)
@@ -86,7 +95,7 @@ const PurchasePage = () => {
                                 <div className="mt-1 flex rounded-md w-full">
 
                                     <div className="w-full text-center">
-                                        <h1 className="text-4xl font-medium text-gray-700 select-none">OOS</h1>
+                                        <h1 className="text-8xl font-bold text-darkOther-200 select-none">OOS</h1>
                                     </div>
 
                                 </div>

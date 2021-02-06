@@ -65,11 +65,10 @@ router.get('/data/:pswd', async (req,res) => {
 
     var details = ''
     if(body2[0].type == 'recurring') {
-        if (body2[0].oneTimeAmount != 0 && body2[0].oneTimeAmount && null || body2[0].oneTimeAmount && 'null') {
-            details = `You will be charged ${currencyToSymbolMap[body2[0].currency]}${body2[0].oneTimeAmount} and then ${currencyToSymbolMap[body2[0].currency]}${body2[0].price} / ${body2[0].intervalType}. `
-        }else {
-            details = `You will be charged ${currencyToSymbolMap[body2[0].currency]}${body2[0].price} / ${body2[0].intervalType}. `
-        }
+        details = `You will be charged ${currencyToSymbolMap[body2[0].currency]}${body2[0].price} / ${body2[0].intervalType}. `
+    }
+    else if(body2[0].type == 'recurring+onetime-payment') {
+        details = `You will be charged ${currencyToSymbolMap[body2[0].currency]}${body2[0].oneTimeAmount} and then ${currencyToSymbolMap[body2[0].currency]}${body2[0].price} / ${body2[0].intervalType}. `
     }
     else if(body2[0].type == 'lifetime') {
         details = `You will be charged ${currencyToSymbolMap[body2[0].currency]}${body2[0].price}. `

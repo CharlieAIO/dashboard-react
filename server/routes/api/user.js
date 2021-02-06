@@ -130,41 +130,53 @@ router.post('/unbind', authorize(),async (req, res) => {
         if(results.rows.length > 0) {
             if(results.rows[0].discordId.toString() != '123456789') {
 
-
+                var unbindable = false;
                 try{
                     var results2 = await pool.query(`SELECT * FROM plans WHERE "planId" = '${results.rows[0].plan}'`)
-                    var resultRoles = JSON.parse(results2.rows[0].role)
-                    var guild = (await client3.guilds.fetch(process.env.GUILD_ID))
-                    for(var i =0; i < resultRoles.length; i++)
-                    {
-                        var guildUser = await guild.members.fetch(results.rows[0].discordId);
-                        for(var i =0; i<resultRoles.length; i++) {
-                            guildUser.roles.remove(resultRoles[i].value).then({}).catch(e => console.log(e))
+                    unbindable = results2.rows[0].unbindable
+                }catch(e){
+                    console.log(e)
+                }
+
+                if(unbindable == false) {
+                    return res.status(400).end()
+                }
+                else {
+
+                    try{
+                        var resultRoles = JSON.parse(results2.rows[0].role)
+                        var guild = (await client3.guilds.fetch(process.env.GUILD_ID))
+                        for(var i =0; i < resultRoles.length; i++)
+                        {
+                            var guildUser = await guild.members.fetch(results.rows[0].discordId);
+                            for(var i =0; i<resultRoles.length; i++) {
+                                guildUser.roles.remove(resultRoles[i].value).then({}).catch(e => console.log(e))
+                            }
                         }
-                    }
-                }catch(e){
-                    console.log(e)
-                }
+                    }catch{}
 
-                await pool.query(
-                    'UPDATE users SET "discordId" = $1, "discordName" =  $2, "discordImage" = $3, "email" = $4, "dateJoined" = $5 WHERE "key" = $6 ',
-                    [123456789, 'empty', '', 'empty', 0, results.rows[0].key]
-                ) 
-
-                try {
-                    const paymentMethods = await stripe.paymentMethods.list({
-                        customer: results.rows[0].customerId,
-                        type: 'card',
-                        limit:100
-                    });
-                    for(var i = 0; i < paymentMethods.data.length; i++)
-                    {
-                        await stripe.paymentMethods.detach(paymentMethods.data[i].id);
+                    await pool.query(
+                        'UPDATE users SET "discordId" = $1, "discordName" =  $2, "discordImage" = $3, "email" = $4, "dateJoined" = $5 WHERE "key" = $6 ',
+                        [123456789, 'empty', '', 'empty', 0, results.rows[0].key]
+                    ) 
+    
+                    try {
+                        const paymentMethods = await stripe.paymentMethods.list({
+                            customer: results.rows[0].customerId,
+                            type: 'card',
+                            limit:100
+                        });
+                        for(var i = 0; i < paymentMethods.data.length; i++)
+                        {
+                            await stripe.paymentMethods.detach(paymentMethods.data[i].id);
+                        }
+                    }catch(e){
+                        console.log(e)
                     }
-                }catch(e){
-                    console.log(e)
+                    return res.status(200).json({response:"unbound"})
+
                 }
-                return res.status(200).json({response:"unbound"})
+                
             }
             else {
                 return res.status(400).end()

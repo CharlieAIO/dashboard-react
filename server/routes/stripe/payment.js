@@ -40,58 +40,129 @@ router.post('/checkout', q, async (req, res) => {
                                 default_payment_method:req.body.paymentMethod.id
                             }
                         });
-                    }catch{
+                    }catch(e){
+                        // console.log(e)
                         return res.status(400).end()
                     }
     
                     if(customer) {
                         var subscription;
-                        try{
-                            subscription = await stripe.subscriptions.create({
-                                customer: customer.id,
-                                items: [
-                                  {price: planBody[0].planId},
-                                ],
+                        var subId = ""
+                        if(planBody[0].type ==  "lifetime") {
+                            await stripe.invoiceItems.create({
+                                customer:  customer.id,
+                                price: planBody[0].planId,
                             });
-                        }catch{
-                            return res.status(400).end()
-                        }
 
-                        if(subscription.status == "active") {
-                            var deductResponse = await fetch(process.env.domain + '/api/v1/restocks/deduct/' + req.body.password, {
-                                headers: {apikey: process.env.API_KEY }
-                            })
-
-                            var response = await fetch(process.env.domain + '/api/v1/users/add',{
-                                headers:{ apikey: process.env.API_KEY, "Content-Type": "application/json" },
-                                method:'post',
-                                body:JSON.stringify({
-                                    plan:planBody[0].planId,
-                                    discordId:123456789,
-                                    discordName:"empty",
-                                    discordImage:"",
-                                    email:req.body.email,
-                                    customerId:customer.id,
-                                    subscriptionId:subscription.id,
-                                    expiryDate:0,
-                                    machineId:"empty",
-                                })
-                            })
-                            if(response.ok) {
-                                var b = await response.json()
-                                sendEmail(b.key, req.body.email)
-                                return res.status(200).json({key:b.key})
-                            }
-    
-                            else {
+                            const invoice = await stripe.invoices.create({
+                                customer: customer.id,
+                                collection_method:"charge_automatically"
+                            });
+                            if(invoice.id) {
+                                const invoicePaid = await stripe.invoices.pay(invoice.id);
+                                if(invoicePaid.amount_due == invoicePaid.amount_paid) {}
+                                else {
+                                    await stripe.customers.del(customer.id).catch(e => {});
+                                    return res.status(400).end()
+                                }
+                            } else {
+                                await stripe.customers.del(customer.id).catch(e => {});
                                 return res.status(400).end()
                             }
-                            
+
+                        } else {
+                            try{
+                                var subObject = {
+                                    customer: customer.id,
+                                    items: [
+                                    {price: planBody[0].planId},
+                                    ],
+                                }
+                                if(planBody[0].expiry != 'none' && planBody[0].expiry != null) {
+                                    subObject['cancel_at'] = parseInt(planBody[0].expiry)
+                                }
+                                subscription = await stripe.subscriptions.create(subObject);
+
+                                if(subscription.status != "active") {
+                                    subId = subscription.id
+                                    await stripe.customers.del(customer.id).catch(e => {});
+                                    return res.status(400).end()
+                                }else{}        
+                            }catch(e){
+                                return res.status(400).end()
+                            }
                         }
-    
+                
+                            
+                        if(planBody[0].oneTimeAmount != null && planBody[0].oneTimeAmount != 0) {
+                            let price = planBody[0].oneTimeAmount;
+                            if(price.includes('.')) price = price.replace('.','')
+                            else price += '00'
+
+                            var paymentIntent
+                            try {
+                                paymentIntent = await stripe.paymentIntents.create({
+                                    amount:parseInt(price),
+                                    currency: planBody[0].currency.toLowerCase(),
+                                    payment_method_types: ['card'],
+                                    customer:customer.id,
+                                    payment_method:req.body.paymentMethod.id,
+                                });
+                            }catch(e){
+                                await stripe.customers.del(customer.id).catch(e => {});
+                                await stripe.subscriptions.del(subId).catch(e => {});
+                                return res.status(400).end()
+                            }
+
+                            if(paymentIntent.id) {
+                                const paymentIntentConf = await stripe.paymentIntents.confirm(
+                                    paymentIntent.id
+                                );
+                                if(paymentIntentConf.amount_received == price) {}
+                                else {
+                                    await stripe.customers.del(customer.id).catch(e => {});
+                                    await stripe.subscriptions.del(subId).catch(e => {});
+                                    return res.status(400).end()
+                                }
+                            }
+                            else {
+                                await stripe.customers.del(customer.id).catch(e => {});
+                                await stripe.subscriptions.del(subId).catch(e => {});
+                                return res.status(400).end()
+                            }
+                        }
+
+                        await fetch(process.env.domain + '/api/v1/restocks/deduct/' + req.body.password, {
+                            headers: {apikey: process.env.API_KEY }
+                        })
+
+                        var response = await fetch(process.env.domain + '/api/v1/users/add',{
+                            headers:{ apikey: process.env.API_KEY, "Content-Type": "application/json" },
+                            method:'post',
+                            body:JSON.stringify({
+                                plan:planBody[0].planId,
+                                discordId:123456789,
+                                discordName:"empty",
+                                discordImage:"",
+                                email:req.body.email,
+                                customerId:customer.id,
+                                subscriptionId:subId,
+                                expiryDate:0,
+                                machineId:"empty",
+                            })
+                        })
+                        if(response.ok) {
+                            var b = await response.json()
+                            sendEmail(b.key, req.body.email)
+                            return res.status(200).json({key:b.key})
+                        }
+
                         else {
                             return res.status(400).end()
                         }
+                            
+                        
+
                         
                     }
     

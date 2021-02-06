@@ -5,6 +5,8 @@ import makeAnimated from 'react-select/animated';
 import chroma from 'chroma-js';
 import currencyOptions from '../../static/data/currencies.json'
 import { Switch } from '@headlessui/react'
+import DatePicker from 'react-date-picker';
+
 
 
 import { AiOutlineClose } from 'react-icons/ai';
@@ -34,6 +36,8 @@ const PlanModal = () => {
     const [interval, setinterval] = useState("")
     const [intervalType, setintervalType] = useState("")
     const [unbinding, setunbinding] = useState(true)
+    const [oneTimePrice, setOneTimePrice] = useState("")
+    const [expDate, setExpDate] = useState(new Date());
     // const [selectColor, setSelectColor] = useState(true)
 
     async function fetchPlans(){
@@ -117,8 +121,8 @@ const PlanModal = () => {
     const submitHandler = async (e) => {
         e.preventDefault()
 
-        if(planName.length > 0 && planType.length > 0 && interval.length > 0) {
-
+        if(planName.length > 0 && planType.length > 0) {
+        
             var response = await fetch('/plans/add', {
                 method:'post',
                 body:JSON.stringify({
@@ -131,7 +135,9 @@ const PlanModal = () => {
                     intervalType:intervalType,
                     planId:'',
                     id:'',
-                    unbinding:unbinding
+                    unbinding:unbinding,
+                    oneTimeAmount:oneTimePrice,
+                    expiry:new Date('Mon Feb 08 2021 00:00:00 GMT+0000 (Greenwich Mean Time)').getTime() / 1000
                 }),
                 "headers": {
                     "Content-Type": "application/json"
@@ -255,33 +261,9 @@ const PlanModal = () => {
                 
                                                 </div>
                 
-                                            </fieldset> : <div></div> }
+                                            </fieldset> :  <></> }
 
-                                            {/* {planType == "recurring" ? <fieldset className="mt-2 bg-white dark:bg-darkOther-200" id="interval-options">
-                                                <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300">Interval</legend>
-                                                <div className="mt-1 bg-white rounded-md shadow-sm dark:bg-darkOther-200">
-
-                                                    <div className="md:grid-cols-1 lg:grid-cols-1 sm:grid-cols-2 gap-2">
-
-                                                        <div className="relative rounded-md shadow-sm">
-                                                            <div className="mt-1 flex rounded-md shadow-sm -space-y-px">
-                                                                <span className="inline-flex items-center px-3 rounded-l-md border-r-2 border-gray-200 bg-gray-50 text-gray-800 sm:text-sm mr-2 dark:bg-darkOther-100 dark:text-white">
-                                                                    every
-                                                                </span>
-                                                                <input name="interval" id="interval" type="text" placeholder="Interval Count" autoComplete="off" className="dark:bg-darkOther-200 block w-full font-medium text-md rounded-md py-2 " value={interval} onChange={e => setinterval(e.target.value)}/>
-                                                            </div>
-
-                                                            <div className="inset-y-0 right-0 flex items-center -space-y-px">
-                                                                <label className="sr-only">Interval Type</label>
-                                                                <Select defaultValue={intervalTypeOptions[3]} styles={colourStyle} id="type" value={intervalType} name="intervalType" options={intervalTypeOptions} placeholder="Interval" className="px-3 w-32"
-                                                                onChange={e => setintervalType(e.value)} value={intervalTypeOptions.filter(function(intervalTypeOptions) {return intervalTypeOptions.value === intervalType})}/>
-                                                            </div>
-
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </fieldset> : <div></div>} */}
+                                            
                                         
 
                                             <fieldset className="mt-4 bg-white dark:bg-darkOther-200">
@@ -302,6 +284,40 @@ const PlanModal = () => {
                                                 </div>
                                             
                                             </fieldset>
+
+                                            {planType == "rental" ? <fieldset className="mt-4 bg-white dark:bg-darkOther-200">
+                                                <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300 select-none">Expiry</legend>
+                                                <div className="mt-1 bg-white  dark:bg-darkOther-200">
+                                                    <div>
+                                                        <div className="mt-1 relative rounded-md shadow-sm text-left ">
+                                                        <DatePicker
+                                                            onChange={setExpDate}
+                                                            value={expDate}
+                                                            calendarAriaLabel={"Select Date"}
+                                                        />
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            
+                                            </fieldset> : <></>}
+
+                                            {planType == "recurring+onetime-payment" ? <fieldset className="mt-2 bg-whit dark:bg-darkOther-200" id="interval-fieldset">
+                                                    <div className="">
+                                                        <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300 select-none">Onetime Payment Price</legend>
+                                                        <div className="mt-1 rounded-md shadow-sm -space-y-px">
+                                                            <div>
+                                                                <label className="sr-only">price</label>
+                                                                <input type="text" className="dark:bg-darkOther-200 focus:ring-other-200 focus:border-other-200 block w-full font-medium text-md  rounded-md py-2 dark:focus:border-darkOther-200 dark:focus:ring-darkOther-200" 
+                                                                placeholder="0.00" value={oneTimePrice} autoComplete="off" onChange={e => setOneTimePrice(e.target.value)}/>
+                                                                                                                                    
+                                                            
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                            
+                                            </fieldset> : <></>}
+
         
                                             <fieldset className="mt-2 bg-whit dark:bg-darkOther-200" id="interval-fieldset">
                                                     <div className="">
@@ -309,9 +325,10 @@ const PlanModal = () => {
                                                         <div className="mt-1 rounded-md shadow-sm -space-y-px">
                                                             <div>
                                                                 <label className="sr-only">roles</label>
+                                    
                                                                 <Select id="roles" value={planRole}  placeholder="Roles" closeMenuOnSelect={false} styles={colourStyles} name="planRole" isSearchable components={makeAnimated()} isMulti options={availableRoles} className="focus:ring-other-200 focus:border-other-200 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md dark:focus:border-darkOther-200 dark:focus:ring-darkOther-200"
                                                                     onChange={e => setplanRole(e)} />
-                                                                                                                                    
+                                                                                                                                                                              
                                                             
                                                             </div>
                                                         </div>

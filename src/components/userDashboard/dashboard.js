@@ -41,10 +41,13 @@ const Dashboard = () => {
             setName(res.name)
             setDiscrim(res.discrim)
             setCustomerId(res.customerId)
-            
-            document.querySelector('#baseBackground').classList.add('bg-darkOther-300')
-            document.querySelector('#baseBackground').style = `background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='Artboard-5' fill='%23f7f7f7' fill-opacity='0.59' fill-rule='nonzero'%3E%3Cpath d='M6 18h12V6H6v12zM4 4h16v16H4V4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");;`
-            // document.querySelector('#baseBackground').style = `background-repeat: no-repeat; background-image: url('${res.bg}'); background-attachment: fixed; background-size: cover; background-size: 100% 100%;`
+            if(res.bg == "" || res.bg == "empty" || res.bg == undefined || res.bg == null) {
+                document.querySelector('#baseBackground').style = `background-repeat: no-repeat; background-image: url('${res.bg}'); background-attachment: fixed; background-size: cover; background-size: 100% 100%;`
+            } else {
+                document.querySelector('#baseBackground').classList.add('bg-darkOther-300')
+                document.querySelector('#baseBackground').style = `background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='199' viewBox='0 0 100 199'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M0 199V0h1v1.99L100 199h-1.12L1 4.22V199H0zM100 2h-.12l-1-2H100v2z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");`
+            }
+
             //setBackground(res.bg)
             setLoaded(true)
             

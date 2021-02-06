@@ -33,7 +33,7 @@ router.get('/', authorize(),async (req, res) => {
 
         try{
             var results;
-            if (req.query.name) results = await pool.query(`SELECT * FROM plans WHERE "planName" = ${req.query.name}`)
+            if (req.query.name) results = await pool.query(`SELECT * FROM plans WHERE "planName" = '${req.query.name}'`)
             else results = await pool.query('SELECT * FROM plans')
 
             return res.status(200).json(results.rows)
@@ -52,11 +52,12 @@ router.get('/get/:id',async (req, res) => {
 
         try{
             var results;
-            if (req.query.name) results = await pool.query(`SELECT * FROM plans WHERE "planId" = ${req.params.id}`)
+            if (req.params.id) results = await pool.query(`SELECT * FROM plans WHERE "planId" = '${req.params.id}'`)
             else results = await pool.query('SELECT * FROM plans')
 
             return res.status(200).json(results.rows)
         }catch(e){
+            console.log(e)
             return res.status(400).end()
         }
     } else {
@@ -130,13 +131,18 @@ router.post('/add', authorize(),async (req, res) => {
                 let price = req.body.price;
                 if(price.includes('.')) price = price.replace('.','')
                 else price += '00'
+                
+
+                // let price2 = req.body.oneTimeAmount;
+                // if(price2.includes('.')) price2 = price2.replace('.','')
+                // else price2 += '00'
 
                 var createObject = {
                     unit_amount: parseInt(price),
                     currency: req.body.currency.toLowerCase(),
                     product: product.id
                 }
-                if(req.body.type == "recurring") {
+                if(req.body.type == "recurring" || req.body.type == "recurring+onetime-payment") {
                     createObject.recurring = {
                         interval:req.body.intervalType,
                         interval_count:parseInt(req.body.interval) 
@@ -147,6 +153,10 @@ router.post('/add', authorize(),async (req, res) => {
         
                 body['planId'] = plan.id
                 body['id'] = uuidv4()
+                body['oneTimeAmount'] = req.body.oneTimeAmount
+
+                if(req.body.type != 'rental') body['expiry'] = 'none'
+                else body['expiry'] = req.body.expiry
         
         
                 for(var i in body)
@@ -155,7 +165,7 @@ router.post('/add', authorize(),async (req, res) => {
                 
                 
                 await pool.query(
-                    'INSERT INTO plans values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)',
+                    'INSERT INTO plans values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)',
                     query
                 ) 
                 return res.status(200).json({response:"added"})

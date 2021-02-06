@@ -235,11 +235,11 @@ const Settings = () => {
                                     <div>
                                         <label for="failePayments" className="block text-sm font-medium text-gray-700 dark:text-gray-400 select-none">Setup Stripe Intergation</label>
                                         <div className="mt-1">
-                                            <button onClick={openIntergrate}  className="bg-other-200 dark:bg-darkOther-100 rounded-sm w-24 h-10 text-white text-md font-medium px-6 hover:bg-other-300">
+                                            <button disabled className="bg-other-200 dark:bg-darkOther-100 rounded-sm w-24 h-10 text-white text-md font-medium px-6 hover:bg-other-300">
                                                 <FaStripe className="h-10 w-12"/>
                                             </button>
                                         </div>
-                                        <p className="mt-2 text-sm text-gray-500 select-none" id="failePayments-description ">Link you stripe account...</p>
+                                        <p className="mt-2 text-sm text-gray-500 select-none" id="failePayments-description ">Strip account already linked to Dashboard.</p>
                                     </div>
                                 </div>
                             </div>
@@ -265,6 +265,8 @@ const Settings = () => {
                             </form>
                         
                         </section>
+
+                        
 
                     </div>
 

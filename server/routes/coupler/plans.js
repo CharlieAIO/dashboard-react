@@ -46,7 +46,8 @@ router.post('/add', async (req,res) => {
                 intervalType:req.body.intervalType,
                 planId:'',
                 id:'',
-                unbinding:req.body.unbinding
+                unbinding:req.body.unbinding,
+                oneTimeAmount:req.body.oneTimeAmount
             }),
         })
     }catch(e){

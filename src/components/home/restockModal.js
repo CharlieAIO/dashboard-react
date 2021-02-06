@@ -17,13 +17,18 @@ const RestockModal = () => {
         const res = await fetch('/plans/data');
         res.json()
         .then(res => {setPlans(res)})
-        .catch(err =>  {});
+        .catch(err =>  fetchPlans());
         
     }
 
     useEffect(() =>{
-        const abortController = new AbortController();
+        var abortController = new AbortController();
         fetchPlans()
+
+        setInterval(() => {
+            abortController = new AbortController();
+            fetchPlans()
+        }, 5000);
 
 
         return () => {

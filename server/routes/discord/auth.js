@@ -42,9 +42,9 @@ router.get('/auth/callback' , async (req, res) => {
         res.cookie('key',oa.access_token, cookieConfig);
         // req.session.key('rt',oa.refresh_token)
         // req.session.rt = oa.refresh_token
-
+        
         try{
-            var user = await oauth.getUser(req.signedCookies['key']) 
+            var user = await oauth.getUser(oa.access_token) 
 
 
             var accessToken = jwt.sign({user:user.id, flags:user.flags},process.env.JWT_SECRET,{
@@ -61,8 +61,8 @@ router.get('/auth/callback' , async (req, res) => {
         }
 
 
-        res.redirect(`https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&scope=bot&permissions=8&response_type=code&redirect_uri=${process.env.DISCORD_BOT_CALLBACK_URI}&scope=identify email bot`)
-        return
+        // res.redirect(`https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&scope=bot&permissions=8&response_type=code&redirect_uri=${process.env.DISCORD_BOT_CALLBACK_URI}&scope=identify email bot`)
+        return res.redirect('/dashboard')
     }   
 
 })
