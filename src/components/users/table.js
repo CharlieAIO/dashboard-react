@@ -15,7 +15,7 @@ const LicenseTable = () => {
         res.json()
         .then(res => {
             setUsers(res)
-            setLoaded(true)
+            setLoaded(false)
         })
         .catch(err =>  {});
         
@@ -45,7 +45,6 @@ const LicenseTable = () => {
     const renderTableRows = () => {
         return users.map(user => {
             var date = new Date(user.dateJoined * 1000)
-            console.log(date)
             return (
                 <tr key={user.id}>
                     <td className="px-6 py-4 whitespace-nowra dark:bg-darkOther-200">

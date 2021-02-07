@@ -24,6 +24,7 @@ module.exports = () => {
                 else {
                     req.data = decoded
                     next()
+                    
                 }
             })
         }

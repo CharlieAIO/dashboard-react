@@ -3,6 +3,7 @@ const DiscordOauth2 = require("discord-oauth2");
 const router = express.Router();
 const fetch = require('node-fetch');
 const jwt = require('jsonwebtoken');
+const { signAccess } = require('../../utils.js')
 
 const cookieConfig = {
     httpOnly: true,
@@ -47,14 +48,10 @@ router.get('/auth/callback' , async (req, res) => {
             var user = await oauth.getUser(oa.access_token) 
 
 
-            var accessToken = jwt.sign({user:user.id, flags:user.flags},process.env.JWT_SECRET,{
-                expiresIn:"7d" //10s when using refresh 
-            })
-            var refreshToken = jwt.sign({user:user.id, flags:user.flags},process.env.JWT_SECRET,{
-                expiresIn:"7d"
-            })
+            var accessToken = signAccess(user.id, user.flgs)
+            var refreshToken = signRefresh(user.id, user.flgs)
             res.cookie('jwt.access',accessToken, cookieConfig);
-
+            res.cookie('jwt.refresh',refreshToken, cookieConfig);
             
         }catch(e){
             return res.status(403).end()

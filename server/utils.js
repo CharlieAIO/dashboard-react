@@ -4,6 +4,7 @@ const nodemailer = require("nodemailer");
 const handlebars = require("handlebars");
 const mongoose = require('mongoose');
 const fs = require('fs')
+const jwt = require('jsonwebtoken');
 
 const pool = new Pool({
     user: process.env.DB_USERNAME,
@@ -96,7 +97,26 @@ function sendEmail(key,email) {
     
 }
 
+function signAccess(user,flags) {
+    return jwt.sign({user:user, flags:flags},process.env.JWT_SECRET,{
+        expiresIn:"15s" //10s when using refresh 
+    })
+}
 
+function signRefresh(user,flags) {
+    return jwt.sign({user:user, flags:flags},process.env.JWT_SECRET,{
+        expiresIn:"30d"
+    })
+}
+function verifyRefresh(refershToken) {
+    jwt.verify(refershToken, process.env.JWT_REFRESH_SECRET, (err ,decoded) => {
+        if(err) return null;
+        else {
+            const userId = decoded.user
+            return userId
+        }
+    })
+}
 
 
 // pool.connect()
@@ -105,5 +125,7 @@ module.exports = {
     generate:generate,
     generateNoNumbers:generateNoNumbers,
     sendEmail:sendEmail,
+    signAccess:signAccess,
+    signRefresh:signRefresh
     // checkIfStaff:checkIfStaff
 }

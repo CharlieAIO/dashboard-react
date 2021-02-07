@@ -5,7 +5,7 @@ const fetch = require('node-fetch');
 
 router.get('/', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/plans',{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/plans`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
@@ -19,7 +19,7 @@ router.get('/', async (req,res) => {
 
 router.get('/data', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/plans/data',{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/plans/data`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
@@ -33,7 +33,7 @@ router.get('/data', async (req,res) => {
 router.post('/add', async (req,res) => {
     try{
 
-        var response = await fetch(process.env.domain + '/api/v1/plans/add',{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/plans/add`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`, "Content-Type": "application/json" },
             method:'post',
             body:JSON.stringify({
@@ -60,7 +60,7 @@ router.post('/add', async (req,res) => {
 
 router.get('/delete/:id', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/plans/delete/' + req.params.id,{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/plans/delete/${req.params.id}`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })

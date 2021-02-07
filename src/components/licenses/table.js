@@ -1,7 +1,7 @@
 import '../../static/styles/main.css'; 
 import React, { useEffect, useState } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
-import BounceLoader from "react-spinners/BounceLoader";
+import SquareLoader from "react-spinners/SquareLoader";
 
 
 const LicenseTable = () => {
@@ -111,9 +111,10 @@ const LicenseTable = () => {
                             {/* <div className="ml-2"> */}
 
                                 {/* style="font-family: 'Ubuntu Mono', monospace;" */}
-                                <div className="text-sm text-gray-700 font-mono dark:text-gray-400" id="key">
+                                <div className="text-gray-500 dark:text-gray-300 font-mono" id="key">
                                     {user.key}
                                 </div>
+                                <div className="text-xs gray-900 dark:text-gray-500" id="discordId">{user.plan}</div>
 
                             {/* </div> */}
 
@@ -206,7 +207,7 @@ const LicenseTable = () => {
     
                                     {/* style="font-family: 'Ubuntu Mono', monospace;" */}
                                     <div className="text-sm text-gray-700 font-mono dark:text-gray-400" id="key">
-                                    <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                                    <SquareLoader color={'#302f2f'} loading={true} size={25} />
                                     </div>
     
                                 {/* </div> */}
@@ -215,8 +216,8 @@ const LicenseTable = () => {
                         </td>
     
                         <td className="px-6 py-4 whitespace-nowrap dark:bg-darkOther-200">
-                            <div className="text-sm text-gray-900 dark:text-gray-500" id="discordName"><BounceLoader color={'#302f2f'} loading={true} size={25} /></div>
-                            <div className="text-sm text-gray-500 dark:text-gray-300" id="discordId"><BounceLoader color={'#302f2f'} loading={true} size={25} /></div>
+                            <div className="text-sm text-gray-900 dark:text-gray-500" id="discordName"><SquareLoader color={'#302f2f'} loading={true} size={25} /></div>
+                            <div className="text-sm text-gray-500 dark:text-gray-300" id="discordId"><SquareLoader color={'#302f2f'} loading={true} size={25} /></div>
                         </td>
     
                         {/* <td className="px-6 py-4 whitespace-nowrap dark:bg-darkOther-200">
@@ -227,12 +228,12 @@ const LicenseTable = () => {
                         </td> */}
     
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:bg-darkOther-200">
-                        <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                        <SquareLoader color={'#302f2f'} loading={true} size={25} />
                         </td>
     
                         <td className="px-6 py-4 whitespace-nowrap dark:bg-darkOther-200">
                             
-                        <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                        <SquareLoader color={'#302f2f'} loading={true} size={25} />
 
     
                         </td>

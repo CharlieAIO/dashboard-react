@@ -38,7 +38,9 @@ const Settings = () => {
         var response = await fetch('/accounts/dashboard/payment/' + failedPayment) 
     } 
     const bgHandle = async () => {
-        var response = await fetch('/accounts/dashboard/background/' + btoa(bgURL)) 
+        var bg = "empty"
+        if(bgURL != "") bg = bgURL 
+        var response = await fetch('/accounts/dashboard/background/' + btoa(bg)) 
     } 
     const descriptionHandle = async () => {
         var response = await fetch('/accounts/dashboard/description/' + description) 

@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 
 router.get('/user/data', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/accounts/data',{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/accounts/data`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
@@ -18,7 +18,7 @@ router.get('/user/data', async (req,res) => {
 
 router.get('/dashboard', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/' + process.env.GUILD_ID,{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/accounts/dashboard/${process.env.GUILD_ID}`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
@@ -31,7 +31,7 @@ router.get('/dashboard', async (req,res) => {
 
 router.get('/dashboard/name/:option', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/name/' + req.params.option,{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/accounts/dashboard/name/${req.params.option}`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
@@ -46,7 +46,7 @@ router.get('/dashboard/name/:option', async (req,res) => {
 
 router.get('/dashboard/supportEmail/:option', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/supportEmail/' + req.params.option,{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/accounts/dashboard/supportEmail/${req.params.option}`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
@@ -60,7 +60,7 @@ router.get('/dashboard/supportEmail/:option', async (req,res) => {
 
 router.get('/dashboard/logo/:option', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/logo/' + req.params.option,{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/accounts/dashboard/logo/${req.params.option}`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
@@ -74,7 +74,7 @@ router.get('/dashboard/logo/:option', async (req,res) => {
 
 router.get('/dashboard/payment/:option', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/payment/' + req.params.option,{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/accounts/dashboard/payment/${req.params.option}`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
@@ -87,10 +87,11 @@ router.get('/dashboard/payment/:option', async (req,res) => {
 
 router.get('/dashboard/background/:option', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/background/' + req.params.option,{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/accounts/dashboard/background/${req.params.option}`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
+        console.log(response)
     }catch{
         return res.status(400).end()
     }
@@ -100,7 +101,7 @@ router.get('/dashboard/background/:option', async (req,res) => {
 
 router.get('/dashboard/description/:option', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/description/' + req.params.option,{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/accounts/dashboard/description/${req.params.option}`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
@@ -114,7 +115,7 @@ router.get('/dashboard/description/:option', async (req,res) => {
 
 router.get('/stats', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/accounts/stats',{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/accounts/stats`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })

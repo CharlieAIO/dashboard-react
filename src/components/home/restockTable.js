@@ -6,7 +6,7 @@ import ProgressBar from "@ramonak/react-progress-bar";
 
 import { AiOutlineDelete, AiOutlineCopy } from 'react-icons/ai';
 import { BsThreeDots } from 'react-icons/bs';
-import BounceLoader from "react-spinners/BounceLoader";
+import SquareLoader from "react-spinners/SquareLoader";
 
 
 const RestockTable = () => {
@@ -145,20 +145,20 @@ const RestockTable = () => {
 
                 <td className="px-6 py-3 max-w-0 whitespace-nowrap text-sm font-medium text-gray-900 dark:bg-darkOther-200 dark:text-white">
                     <div className="flex items-center lg:pl-2">
-                    <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                    <SquareLoader color={'#302f2f'} loading={true} size={25} />
                     </div>
                 </td>
 
                 <td className="px-6 py-3 text-sm text-gray-800 font-medium dark:bg-darkOther-200 dark:text-white">
                     <div className="flex items-center space-x-2">
 
-                    <span className="flex-shrink-0 text-xs leading-5 font-medium w-full"><BounceLoader color={'#302f2f'} loading={true} size={25} /></span>
+                    <span className="flex-shrink-0 text-xs leading-5 font-medium w-full"><SquareLoader color={'#302f2f'} loading={true} size={25} /></span>
                     </div>
                 </td>
 
                 <td className="pr-6 dark:bg-darkOther-200 dark:text-white">
                     <div className="relative flex justify-end items-center">
-                    <BounceLoader color={'#302f2f'} loading={true} size={25} />
+                    <SquareLoader color={'#302f2f'} loading={true} size={25} />
 
                     </div>
 

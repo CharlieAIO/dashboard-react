@@ -6,7 +6,7 @@ const currencyToSymbolMap = require('currency-symbol-map/map')
 
 router.get('/', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/restocks',{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/restocks`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
@@ -20,11 +20,11 @@ router.get('/', async (req,res) => {
 
 router.get('/get/:pswd', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/restocks/get/' + req.params.pswd,{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/restocks/get/${req.params.pswd}`,{
             headers:{ apikey: process.env.API_KEY},
             method:'get'
         })
-        var response2 = await fetch(process.env.domain + '/api/v1/accounts/dashboard/' + process.env.GUILD_ID,{
+        var response2 = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/accounts/dashboard/${process.env.GUILD_ID}`,{
             headers:{ apikey: process.env.API_KEY},
             method:'get'
         })
@@ -41,13 +41,13 @@ router.get('/get/:pswd', async (req,res) => {
 
 router.get('/data/:pswd', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/restocks/get/' + req.params.pswd,{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/restocks/get/${req.params.pswd}`,{
             headers:{ apikey: process.env.API_KEY},
             method:'get'
         })
         var body = await response.json()
 
-        var response2 = await fetch(process.env.domain + '/api/v1/plans/get/' + body.planId,{
+        var response2 = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/plans/get/${body.planId}`,{
             headers:{ apikey: process.env.API_KEY},
             method:'get'
         })
@@ -88,7 +88,7 @@ router.get('/data/:pswd', async (req,res) => {
 
 router.post('/add', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/restocks/add',{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/restocks/add`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`, "Content-Type": "application/json" },
             method:'post',
             body:JSON.stringify({
@@ -111,7 +111,7 @@ router.post('/add', async (req,res) => {
 
 router.get('/delete/:id', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/restocks/delete/' + req.params.id,{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/restocks/delete/${req.params.id}`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
