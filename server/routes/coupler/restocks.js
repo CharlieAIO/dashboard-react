@@ -28,9 +28,11 @@ router.get('/get/:pswd', async (req,res) => {
             headers:{ apikey: process.env.API_KEY},
             method:'get'
         })
-        var body2 = await response2.json()
+
         var body = await response.json()
-        body['name'] = body2[0].name
+        var body2 = await response2.json()
+        body.name = body2[0].name
+        body.bg = body2[0].backgroundUrl
     }catch{
         return res.status(400).end()
     }

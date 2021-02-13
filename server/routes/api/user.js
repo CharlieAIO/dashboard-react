@@ -5,7 +5,7 @@ const authorize = require('../../auth-middleware')
 const { v4: uuidv4 } = require('uuid');
 const mongoose = require('mongoose');
 const Stripe = require('stripe');
-const { Client } = require("discord.js");
+const { Client } = require("discord.js")
 
 const stripe = Stripe(process.env.STRIPE_SECRET);
 
@@ -21,8 +21,7 @@ function find(name,query,cb) {
 
 router.get('/', authorize(),async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
-        // console.log(req.data.user)
-        // check if user is admin/staff
+
         find('users', `discord: { id: "${req.data.user}"}`, function (err, data) {
             if(err){
                 return null;
@@ -91,22 +90,28 @@ router.post('/bind', authorize(),async (req, res) => {
             
             if(result.rows.length > 0) {
                 if(result.rows[0].discordId.toString() == '123456789')
-                await pool.query(
-                    'UPDATE users SET "discordId" = $1, "discordName" =  $2, "discordImage" = $3, "email" = $4, "dateJoined" = $5 WHERE "key" = $6 ',
-                    [req.body.discordId, req.body.discordName, req.body.discordImage, req.body.email, Math.floor(Date.now() / 1000), req.body.key]
-                ) 
-
-                var results2 = await pool.query(`SELECT * FROM plans WHERE "planId" = '${result.rows[0].plan}'`)
-                var roles = []
-                if(results2.rows.length > 0) {
-                    var r = JSON.parse(results2.rows[0].role)
-                    for(var i = 0; i < r.length; i++) {
-                        roles.push(r[i].value)
+                {
+                    await pool.query(
+                        'UPDATE users SET "discordId" = $1, "discordName" =  $2, "discordImage" = $3, "email" = $4, "dateJoined" = $5 WHERE "key" = $6 ',
+                        [req.body.discordId, req.body.discordName, req.body.discordImage, req.body.email, Math.floor(Date.now() / 1000), req.body.key]
+                    ) 
+    
+                    var results2 = await pool.query(`SELECT * FROM plans WHERE "planId" = '${result.rows[0].plan}'`)
+                    var roles = []
+                    if(results2.rows.length > 0) {
+                        var r = JSON.parse(results2.rows[0].role)
+                        for(var i = 0; i < r.length; i++) {
+                            roles.push(r[i].value)
+                        }
                     }
-                }
+    
+                    
+                    return res.status(200).json({response:"bound", roles:roles})
 
-                
-                return res.status(200).json({response:"bound", roles:roles})
+                } 
+                else {
+                    return res.status(400).end()
+                }
             }
             return res.status(400).end()
     
@@ -285,6 +290,107 @@ router.get('/disable/:id', async (req, res) => {
             return res.status(400).end()
         }
 
+    } else {
+        return res.status(403).end()
+    }
+
+})
+/////////////////////////////////////////
+
+
+// Force Unbind User from Database
+router.post('/force/unbind', authorize(),async (req, res) => {
+    try{
+        var results = await pool.query(`SELECT * FROM users WHERE "id" = '${req.body.key}'`)
+        
+        if(results.rows.length > 0) {
+            if(results.rows[0].discordId.toString() != '123456789') {
+
+                try{
+                    var results2 = await pool.query(`SELECT * FROM plans WHERE "planId" = '${results.rows[0].plan}'`)
+                }catch(e){
+                    console.log(e)
+                }
+
+                try{
+                    var resultRoles = JSON.parse(results2.rows[0].role)
+                    var guild = (await client3.guilds.fetch(process.env.GUILD_ID))
+                    for(var i =0; i < resultRoles.length; i++)
+                    {
+                        var guildUser = await guild.members.fetch(results.rows[0].discordId);
+                        for(var i =0; i<resultRoles.length; i++) {
+                            guildUser.roles.remove(resultRoles[i].value).then({}).catch(e => console.log(e))
+                        }
+                    }
+                }catch{}
+
+                await pool.query(
+                    'UPDATE users SET "discordId" = $1, "discordName" =  $2, "discordImage" = $3, "email" = $4, "dateJoined" = $5 WHERE "key" = $6 ',
+                    [123456789, 'empty', '', 'empty', 0, results.rows[0].key]
+                ) 
+
+                try {
+                    const paymentMethods = await stripe.paymentMethods.list({
+                        customer: results.rows[0].customerId,
+                        type: 'card',
+                        limit:100
+                    });
+                    for(var i = 0; i < paymentMethods.data.length; i++)
+                    {
+                        await stripe.paymentMethods.detach(paymentMethods.data[i].id);
+                    }
+                }catch(e){
+                    console.log(e)
+                }
+
+                return res.status(200).json({response:"unbound"})
+                
+            }
+            else {
+                return res.status(400).end()
+            }
+        }
+        return res.status(400).end()
+
+    }catch(e){
+        return res.status(400).end()
+    }
+
+})
+/////////////////////////////////////////
+
+// Bind User to Database
+router.post('/renew', authorize(),async (req, res) => {
+    if(req.get('apikey') == process.env.API_KEY) {
+        try{
+            var result = await pool.query(`SELECT * FROM users WHERE "key" = '${req.body.key}'`)
+            
+
+            if(result.rows.length > 0) {
+                await pool.query(
+                    'UPDATE users SET "customerId" = $1, "subscriptionId" =  $2 WHERE "key" = $3 ',
+                    [req.body.cusId, req.body.subId,req.body.key]
+                ) 
+
+                var results2 = await pool.query(`SELECT * FROM plans WHERE "planId" = '${result.rows[0].plan}'`)
+                var roles = []
+                if(results2.rows.length > 0) {
+                    var r = JSON.parse(results2.rows[0].role)
+                    for(var i = 0; i < r.length; i++) {
+                        roles.push(r[i].value)
+                    }
+                }
+
+                
+                return res.status(200).json({response:"renewed", roles:roles})
+            }
+            return res.status(400).end()
+    
+        }catch(e){
+            console.log(e)
+            return res.status(400).end()
+        }
+    
     } else {
         return res.status(403).end()
     }

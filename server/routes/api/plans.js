@@ -144,8 +144,8 @@ router.post('/add', authorize(),async (req, res) => {
                 }
                 if(req.body.type == "recurring" || req.body.type == "recurring+onetime-payment") {
                     createObject.recurring = {
-                        interval:req.body.intervalType,
-                        interval_count:parseInt(req.body.interval) 
+                        interval:req.body.intervalType || 'month',
+                        interval_count:parseInt(req.body.interval) || 1
                     }
                 }
         
@@ -165,7 +165,7 @@ router.post('/add', authorize(),async (req, res) => {
                 
                 
                 await pool.query(
-                    'INSERT INTO plans values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)',
+                    'INSERT INTO plans values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',
                     query
                 ) 
                 return res.status(200).json({response:"added"})

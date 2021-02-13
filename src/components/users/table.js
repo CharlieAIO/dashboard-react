@@ -15,7 +15,7 @@ const LicenseTable = () => {
         res.json()
         .then(res => {
             setUsers(res)
-            setLoaded(false)
+            setLoaded(true)
         })
         .catch(err =>  {});
         

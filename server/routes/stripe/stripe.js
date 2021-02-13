@@ -34,7 +34,35 @@ router.post('/customer-portal-sess', async (req, res) => {
       return_url: process.env.domain + '/dashboard',
     });
     res.redirect(session.url);
-  });
+
+});
+
+router.get('/sub/status/:sub', async (req, res) => {
+  if(req.get('apikey') == process.env.API_KEY) {
+    var subscription = null
+    try {
+      subscription = await stripe.subscriptions.retrieve(req.params.sub);
+      console.log(subscription)
+    } catch(e){
+      console.log(e)
+      return res.status(200).send(false)
+    }
+
+    if(subscription) {
+      var status = false
+      try {
+        status = subscription.status
+      } catch{}
+
+      if(status != 'active') return res.status(200).send(true) //renew required (true)
+      else return res.status(200).send(false) //renew required (false)
+    }
+    return res.status(200).send(false) 
+  }
+  else {
+    return res.status(403).end()
+  }
+})
 
 let redirect = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${process.env.CLIENT_ID_STRIPE}&scope=read_write&redirect_uri=${process.env.REDIRECT_URI_STRIPE}`
 module.exports = router

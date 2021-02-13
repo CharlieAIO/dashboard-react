@@ -67,7 +67,7 @@ const LicenseTable = () => {
         
         try{
 
-            await fetch('/users/unbind/' +id, {
+            await fetch('/users/force/unbind/' +id, {
                 method:'get'
             })
             .then(response => {

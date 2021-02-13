@@ -3,7 +3,9 @@ const router = express.Router();
 const Discord = require('discord.js');
 const DiscordOauth2 = require("discord-oauth2");
 const client = new Discord.Client();
+const authorize = require('../../auth-middleware')
 const fetch = require('node-fetch');
+
 
 const oauth = new DiscordOauth2({
 	clientId: process.env.CLIENT_ID,
@@ -14,17 +16,18 @@ const oauth = new DiscordOauth2({
 
 router.get('/data', async (req, res) => {
     try {
-        var user = await oauth.getUser(req.signedCookies['key'] || req.headers.key) 
+
         try{
-            var response = await fetch(process.env.domain + '/users/' + user.id,{
-                headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`  || req.headers.authorization },
+            var user = await oauth.getUser(req.signedCookies['key'] || req.headers.key) 
+            var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users?id=${user.id}`,{
+                headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`  || req.headers.authorization,  refresh:req.signedCookies['jwt.refresh']},
                 method:'get',
             })
             var response2 = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/accounts/dashboard/${process.env.GUILD_ID}`,{
                 headers:{ apikey: process.env.API_KEY },
                 method:'get',
             })
-        }catch{
+        }catch(e){
             return res.status(400).end()
         }
         if(response.ok) {
@@ -32,14 +35,25 @@ router.get('/data', async (req, res) => {
             var responseBody2 = await response2.json()
             var key = ''
             var cusId = ''
+            var subId = ''
             try{
                 key = responseBody[0].key
                 cusId = responseBody[0].customerId
+                subId = responseBody[0].subscriptionId
             }catch{
                 key = 'n/a'
                 cusId = 'n/a'
-
             }
+
+            var status = false
+            console.log(responseBody[0])
+            try{
+                var response3 = await fetch(process.env.domain + `/stripe/sub/status/${subId}`,{
+                    headers:{ apikey: process.env.API_KEY },
+                    method:'get',
+                })
+                status = await response3.json()
+            } catch(e){}
 
             return res.json({
                 customerId:cusId,
@@ -49,7 +63,8 @@ router.get('/data', async (req, res) => {
                 discordImage:`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`,
                 name:user.username,
                 discrim:user.discriminator,
-                bg:responseBody2[0].backgroundUrl
+                bg:responseBody2[0].backgroundUrl,
+                renewReq:status
             })
         } else {
             return res.json({
@@ -64,12 +79,12 @@ router.get('/data', async (req, res) => {
         
 
     } catch(e) {
-
+        console.log(e)
         return res.status(403).send("unauthorized")
     }
 })
 
-router.get('/guild/data/:guild', async (req, res) => {
+router.get('/guild/data/:guild', authorize(),async (req, res) => {
     const guildData = await client.guilds.fetch(req.params.guild)
     return res.json(guildData)
 })

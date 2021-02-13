@@ -85,7 +85,7 @@ const RestockTable = () => {
 
                             <div id={"restock-options-dropdown-" + restock.id} className="dark:bg-darkOther-200 hidden mx-3 mr-10 origin-top-right absolute right-7 top-0 w-48 mt-1 rounded-md shadow-lg z-10 bg-white ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="project-options-menu-0">
                                 <div className="py-1" role="none">
-                                    <CopyToClipboard href="#" className="group flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-darkOther-300 dark:text-white" role="menuitem" text={`${window.location.origin}/?password=${restock.password}`} onCopy={() => {
+                                    <CopyToClipboard href="#" className="group flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-darkOther-300 dark:text-white" role="menuitem" text={`${window.location.origin}/purchase?password=${restock.password}`} onCopy={() => {
                                     document.querySelector('#copy-hide-' + restock.id).classList.add('text-green-500')
                                     setTimeout(() => {
                                         document.querySelector('#copy-hide-' + restock.id).classList.remove(['text-green-500'])

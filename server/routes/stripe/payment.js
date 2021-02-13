@@ -8,11 +8,13 @@ var queue = require('express-queue');
 
 var q = queue({ activeLimit: 2 })
 router.post('/checkout', q, async (req, res) => {
-    var response = await fetch(process.env.domain + '/api/v1/restocks/get/' + req.body.password,{
+    var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/restocks/get/${req.body.password}`,{
         headers:{ apikey: process.env.API_KEY},
         method:'get'
     })
     if(response.ok) {
+        var cusId = ""
+        var subId = ""
 
         var responseBody = await response.json();
         var stock = parseInt(responseBody.stockRemaining)
@@ -21,7 +23,7 @@ router.post('/checkout', q, async (req, res) => {
 
             if(plan) {
 
-                var response2 = await fetch(process.env.domain + '/api/v1/plans/get/' + plan,{
+                var response2 = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/plans/get/${plan}`,{
                     headers:{ apikey: process.env.API_KEY},
                     method:'get'
                 })
@@ -40,6 +42,7 @@ router.post('/checkout', q, async (req, res) => {
                                 default_payment_method:req.body.paymentMethod.id
                             }
                         });
+                        cusId = customer.id
                     }catch(e){
                         // console.log(e)
                         return res.status(400).end()
@@ -47,8 +50,10 @@ router.post('/checkout', q, async (req, res) => {
     
                     if(customer) {
                         var subscription;
-                        var subId = ""
-                        if(planBody[0].type ==  "lifetime") {
+                        
+                        
+                        if(planBody[0].type ==  "lifetime" || planBody[0].type ==  "rental") {
+                            console.log("here")
                             await stripe.invoiceItems.create({
                                 customer:  customer.id,
                                 price: planBody[0].planId,
@@ -82,12 +87,14 @@ router.post('/checkout', q, async (req, res) => {
                                     subObject['cancel_at'] = parseInt(planBody[0].expiry)
                                 }
                                 subscription = await stripe.subscriptions.create(subObject);
+                            
 
                                 if(subscription.status != "active") {
-                                    subId = subscription.id
                                     await stripe.customers.del(customer.id).catch(e => {});
                                     return res.status(400).end()
-                                }else{}        
+                                }else{
+                                    subId = subscription.id
+                                }        
                             }catch(e){
                                 return res.status(400).end()
                             }
@@ -132,11 +139,11 @@ router.post('/checkout', q, async (req, res) => {
                             }
                         }
 
-                        await fetch(process.env.domain + '/api/v1/restocks/deduct/' + req.body.password, {
+                        await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/restocks/deduct/${req.body.password}`, {
                             headers: {apikey: process.env.API_KEY }
                         })
 
-                        var response = await fetch(process.env.domain + '/api/v1/users/add',{
+                        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users/add`,{
                             headers:{ apikey: process.env.API_KEY, "Content-Type": "application/json" },
                             method:'post',
                             body:JSON.stringify({
@@ -145,7 +152,7 @@ router.post('/checkout', q, async (req, res) => {
                                 discordName:"empty",
                                 discordImage:"",
                                 email:req.body.email,
-                                customerId:customer.id,
+                                customerId:cusId,
                                 subscriptionId:subId,
                                 expiryDate:0,
                                 machineId:"empty",

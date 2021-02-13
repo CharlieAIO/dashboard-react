@@ -137,7 +137,7 @@ const PlanModal = () => {
                     id:'',
                     unbinding:unbinding,
                     oneTimeAmount:oneTimePrice,
-                    expiry:new Date('Mon Feb 08 2021 00:00:00 GMT+0000 (Greenwich Mean Time)').getTime() / 1000
+                    expiry:expDate.getTime() / 1000
                 }),
                 "headers": {
                     "Content-Type": "application/json"

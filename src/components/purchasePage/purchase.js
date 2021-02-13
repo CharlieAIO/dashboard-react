@@ -1,12 +1,8 @@
 import '../../static/styles/main.css'; 
 import React, { useState, useEffect } from 'react';
 import UserNav from '../userNav'
-import { IoKeyOutline } from 'react-icons/io5'
-import { BiLogInCircle } from 'react-icons/bi'
-import { FaUserCircle } from 'react-icons/fa'
 import BounceLoader from "react-spinners/BounceLoader";
 import Checkout from './checkout'
-
 
 
 
@@ -25,8 +21,7 @@ const PurchasePage = () => {
         .then(res => {
             setStock(parseInt(res.stockRemaining))
             setName(res.name)
-
-            if((res.bg == "empty" ) || undefined || null) {
+            if((res.bg == "empty" ) || (res.bg == undefined )  || (res.bg == null )) {
                 document.querySelector('#baseBackground').classList.add('bg-darkOther-300')
                 document.querySelector('#baseBackground').style = `background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='199' viewBox='0 0 100 199'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M0 199V0h1v1.99L100 199h-1.12L1 4.22V199H0zM100 2h-.12l-1-2H100v2z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");`
                 

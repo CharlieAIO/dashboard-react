@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const fetch = require('node-fetch');
+const authorize = require('../../auth-middleware')
 
-
-router.get('/', async (req,res) => {
+router.get('/',async (req,res) => {
     try{
         var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/plans`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
@@ -12,7 +12,6 @@ router.get('/', async (req,res) => {
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
     return res.status(200).json(await response.json())
 })
 

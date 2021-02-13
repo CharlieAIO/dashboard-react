@@ -6,9 +6,9 @@ import { AiOutlineMail } from 'react-icons/ai';
 import { BiCalendar, BiExit } from 'react-icons/bi'
 import { FaUserCircle } from 'react-icons/fa'
 import { IoKeyOutline, IoCardOutline } from 'react-icons/io5'
-import Background from '../../static/styles/background.svg'
-
 import UserNav from '../userNav'
+
+import RenewModal from './renewModal'
 
 const Dashboard = () => {
     let history = useHistory()
@@ -22,7 +22,7 @@ const Dashboard = () => {
     const [discordImage, setDiscordImage] = useState("")
     const [customerId, setCustomerId] = useState("")
     const [background, setBackground] = useState("")
-
+    const [renewRequired, setRenewRequired] = useState(false)
     async function fetchData(){
         const res = await fetch('/discord/data');
         res.json()
@@ -30,6 +30,7 @@ const Dashboard = () => {
             if(res.key == 'n/a') {
                 history.push('/bind')
             }
+            setRenewRequired(res.renewReq)
             setEmail(res.email)
             setKey(res.key)
             var date = new Date(res.dateJoined)
@@ -41,8 +42,7 @@ const Dashboard = () => {
             setName(res.name)
             setDiscrim(res.discrim)
             setCustomerId(res.customerId)
-            console.log(res.bg)
-            if((res.bg == "empty" ) || undefined || null) {
+            if((res.bg == "empty" ) || (res.bg == undefined )  || (res.bg == null )) {
                 document.querySelector('#baseBackground').classList.add('bg-darkOther-300')
                 document.querySelector('#baseBackground').style = `background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='199' viewBox='0 0 100 199'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M0 199V0h1v1.99L100 199h-1.12L1 4.22V199H0zM100 2h-.12l-1-2H100v2z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");`
                 
@@ -75,12 +75,18 @@ const Dashboard = () => {
 
     const unbind = async () => {
         var response = await fetch('/users/unbind/' + key)
-        console.log(response)
+
         if(response.ok) {
             history.push('/bind')
-        }else{
-            {}
+        } else {
+            document.querySelector('#unbind').classList.remove('bg-other-900')
+            document.querySelector('#unbind').classList.add('bg-red-500')
+            setTimeout(() => {
+                document.querySelector('#unbind').classList.remove('bg-red-500')
+                document.querySelector('#unbind').classList.add('bg-other-900')
+            }, 1500);
         }
+
     }
 
         return (
@@ -93,6 +99,8 @@ const Dashboard = () => {
                             <div class="px-4 py-5 sm:px-6">
                                 <h1 className="text-lg font-medium text-gray-700 select-none">Dashboard</h1>
                             </div>
+
+                            {renewRequired ?<RenewModal /> : <></>}
                             
                             {loaded ? <div class="px-4 py-5 sm:p-6">
 
@@ -159,7 +167,7 @@ const Dashboard = () => {
                                 <div className="grid grid-cols-2 gap-4 w-full">
                                     <div className="mt-2 relative rounded-md shadow-sm rounded-lg ">
 
-                                        <button  name="joined" id="joined" className="bg-other-900 p-3 block w-full sm:text-sm text-white rounded-md font-medium lg:text-lg" onClick={() => unbind()}>
+                                        <button  name="joined" id="joined" className="bg-other-900 p-3 block w-full sm:text-sm text-white rounded-md font-medium lg:text-lg" onClick={() => unbind()} id="unbind">
                                             <div className="absolute inset-y-0 flex items-center pointer-events-none">
                                                 
                                                 <BiExit className="h-4 w-auto text-white font-medium"/>

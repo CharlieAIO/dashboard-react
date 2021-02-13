@@ -97,24 +97,30 @@ function sendEmail(key,email) {
     
 }
 
-function signAccess(user,flags) {
-    return jwt.sign({user:user, flags:flags},process.env.JWT_SECRET,{
-        expiresIn:"15s" //10s when using refresh 
+async function signAccess(user,flags) {
+    return new Promise((resolve) => {
+        resolve(jwt.sign({user:user, flags:flags},process.env.JWT_SECRET,{
+            expiresIn:"30d" //10s when using refresh 
+        }))
     })
 }
 
-function signRefresh(user,flags) {
-    return jwt.sign({user:user, flags:flags},process.env.JWT_SECRET,{
-        expiresIn:"30d"
+async function signRefresh(user,flags) {
+    return new Promise((resolve) => {
+        resolve(jwt.sign({user:user, flags:flags},process.env.JWT_REFRESH_SECRET,{
+            expiresIn:"30d" //10s when using refresh 
+        }))
     })
 }
-function verifyRefresh(refershToken) {
-    jwt.verify(refershToken, process.env.JWT_REFRESH_SECRET, (err ,decoded) => {
-        if(err) return null;
-        else {
-            const userId = decoded.user
-            return userId
-        }
+
+async function verifyRefresh(refershToken) {
+    return new Promise((resolve) => {
+        jwt.verify(refershToken, process.env.JWT_REFRESH_SECRET, async (err ,decoded) => {
+            if(err) resolve(null)
+            else {
+                resolve(decoded)
+            }
+        })
     })
 }
 
@@ -126,6 +132,7 @@ module.exports = {
     generateNoNumbers:generateNoNumbers,
     sendEmail:sendEmail,
     signAccess:signAccess,
-    signRefresh:signRefresh
+    signRefresh:signRefresh,
+    verifyRefresh:verifyRefresh
     // checkIfStaff:checkIfStaff
 }

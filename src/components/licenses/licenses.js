@@ -42,12 +42,12 @@ const Licenses = () => {
         <>
 
             <AdminNavigation />
-            <div className="flex flex-col w-0 flex-1 overflow-hidden">
+            <div className="flex flex-col w-0 flex-1 overflow-hidden " >
             <AdminSearchbar />
         
             {
                 loaded ?
-                <main className="flex-1 relative overflow-y-auto focus:outline-none" id="main" tabIndex='0'>
+                <main className="flex-1 relative overflow-y-auto focus:outline-none ">
 
                 <div className="bg-white overflow-hidden shadow rounded-lg divide-y mr-12 mt-5 dark:bg-darkOther-200">
 
@@ -55,7 +55,7 @@ const Licenses = () => {
 
                         <dl className="sm:grid sm:grid-cols-2">
 
-                            <div className="flex flex-col p-2  bg-white mr-5 dark:bg-darkOther-200">
+                            <div className="flex flex-col p-2 bg-white mr-5 dark:bg-darkOther-200">
 
                                 <h1 className="dark:text-white">Licenses</h1>
 

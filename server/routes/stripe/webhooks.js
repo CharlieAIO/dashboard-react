@@ -63,6 +63,7 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
     var userID = user.discordId
     var guild = (await client2.guilds.fetch(process.env.GUILD_ID))
 
+    // console.log(req.body.type)
     switch (req.body.type) {
 
         // Case

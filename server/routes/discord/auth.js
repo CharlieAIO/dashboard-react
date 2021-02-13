@@ -2,8 +2,7 @@ const express = require('express');
 const DiscordOauth2 = require("discord-oauth2");
 const router = express.Router();
 const fetch = require('node-fetch');
-const jwt = require('jsonwebtoken');
-const { signAccess } = require('../../utils.js')
+const { signAccess,signRefresh } = require('../../utils.js');
 
 const cookieConfig = {
     httpOnly: true,
@@ -11,12 +10,12 @@ const cookieConfig = {
     // maxAge: 10000000,
     signed: true
 };
-
 const oauth = new DiscordOauth2({
 	clientId: process.env.CLIENT_ID,
 	clientSecret: process.env.CLIENT_SECRET,
 	redirectUri: process.env.REDIRECT_URI,
 });
+
 const oauthURL = oauth.generateAuthUrl({
     scope: ["identify", "guilds","email","guilds.join"],
     clientId:process.env.CLIENT_ID
@@ -28,33 +27,49 @@ router.get('/oauth', async (req, res) =>{
 })
  
 
+const refreshTokens = []
 router.get('/auth/callback' , async (req, res) => {
     let code = req.query.code;
     if(code == undefined) {
         res.redirect(oauthURL)
         return
     }else{
-        var oa = await oauth.tokenRequest({            
-            code: code,
-            scope: "identify guilds",
-            grantType: "authorization_code", 
-            redirectUri: process.env.REDIRECT_URI
-        })
-        res.cookie('key',oa.access_token, cookieConfig);
-        // req.session.key('rt',oa.refresh_token)
-        // req.session.rt = oa.refresh_token
+
+        var formBody = []
+        var body = {client_id:process.env.CLIENT_ID,client_secret:process.env.CLIENT_SECRET,code: code,scope: "identify",grant_type: "authorization_code", redirect_uri: process.env.REDIRECT_URI}
+        for (var property in body) formBody.push(encodeURIComponent(property) + "=" + encodeURIComponent(body[property]));
+        formBody = formBody.join("&");
         
+        
+
+
         try{
-            var user = await oauth.getUser(oa.access_token) 
+
+            var oa = await fetch("https://discord.com/api/v6/oauth2/token",{
+                method:'POST',
+                body:formBody,
+                headers:{
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            oa = await oa.json()
+            if(!oa.error) {
+                res.cookie('key',oa.access_token, cookieConfig);
+
+                var user = await oauth.getUser(oa.access_token) 
 
 
-            var accessToken = signAccess(user.id, user.flgs)
-            var refreshToken = signRefresh(user.id, user.flgs)
-            res.cookie('jwt.access',accessToken, cookieConfig);
-            res.cookie('jwt.refresh',refreshToken, cookieConfig);
+                var accessToken = await signAccess(user.id, user.flags)
+                var refreshToken = await signRefresh(user.id, user.flags)
+                res.cookie('jwt.access',accessToken, cookieConfig);
+                res.cookie('jwt.refresh',refreshToken, cookieConfig);
+                // refreshTokens.push(refreshToken)
             
+            }else return res.redirect('/')
+
         }catch(e){
-            return res.status(403).end()
+            // console.log(e)
+            return res.redirect('/')
         }
 
 

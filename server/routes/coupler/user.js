@@ -3,7 +3,8 @@ const router = express.Router();
 const fetch = require('node-fetch');
 const DiscordOauth2 = require("discord-oauth2");
 const {sendEmail} = require('../../utils');
-const { json } = require('body-parser');
+
+
 
 const oauth = new DiscordOauth2({
 	clientId: process.env.CLIENT_ID,
@@ -14,7 +15,7 @@ const oauth = new DiscordOauth2({
 
 router.get('/', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/users',{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`},
             method:'get',
         })
@@ -27,13 +28,14 @@ router.get('/', async (req,res) => {
 
 router.get('/:id', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/users?id=' + req.params.id,{
-            headers:{ apikey: process.env.API_KEY, authorization: req.headers.authorization },
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users?id=${req.params.id}`,{
+            headers:{ apikey: process.env.API_KEY, authorization: req.headers.authorization, refresh:req.headers.refresh },
             method:'get',
         })
     }catch(e){
         return res.status(400).end()
     }
+
     if(response.status == 403) return res.status(403).send("unauthorized")
     return res.status(200).json(await response.json())
 })
@@ -42,7 +44,7 @@ router.get('/:id', async (req,res) => {
 
 router.post('/add', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + '/api/v1/users/add',{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users/add`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`, "Content-Type": "application/json" },
             method:'post',
             body:JSON.stringify({
@@ -71,7 +73,7 @@ router.post('/bind', async (req,res) => {
     try{
         var user = await oauth.getUser(req.signedCookies['key']) 
 
-        var response = await fetch(process.env.domain + '/api/v1/users/bind',{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users/bind`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`, "Content-Type": "application/json" },
             method:'post',
             body:JSON.stringify({
@@ -120,7 +122,7 @@ router.post('/email', async (req,res) => {
 router.get('/revoke/:id', async (req,res) => {
     try{
         var id = req.params.id
-        var response = await fetch(process.env.domain + '/api/v1/users/delete/uuid/' + id,{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users/delete/uuid/${id}`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`},
             method:'get'
             
@@ -139,7 +141,7 @@ router.get('/revoke/:id', async (req,res) => {
 router.get('/unbind/:key', async (req,res) => {
     try{
         var key = req.params.key
-        var response = await fetch(process.env.domain + '/api/v1/users/unbind',{
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users/unbind`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`, "Content-Type": "application/json"},
             method:'post',
             body:JSON.stringify({
@@ -157,6 +159,26 @@ router.get('/unbind/:key', async (req,res) => {
     }
 })
 
+router.get('/force/unbind/:key', async (req,res) => {
+    try{
+        var key = req.params.key
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users/force/unbind`,{
+            headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`, "Content-Type": "application/json"},
+            method:'post',
+            body:JSON.stringify({
+                key:key
+            })
+            
+        })
+        var text = await response.text()
+        if(response.status == 403) return res.status(403).send("unauthorized")
+        if(text.includes("unbound")) return res.status(200).end()
+        else return res.status(400).end()
+    }catch(e){
+        console.log(e)
+        return res.status(400).end()
+    }
+})
 
 
 module.exports = router

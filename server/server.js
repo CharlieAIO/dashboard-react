@@ -7,9 +7,11 @@ const cookies = require('cookies');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session)
 const cookieParser = require('cookie-parser');
+const checker = require('./routes/stripe/checker')
 
 const app = express();
 
+// mongoose.connect('mongodb://127.0.0.1:27017', {useNewUrlParser:true, useUnifiedTopology: true })
 mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@dashboard-cluster.gkzme.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`, {useNewUrlParser:true, useUnifiedTopology: true })
 mongoose.Promise = global.Promise;
 
@@ -53,9 +55,10 @@ app.use(`/discord/`,require('./routes/discord/auth'));
 app.use(`/stripe/`,require('./routes/stripe/stripe'));
 app.use(`/stripe/`,require('./routes/stripe/webhooks'));
 app.use(`/stripe/`,require('./routes/stripe/payment'));
+app.use(`/stripe/`,require('./routes/stripe/renew'));
 
 app.use(`/`,require('./routes/routes.js'));
 
-
+checker()
 
 app.listen(process.env.PORT_SERVER, () => console.log(`http://127.0.0.1:${process.env.PORT_SERVER}`))
