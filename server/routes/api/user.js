@@ -6,6 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 const mongoose = require('mongoose');
 const Stripe = require('stripe');
 const { Client } = require("discord.js")
+const atob = require('atob')
 
 const stripe = Stripe(process.env.STRIPE_SECRET);
 
@@ -22,17 +23,25 @@ function find(name,query,cb) {
 router.get('/', authorize(),async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
 
-        find('users', `discord: { id: "${req.data.user}"}`, function (err, data) {
-            if(err){
-                return null;
-            }
-            if(data[0].discord.id.normalize() === req.data.user.normalize()) {
-                {}
-            }else {
-                return res.status(403).end()
-            }
-        });
-
+        // find('users', `discord: { id: "${req.data.user}"}`, async function (err, data) {
+        //     if(err){
+        //         console.log(err)
+        //         return null;
+        //     }
+        //     if(data[0].discord.id.normalize() === req.data.user.normalize()) {
+        //         try{
+        //             var results;
+        //             if (req.query.id) results = await pool.query(`SELECT * FROM users WHERE "discordId" = ${req.query.id}`)
+        //             else results = await pool.query('SELECT * FROM users')
+                    
+        //             return res.status(200).json(results.rows)
+        //         }catch(e){
+        //             return res.status(400).end()
+        //         }
+        //     }else {
+        //         return res.status(403).end()
+        //     }
+        // });
         try{
             var results;
             if (req.query.id) results = await pool.query(`SELECT * FROM users WHERE "discordId" = ${req.query.id}`)
@@ -42,6 +51,8 @@ router.get('/', authorize(),async (req, res) => {
         }catch(e){
             return res.status(400).end()
         }
+
+        
     } else {
         return res.status(403).end()
     }
@@ -94,6 +105,52 @@ router.post('/bind', authorize(),async (req, res) => {
                     await pool.query(
                         'UPDATE users SET "discordId" = $1, "discordName" =  $2, "discordImage" = $3, "email" = $4, "dateJoined" = $5 WHERE "key" = $6 ',
                         [req.body.discordId, req.body.discordName, req.body.discordImage, req.body.email, Math.floor(Date.now() / 1000), req.body.key]
+                    ) 
+    
+                    var results2 = await pool.query(`SELECT * FROM plans WHERE "planId" = '${result.rows[0].plan}'`)
+                    var roles = []
+                    if(results2.rows.length > 0) {
+                        var r = JSON.parse(results2.rows[0].role)
+                        for(var i = 0; i < r.length; i++) {
+                            roles.push(r[i].value)
+                        }
+                    }
+    
+                    
+                    return res.status(200).json({response:"bound", roles:roles})
+
+                } 
+                else {
+                    return res.status(400).end()
+                }
+            }
+            return res.status(400).end()
+    
+        }catch(e){
+            console.log(e)
+            return res.status(400).end()
+        }
+    
+    } else {
+        return res.status(403).end()
+    }
+
+})
+/////////////////////////////////////////
+
+// Bind User to Database
+router.post('/update', authorize(),async (req, res) => {
+    if(req.get('apikey') == process.env.API_KEY) {
+        try{
+            var user = atob(req.query.user)
+            var result = await pool.query(`SELECT * FROM users WHERE "discordId" = ${user.id}`)
+            
+            if(result.rows.length > 0) {
+                if(result.rows[0].discordId.toString() != '123456789')
+                {
+                    await pool.query(
+                        'UPDATE users SET "discordName" =  $1, "discordImage" = $2, "email" = $3 WHERE "discordId" = $4 ',
+                        [`${user.username}#${user.discriminator}`,`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`,user.email,user.id]
                     ) 
     
                     var results2 = await pool.query(`SELECT * FROM plans WHERE "planId" = '${result.rows[0].plan}'`)

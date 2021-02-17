@@ -27,7 +27,7 @@ class Users extends Component {
             // Loop through all table rows, and hide those who don't match the search query
             for (i = 0; i < tr.length; i++) {
                 try{
-                    var td1 = tr[i].getElementsByTagName("td")[2];
+                    var td1 = tr[i].getElementsByTagName("td")[1];
 
                     txtValue = td1.textContent || td1.innerText;
                     if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -65,7 +65,7 @@ class Users extends Component {
                                             <AiOutlineSearch className="h-5 w-5 text-gray-900 dark:text-other-100"/>
                                         </div>   
                                                                                
-                                        <input id="searchInput" onKeyUp={filter} autoComplete="off" className="dark:text-white dark:bg-darkOther-200 bg-white block w-full h-full pl-8 pr-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm" placeholder="Search by Key" type="search" name="search" />
+                                        <input id="searchInput" onKeyUp={filter} autoComplete="off" className="dark:text-white dark:bg-darkOther-200 bg-white block w-full h-full pl-8 pr-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm" placeholder="Search by email" type="search" name="search" />
                                     
                                     </div>
         

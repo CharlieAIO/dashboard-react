@@ -26,10 +26,10 @@ const Settings = () => {
     }
 
     const accountHandle = async () => {
-        var response = await fetch('/accounts/dashboard/name/' + accountName)
+        var response = await fetch('/accounts/dashboard/name/' + btoa(accountName))
     } 
     const supportHandle = async () => {
-        var response = await fetch('/accounts/dashboard/supportEmail/' + supportEmail)
+        var response = await fetch('/accounts/dashboard/supportEmail/' + btoa(supportEmail))
     } 
     const logoHandle = async () => {
         var response = await fetch('/accounts/dashboard/logo/' + btoa(imageURL))
@@ -43,7 +43,7 @@ const Settings = () => {
         var response = await fetch('/accounts/dashboard/background/' + btoa(bg)) 
     } 
     const descriptionHandle = async () => {
-        var response = await fetch('/accounts/dashboard/description/' + description) 
+        var response = await fetch('/accounts/dashboard/description/' + btoa(description)) 
         console.log(response)
     }
 

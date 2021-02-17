@@ -10,7 +10,7 @@ const LicenseTable = () => {
     const [loaded, setLoaded] = useState(false)
 
     async function fetchUsers(){
-        const res = await fetch('/users');
+        const res = await fetch('/users/fetch');
         res.json()
         .then(res => {
             setUsers(res)
@@ -151,7 +151,7 @@ const LicenseTable = () => {
                             <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-darkOther-300 w-full" role="menuitem" id={`hide-${user.id}`} onClick={(e) => submitUnbindHandler(e, user.id)}>Unbind from User</button>
                             <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-darkOther-300 w-full" role="menuitem" id={`hide-${user.id}`} onClick={(e) => submitRevokeHandler(e, user.id)}>Revoke & Delete</button>
                             <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-darkOther-300 w-full" role="menuitem" id={`hide-${user.id}`} onClick={(e) => submitEmailHandler(e, user.key, user.email)}>Send receipt via email</button>
-                            <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-darkOther-300 w-full" role="menuitem" id={`hide-${user.id}`} onClick={(e) => {}}>Extend license</button>
+                            <button disabled className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-darkOther-300 w-full" role="menuitem" id={`hide-${user.id}`} onClick={(e) => {}}>Extend license (disabled)</button>
                     
                         </div>
 

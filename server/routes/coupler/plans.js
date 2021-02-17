@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const fetch = require('node-fetch');
-const authorize = require('../../auth-middleware')
 
 router.get('/',async (req,res) => {
     try{
@@ -25,7 +24,7 @@ router.get('/data', async (req,res) => {
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     return res.status(200).json(await response.json())
 })
 
@@ -46,15 +45,18 @@ router.post('/add', async (req,res) => {
                 planId:'',
                 id:'',
                 unbinding:req.body.unbinding,
-                oneTimeAmount:req.body.oneTimeAmount
+                oneTimeAmount:req.body.oneTimeAmount,
+                expiry:req.body.expiry
             }),
         })
     }catch(e){
         console.log(e)
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
-    return res.status(200).json(await response.json())
+    console.log(response)
+    var bdy = await response.text()
+    if(response.status == 403) return res.redirect('/')
+    return res.status(200).json(JSON.parse(bdy))
 })
 
 router.get('/delete/:id', async (req,res) => {
@@ -66,7 +68,8 @@ router.get('/delete/:id', async (req,res) => {
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    
+    if(response.status == 403) return res.redirect('/')
     return res.status(200).json(await response.json())
 })
 

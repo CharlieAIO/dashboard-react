@@ -9,7 +9,7 @@ const UserNav = () =>  {
     const [img, setImg] = useState("")
 
     async function fetchData(){
-        const res = await fetch('/api/v1/accounts/data');
+        const res = await fetch('/accounts/user/data');
         res.json()
         .then(res => {
             setImg(res.serverImage)

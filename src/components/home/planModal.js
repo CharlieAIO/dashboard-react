@@ -122,6 +122,8 @@ const PlanModal = () => {
         e.preventDefault()
 
         if(planName.length > 0 && planType.length > 0) {
+            // console.log(expDate)
+            // console.log(expDate.getTime())
         
             var response = await fetch('/plans/add', {
                 method:'post',
@@ -137,7 +139,7 @@ const PlanModal = () => {
                     id:'',
                     unbinding:unbinding,
                     oneTimeAmount:oneTimePrice,
-                    expiry:expDate.getTime() / 1000
+                    expiry:expDate.getTime()
                 }),
                 "headers": {
                     "Content-Type": "application/json"

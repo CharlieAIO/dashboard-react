@@ -19,10 +19,14 @@ client2.on("ready", () => {
   
 
 router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
+    // if(process.env.WEBHOOK_SECRET != req.headers["stripe-signature"]) return res.status(403).end()
+
     var searchId;
     var query;
     if(req.body.data.object.id) {
-        searchId = req.body.data.object.id
+        if(req.body.data.object.payment_method == "payment_method") searchId = req.body.data.object.customer
+        else searchId = req.body.data.object.id
+
         if (req.body.data.object.object == 'subscription') query = 'subscriptionId'
         if (req.body.data.object.object == 'customer') query = 'customerId'
     }
@@ -34,16 +38,18 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
         if(results.rows[0].discordId != 123456789) user = results.rows[0]
         else res.status(404).end('user doesnt exist')
 
-
         var results2 = await pool.query(`SELECT * FROM plans WHERE "planId" = '${user.plan}'`)
         var resultRoles = JSON.parse(results2.rows[0].role)
         for(var i =0; i < resultRoles.length; i++)
         {
             roles.push(resultRoles[i].value)
         }
-    }catch{
+    }catch(e){
+        console.log("webhook error")
+        console.log(req.body)
         return res.status(404).end('user doesnt exist')
     }
+    
 
     var response = await fetch(process.env.domain + '/api/v1/accounts/dashboard/' + process.env.GUILD_ID, {
         headers:{ apikey: process.env.API_KEY },

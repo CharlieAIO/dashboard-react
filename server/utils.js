@@ -53,7 +53,7 @@ function sendEmail(key,email) {
         });
     };
 
-    readHTMLFile(__dirname + "\\email.html", function (
+    readHTMLFile(__dirname + "/email.html", function (
         err,
         html
     ) {

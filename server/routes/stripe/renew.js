@@ -96,11 +96,7 @@ router.post('/renew', async (req, res) => {
                     newsubId = subscription.id
                 }
                 
-                console.log(JSON.stringify({
-                    key:key,
-                    subId:newsubId,
-                    cusId:newcusId
-                }))
+
                 var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users/renew`,{
                     headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`  || req.headers.authorization,  refresh:req.signedCookies['jwt.refresh'], "Content-Type": "application/json"},
                     method:'post',
@@ -110,7 +106,6 @@ router.post('/renew', async (req, res) => {
                         cusId:newcusId
                     })
                 })
-                console.log(response)
                 var text = await response.text()
                 if(text.includes("renewed")) {
                     try{

@@ -13,7 +13,7 @@ const oauth = new DiscordOauth2({
 });
 
 
-router.get('/', async (req,res) => {
+router.get('/fetch', async (req,res) => {
     try{
         var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`},
@@ -22,7 +22,7 @@ router.get('/', async (req,res) => {
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     return res.status(200).json(await response.json())
 })
 
@@ -36,7 +36,7 @@ router.get('/:id', async (req,res) => {
         return res.status(400).end()
     }
 
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     return res.status(200).json(await response.json())
 })
 
@@ -63,10 +63,11 @@ router.post('/add', async (req,res) => {
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     var data = await response.json()
+    sendEmail(data.key, req.body.email)
     if(data) return res.status(200).json(data)
-    else return res.status(403).send("unauthorized")
+    else return res.redirect('/')
 })
 
 router.post('/bind', async (req,res) => {
@@ -86,7 +87,7 @@ router.post('/bind', async (req,res) => {
             })
             
         })
-        if(response.status == 403) return res.status(403).send("unauthorized")
+        if(response.status == 403) return res.redirect('/')
         var text = await response.text()
         if(text.includes("bound")) {
             try{
@@ -127,7 +128,7 @@ router.get('/revoke/:id', async (req,res) => {
             method:'get'
             
         })
-        if(response.status == 403) return res.status(403).send("unauthorized")
+        if(response.status == 403) return res.redirect('/')
         var text = await response.text()
         if(text.includes("deleted")) return res.status(200).json(text)
         else return res.status(400).end()
@@ -150,7 +151,7 @@ router.get('/unbind/:key', async (req,res) => {
             
         })
         var text = await response.text()
-        if(response.status == 403) return res.status(403).send("unauthorized")
+        if(response.status == 403) return res.redirect('/')
         if(text.includes("unbound")) return res.status(200).end()
         else return res.status(400).end()
     }catch(e){
@@ -171,7 +172,7 @@ router.get('/force/unbind/:key', async (req,res) => {
             
         })
         var text = await response.text()
-        if(response.status == 403) return res.status(403).send("unauthorized")
+        if(response.status == 403) return res.redirect('/')
         if(text.includes("unbound")) return res.status(200).end()
         else return res.status(400).end()
     }catch(e){

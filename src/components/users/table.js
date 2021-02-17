@@ -11,7 +11,7 @@ const LicenseTable = () => {
     
 
     async function fetchUsers(){
-        const res = await fetch('/users');
+        const res = await fetch('/users/fetch');
         res.json()
         .then(res => {
             setUsers(res)

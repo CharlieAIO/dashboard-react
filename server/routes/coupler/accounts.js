@@ -11,7 +11,7 @@ router.get('/user/data', async (req,res) => {
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     return res.status(200).json(await response.json())
 })
 
@@ -25,7 +25,7 @@ router.get('/dashboard', async (req,res) => {
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     return res.status(200).json(await response.json())
 })
 
@@ -38,7 +38,7 @@ router.get('/dashboard/name/:option', async (req,res) => {
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     var d = await respons.json()
     return res.status(200).json(d)
 })
@@ -53,7 +53,7 @@ router.get('/dashboard/supportEmail/:option', async (req,res) => {
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     return res.status(200).json(await response.json())
 })
 
@@ -67,7 +67,7 @@ router.get('/dashboard/logo/:option', async (req,res) => {
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     return res.status(200).json(await response.json())
 })
 
@@ -81,7 +81,7 @@ router.get('/dashboard/payment/:option', async (req,res) => {
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     return res.status(200).json(await response.json())
 })
 
@@ -91,11 +91,10 @@ router.get('/dashboard/background/:option', async (req,res) => {
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
-        console.log(response)
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     return res.status(200).json(await response.json())
 })
 
@@ -105,11 +104,10 @@ router.get('/dashboard/description/:option', async (req,res) => {
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
-        console.log(response)
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     return res.status(200).json(await response.json())
 })
 
@@ -119,10 +117,10 @@ router.get('/stats', async (req,res) => {
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
-    }catch{
+    }catch(e){
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     return res.status(200).json(await response.json())
 })
 

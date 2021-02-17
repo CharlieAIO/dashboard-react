@@ -42,9 +42,8 @@ router.get('/sub/status/:sub', async (req, res) => {
     var subscription = null
     try {
       subscription = await stripe.subscriptions.retrieve(req.params.sub);
-      console.log(subscription)
     } catch(e){
-      console.log(e)
+      // console.log(e)
       return res.status(200).send(false)
     }
 

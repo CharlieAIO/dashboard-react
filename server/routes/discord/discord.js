@@ -5,6 +5,7 @@ const DiscordOauth2 = require("discord-oauth2");
 const client = new Discord.Client();
 const authorize = require('../../auth-middleware')
 const fetch = require('node-fetch');
+const btoa = require('btoa')
 
 
 const oauth = new DiscordOauth2({
@@ -28,11 +29,16 @@ router.get('/data', async (req, res) => {
                 method:'get',
             })
         }catch(e){
+            console.log(e)
             return res.status(400).end()
         }
+        var responseBody2 = null;
+        try{
+            responseBody2 = await response2.json()
+        }catch{}
         if(response.ok) {
             var responseBody = await response.json()
-            var responseBody2 = await response2.json()
+    
             var key = ''
             var cusId = ''
             var subId = ''
@@ -46,7 +52,6 @@ router.get('/data', async (req, res) => {
             }
 
             var status = false
-            console.log(responseBody[0])
             try{
                 var response3 = await fetch(process.env.domain + `/stripe/sub/status/${subId}`,{
                     headers:{ apikey: process.env.API_KEY },
@@ -54,6 +59,13 @@ router.get('/data', async (req, res) => {
                 })
                 status = await response3.json()
             } catch(e){}
+
+            try{
+                await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users/update?user=${btoa(user)}`,{
+                    headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`  || req.headers.authorization,  refresh:req.signedCookies['jwt.refresh']},
+                    method:'get',
+                })
+            }catch{}
 
             return res.json({
                 customerId:cusId,
@@ -63,7 +75,7 @@ router.get('/data', async (req, res) => {
                 discordImage:`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`,
                 name:user.username,
                 discrim:user.discriminator,
-                bg:responseBody2[0].backgroundUrl,
+                bg:responseBody2[0].backgroundUrl || 'empty',
                 renewReq:status
             })
         } else {
@@ -73,6 +85,7 @@ router.get('/data', async (req, res) => {
                 dateJoined:Math.floor(Date.now() / 1000),
                 discordImage:`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`,
                 name:user.username,
+                bg:responseBody2[0].backgroundUrl || 'empty',
                 discrim:user.discriminator
             })
         }

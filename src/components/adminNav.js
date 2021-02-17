@@ -19,6 +19,7 @@ const AdminNavigation = () =>  {
         var response = await fetch('/accounts/user/data')
         if(response.ok) {
             var responseBody = await response.json()
+            if(responseBody.admin == false) history.push('/')
             setAppName(responseBody.name)
             setAppImage(responseBody.serverImage)
             setLoaded(true)

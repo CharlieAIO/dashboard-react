@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 const {generateNoNumbers} = require('../../utils.js')
 const authorize = require('../../auth-middleware')
+const authorize2 = require('../../auth-middleware-2')
 const mongoose = require('mongoose');
 const Account = require('../../models/account')
 const User = require('../../models/user')
 const { v4: uuidv4 } = require('uuid');
 const { pool } = require('../../utils')
 const fs = require('fs');
-const getPort = require('get-port');
 const atob = require('atob')
 const Stripe = require('stripe');
 const stripe = Stripe(process.env.STRIPE_SECRET);
@@ -34,8 +34,72 @@ function update(name,f_query,a_query,cb) {
 
 
 
-router.get('/data', async (req, res) => {
+router.get('/data', authorize2(),async (req, res) => {
     try{
+        find('users', `discord: { id: "${req.data.user}"}`, async function (err, data) {
+            if(err){
+                var query = { guild: process.env.GUILD_ID }
+                find('accounts', query, function (err, data) {
+                    if(err){
+                        res.send({
+                            status:400,
+                            error:err,
+                        })
+                        return;
+                    }
+                    return res.json({
+                        name:data[0].name,
+                        serverImage:data[0].branding.logoUrl,
+                        admin:false
+                    })
+                });
+            }
+            var admins = []
+            for(var i =0; i < data.length; i++) admins.push(data[i].discord.id)
+            if(admins.includes(req.data.user)) {
+                
+                try{
+                    var query = { guild: process.env.GUILD_ID }
+                    find('accounts', query, function (err, data) {
+                        if(err){
+                            res.send({
+                                status:400,
+                                error:err,
+                            })
+                            return;
+                        }
+                        return res.json({
+                            name:data[0].name,
+                            serverImage:data[0].branding.logoUrl,
+                            admin:true
+                        })
+                    });
+                }catch(e){
+                    console.log(e)
+                    return res.status(400).end()
+                }
+
+            }else {
+                var query = { guild: process.env.GUILD_ID }
+                find('accounts', query, function (err, data) {
+                    if(err){
+                        res.send({
+                            status:400,
+                            error:err,
+                        })
+                        return;
+                    }
+                    return res.json({
+                        name:data[0].name,
+                        serverImage:data[0].branding.logoUrl,
+                        admin:false
+                    })
+                });
+            }
+        });
+        
+        
+    }catch(e){
         var query = { guild: process.env.GUILD_ID }
         find('accounts', query, function (err, data) {
             if(err){
@@ -47,11 +111,10 @@ router.get('/data', async (req, res) => {
             }
             return res.json({
                 name:data[0].name,
-                serverImage:data[0].branding.logoUrl
+                serverImage:data[0].branding.logoUrl,
+                admin:false
             })
         });
-    }catch(e){
-        return res.status(400).end()
     }
     
 })
@@ -70,6 +133,7 @@ router.get('/user/:discordId', async (req, res) => {
         return res.send(data)
     });
 })
+
 router.get('/dashboard/:guildId',async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
         // console.log(req.data.user)
@@ -175,31 +239,31 @@ router.get('/dashboard/payment/:option', authorize(),async (req, res) => {
                 return null;
             }
             if(data[0].discord.id.normalize() === req.data.user.normalize()) {
-                {}
+                try{
+        
+                    var query = { settings: { payments: { failedPaymentOption: req.params.option } } }
+                    update('accounts', { guild: process.env.GUILD_ID },query, function (err, data) {
+                        if(err){
+                            res.send({
+                                status:400,
+                                error:err,
+                            })
+                            return;
+                        }
+                        console.log(data)
+                        return res.status(200).send(data)
+                    });
+                    
+                
+                }catch(e){
+                    return res.status(400).end()
+                }
             }else {
                 return res.status(403).end()
             }
         });
 
-        try{
         
-            var query = { settings: { payments: { failedPaymentOption: req.params.option } } }
-            update('accounts', { guild: process.env.GUILD_ID },query, function (err, data) {
-                if(err){
-                    res.send({
-                        status:400,
-                        error:err,
-                    })
-                    return;
-                }
-                console.log(data)
-                return res.status(200).send(data)
-            });
-            
-        
-        }catch(e){
-            return res.status(400).end()
-        }
     } else {
         return res.status(403).end()
     }
@@ -214,30 +278,30 @@ router.get('/dashboard/supportEmail/:option', authorize(),async (req, res) => {
                 return null;
             }
             if(data[0].discord.id.normalize() === req.data.user.normalize()) {
-                {}
+                try{
+        
+                    var query = { supportEmail: atob(req.params.option) }
+                    update('accounts', { guild: process.env.GUILD_ID }, query, function (err, data) {
+                        if(err){
+                            res.send({
+                                status:400,
+                                error:err,
+                            })
+                            return;
+                        }
+                        return res.status(200).send(data)
+                    });
+                    
+                
+                }catch(e){
+                    return res.status(400).end()
+                }
             }else {
                 return res.status(403).end()
             }
         });
 
-        try{
-        
-            var query = { supportEmail: req.params.option }
-            update('accounts', { guild: process.env.GUILD_ID }, query, function (err, data) {
-                if(err){
-                    res.send({
-                        status:400,
-                        error:err,
-                    })
-                    return;
-                }
-                return res.status(200).send(data)
-            });
-            
-        
-        }catch(e){
-            return res.status(400).end()
-        }
+
     } else {
         return res.status(403).end()
     }
@@ -252,32 +316,32 @@ router.get('/dashboard/name/:option', authorize(),async (req, res) => {
                 return null;
             }
             if(data[0].discord.id.normalize() === req.data.user.normalize()) {
-                {}
+                try{
+        
+                    var query = { name: atob(req.params.option) }
+                    update('accounts', { guild: process.env.GUILD_ID }, query, function (err, data) {
+                        if(err){
+                            console.log(err)
+                            res.send({
+                                status:400,
+                                error:err,
+                            })
+                            return;
+                        }
+                        return res.status(200).send(data)
+                    });
+                    
+                
+                }catch(e){
+                    console.log(e)
+                    return res.status(400).end()
+                }
             }else {
                 return res.status(403).end()
             }
         });
 
-        try{
         
-            var query = { name: req.params.option }
-            update('accounts', { guild: process.env.GUILD_ID }, query, function (err, data) {
-                if(err){
-                    console.log(err)
-                    res.send({
-                        status:400,
-                        error:err,
-                    })
-                    return;
-                }
-                return res.status(200).send(data)
-            });
-            
-        
-        }catch(e){
-            console.log(e)
-            return res.status(400).end()
-        }
     } else {
         return res.status(403).end()
     }
@@ -292,30 +356,30 @@ router.get('/dashboard/logo/:option', authorize(),async (req, res) => {
                 return null;
             }
             if(data[0].discord.id.normalize() === req.data.user.normalize()) {
-                {}
+                try{
+        
+                    var query = { branding:{ logoUrl: atob(req.params.option) } } 
+                    update('accounts', { guild: process.env.GUILD_ID }, query, function (err, data) {
+                        if(err){
+                            res.send({
+                                status:400,
+                                error:err,
+                            })
+                            return;
+                        }
+                        return res.status(200).send(data)
+                    });
+                    
+                
+                }catch(e){
+                    return res.status(400).end()
+                }
             }else {
                 return res.status(403).end()
             }
         });
 
-        try{
         
-            var query = { branding:{ logoUrl: atob(req.params.option) } } 
-            update('accounts', { guild: process.env.GUILD_ID }, query, function (err, data) {
-                if(err){
-                    res.send({
-                        status:400,
-                        error:err,
-                    })
-                    return;
-                }
-                return res.status(200).send(data)
-            });
-            
-        
-        }catch(e){
-            return res.status(400).end()
-        }
     } else {
         return res.status(403).end()
     }
@@ -330,30 +394,30 @@ router.get('/dashboard/background/:option', authorize(),async (req, res) => {
                 return null;
             }
             if(data[0].discord.id.normalize() === req.data.user.normalize()) {
-                {}
+                try{
+        
+                    var query = { backgroundUrl: atob(req.params.option) } 
+                    update('accounts', { guild: process.env.GUILD_ID }, query, function (err, data) {
+                        if(err){
+                            res.send({
+                                status:400,
+                                error:err,
+                            })
+                            return;
+                        }
+                        return res.status(200).send(data)
+                    });
+                    
+                
+                }catch(e){
+                    return res.status(400).end()
+                }
             }else {
                 return res.status(403).end()
             }
         });
 
-        try{
-        
-            var query = { backgroundUrl: atob(req.params.option) } 
-            update('accounts', { guild: process.env.GUILD_ID }, query, function (err, data) {
-                if(err){
-                    res.send({
-                        status:400,
-                        error:err,
-                    })
-                    return;
-                }
-                return res.status(200).send(data)
-            });
-            
-        
-        }catch(e){
-            return res.status(400).end()
-        }
+    
     } else {
         return res.status(403).end()
     }
@@ -368,30 +432,30 @@ router.get('/dashboard/description/:option', authorize(),async (req, res) => {
                 return null;
             }
             if(data[0].discord.id.normalize() === req.data.user.normalize()) {
-                {}
+                try{
+        
+                    var query = { description: atob(req.params.option) } 
+                    update('accounts', { guild: process.env.GUILD_ID }, query, function (err, data) {
+                        if(err){
+                            res.send({
+                                status:400,
+                                error:err,
+                            })
+                            return;
+                        }
+                        return res.status(200).send(data)
+                    });
+                    
+                
+                }catch(e){
+                    return res.status(400).end()
+                }
             }else {
                 return res.status(403).end()
             }
         });
 
-        try{
-        
-            var query = { description: req.params.option } 
-            update('accounts', { guild: process.env.GUILD_ID }, query, function (err, data) {
-                if(err){
-                    res.send({
-                        status:400,
-                        error:err,
-                    })
-                    return;
-                }
-                return res.status(200).send(data)
-            });
-            
-        
-        }catch(e){
-            return res.status(400).end()
-        }
+    
     } else {
         return res.status(403).end()
     }
@@ -403,55 +467,56 @@ router.get('/stats', authorize(),async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
         // console.log(req.data.user)
         // check if user is admin/staff
-        find('users', `discord: { id: "${req.data.user}"}`, function (err, data) {
+        find('users', `discord: { id: "${req.data.user}"}`, async function (err, data) {
             if(err){
+                console.log(err)
                 return null;
             }
             if(data[0].discord.id.normalize() === req.data.user.normalize()) {
-                {}
+                try{
+        
+                    var result = await pool.query(`SELECT * FROM users`)
+                    var totalCustomers = result.rows.length
+                    var customersMonth = 0
+                    for(var i = 0; i<result.rows.length; i++) {
+                        var date = new Date(result.rows[i].dateCreaed * 1000)
+                        var currentDate = new Date(Math.floor(Date.now() / 1000)  * 1000)
+                        var month = ['January','February','March','April','May','June','July','August','September','October','November','December'][date.getMonth()]
+                        var currentMonth = ['January','February','March','April','May','June','July','August','September','October','November','December'][currentDate.getMonth()]
+                        if(month == currentMonth) {
+                            customersMonth ++;
+                        }
+                    }
+        
+                    // try{
+                    //     const reportRun = await stripe.reporting.reportRuns.create({
+                    //         report_type: 'balance.summary.1',
+                    //         parameters: {
+                    //           interval_start: new Date(Math.floor(Date.now() / 1000)  * 1000) - 10000,
+                    //           interval_end: new Date(Math.floor(Date.now() / 1000)  * 1000),
+                    //         },
+                    //     });
+                        
+                    // }
+                    // catch{}
+        
+        
+                    return res.status(200).json({
+                        totalCustomers:totalCustomers,
+                        customersMonth:customersMonth,
+                        revenue:'$0'
+                    })
+                
+                }catch(e){
+                    console.log(e)
+                    return res.status(400).end()
+                }
             }else {
                 return res.status(403).end()
             }
         });
 
-        try{
         
-            var result = await pool.query(`SELECT * FROM users`)
-            var totalCustomers = result.rows.length
-            var customersMonth = 0
-            for(var i = 0; i<result.rows.length; i++) {
-                var date = new Date(result.rows[i].dateCreaed * 1000)
-                var currentDate = new Date(Math.floor(Date.now() / 1000)  * 1000)
-                var month = ['January','February','March','April','May','June','July','August','September','October','November','December'][date.getMonth()]
-                var currentMonth = ['January','February','March','April','May','June','July','August','September','October','November','December'][currentDate.getMonth()]
-                if(month == currentMonth) {
-                    customersMonth ++;
-                }
-            }
-
-            try{
-                const reportRun = await stripe.reporting.reportRuns.create({
-                    report_type: 'balance.summary.1',
-                    parameters: {
-                      interval_start: new Date(Math.floor(Date.now() / 1000)  * 1000) - 10000,
-                      interval_end: new Date(Math.floor(Date.now() / 1000)  * 1000),
-                    },
-                });
-                
-            }
-            catch{}
-
-
-            return res.status(200).json({
-                totalCustomers:totalCustomers,
-                customersMonth:customersMonth,
-                revenue:'$0'
-            })
-        
-        }catch(e){
-            console.log(e)
-            return res.status(400).end()
-        }
     } else {
         return res.status(403).end()
     }

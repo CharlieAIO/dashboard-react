@@ -23,7 +23,7 @@ const check = async () => {
             for(var i = 0; i < response.rows.length; i++) 
             {   
                 if(response.rows[i].expiryDate != 0) {
-                    if(parseInt(response.rows[i].expiryDate) <= parseInt(new Date().getTime() / 1000)) {
+                    if(parseInt(response.rows[i].expiryDate) <= parseInt(new Date().getTime())) {
                         try {
                             guild = (await client2.guilds.fetch(process.env.GUILD_ID))
                             // Key expired if current date is greater than expiry date.

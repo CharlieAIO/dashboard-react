@@ -38,6 +38,7 @@ router.post('/checkout', q, async (req, res) => {
                             description: `${planBody[0].type} Customer`,
                             email:req.body.email,
                             payment_method:req.body.paymentMethod.id,
+                            coupon:req.body.coupon,
                             invoice_settings:{
                                 default_payment_method:req.body.paymentMethod.id
                             }
@@ -53,7 +54,6 @@ router.post('/checkout', q, async (req, res) => {
                         
                         
                         if(planBody[0].type ==  "lifetime" || planBody[0].type ==  "rental") {
-                            console.log("here")
                             await stripe.invoiceItems.create({
                                 customer:  customer.id,
                                 price: planBody[0].planId,
@@ -79,6 +79,7 @@ router.post('/checkout', q, async (req, res) => {
                             try{
                                 var subObject = {
                                     customer: customer.id,
+                                    coupon:req.body.coupon,
                                     items: [
                                     {price: planBody[0].planId},
                                     ],
@@ -100,8 +101,7 @@ router.post('/checkout', q, async (req, res) => {
                             }
                         }
                 
-                            
-                        if(planBody[0].oneTimeAmount != null && planBody[0].oneTimeAmount != 0) {
+                        if(planBody[0].oneTimeAmount != null && planBody[0].oneTimeAmount != 0 && planBody[0].oneTimeAmount != '') {
                             let price = planBody[0].oneTimeAmount;
                             if(price.includes('.')) price = price.replace('.','')
                             else price += '00'

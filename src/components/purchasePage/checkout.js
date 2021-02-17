@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import BeatLoader from "react-spinners/BeatLoader";
-
+import publicIp from "public-ip";
 
 import {HiOutlineMail} from 'react-icons/hi'
+import {RiCoupon2Fill} from 'react-icons/ri'
 import {loadStripe} from '@stripe/stripe-js';
 import {
   CardElement,
@@ -17,10 +18,15 @@ const CheckoutForm = () => {
     const elements = useElements();
     const [checkoutStatus, setCheckoutStatus] = useState("idle")
     const [email, setEmail] = useState("")
+    const [coupon, setCoupon] = useState("")
     const [key, setKey] = useState("")
     const [availableStock, setAvailableStock] = useState(false)
     const [pricingDetails, setPricingDetails] = useState("")
     // const [publicKey, setPublicKey] = useState("")
+
+    const getClientIp = async () => await publicIp.v4({
+        fallbackUrls: [ "https://ifconfig.co/ip" ]
+    });
 
     async function fetchData(){
         const res = await fetch('/restocks/data/' + localStorage.getItem('pswd'));
@@ -65,28 +71,33 @@ const CheckoutForm = () => {
                 setCheckoutStatus("failed")
             }
 
-            setCheckoutStatus("pending")
-            var response = await fetch('/stripe/checkout', {
-                method:'post',
-                body:JSON.stringify({
-                    paymentMethod:paymentMethod,
-                    password:localStorage.getItem('pswd'),
-                    email:email
-                }),
-                "headers": {
-                    "Content-Type": "application/json"
-                }
-            })
-            if(response.ok) {
-                if(response.status == 200) {
-                    setCheckoutStatus("success")
-                    //setKey(await response.json().key)
-                }
-                else setCheckoutStatus("failed")
+            if(localStorage.getItem('ip') == await getClientIp()) setCheckoutStatus("failed")
+            else {
+                setCheckoutStatus("pending")
+                var response = await fetch('/stripe/checkout', {
+                    method:'post',
+                    body:JSON.stringify({
+                        paymentMethod:paymentMethod,
+                        password:localStorage.getItem('pswd'),
+                        email:email,
+                        coupon:coupon
+                    }),
+                    "headers": {
+                        "Content-Type": "application/json"
+                    }
+                })
+                if(response.ok) {
+                    if(response.status == 200) {
+                        localStorage.setItem('ip',await getClientIp())
+                        setCheckoutStatus("success")
+                        //setKey(await response.json().key)
+                    }
+                    else setCheckoutStatus("failed")
 
-            } else {
+                } else {
 
-                setCheckoutStatus("failed")
+                    setCheckoutStatus("failed")
+                }
             }
         }
     };
@@ -121,6 +132,16 @@ const CheckoutForm = () => {
                         <input type="text" className="focus:outline-none md:text-md lg:text-md font-normal text-gray-500 w-full pl-8 sm:text-sm rounded-md p-3" placeholder="email" onChange={e => setEmail(e.target.value)} />
                     </div>
                 </fieldset>
+
+                <fieldset >
+                    <div class="mt-3 relative rounded-md border-0">
+                        <div class="absolute inset-y-0 left-0 flex items-center pointer-events-none">
+                        <RiCoupon2Fill class="h-6 w-6 text-gray-400"/>
+                        </div>
+                        <input type="text" className="focus:outline-none md:text-md lg:text-md font-normal text-gray-500 w-full pl-8 sm:text-sm rounded-md p-3" placeholder="coupon" onChange={e => setCoupon(e.target.value)} />
+                    </div>
+                </fieldset>
+                
                 <p className="text-xs text-gray-400 font-medium select-none">{pricingDetails}</p>
 
                 {

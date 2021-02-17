@@ -14,7 +14,7 @@ router.get('/', async (req,res) => {
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     return res.status(200).json(body)
 })
 
@@ -28,16 +28,29 @@ router.get('/get/:pswd', async (req,res) => {
             headers:{ apikey: process.env.API_KEY},
             method:'get'
         })
-
-        var body = await response.json()
-        var body2 = await response2.json()
-        body.name = body2[0].name
-        body.bg = body2[0].backgroundUrl
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    var body2 = null
+    var body1 = null
+    try{
+        body2 = await response2.json()
+        body1 = await response.json()
+    }catch{}
+
+    var body = {
+        name:body2[0].name,
+        bg:body2[0].backgroundUrl
+    }
+    
+    try{
+        body.stockRemaining = body1.stockRemaining
+        body.name = body1.name
+    }catch{}
+    
+    
     return res.status(200).json(body)
+
 })
 
 
@@ -57,7 +70,7 @@ router.get('/data/:pswd', async (req,res) => {
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
 
     var availableStock = false
     if(body.stockRemaining > 0) {
@@ -104,10 +117,11 @@ router.post('/add', async (req,res) => {
             }),
         })
         var body = await response.json()
-    }catch{
+    }catch(e){
+        console.log(e)
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     return res.status(200).json(body)
 })
 
@@ -121,7 +135,7 @@ router.get('/delete/:id', async (req,res) => {
     }catch{
         return res.status(400).end()
     }
-    if(response.status == 403) return res.status(403).send("unauthorized")
+    if(response.status == 403) return res.redirect('/')
     return res.status(200).json(body)
 })
 
