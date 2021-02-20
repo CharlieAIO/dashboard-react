@@ -11,6 +11,8 @@ import DatePicker from 'react-date-picker';
 
 import { AiOutlineClose } from 'react-icons/ai';
 import { IoPricetagOutline } from 'react-icons/io5';
+import { BsCalendar } from 'react-icons/bs'
+import { MdClear } from 'react-icons/md'
 
 var planOptions = [
     {label:'Recurring & Onetime Payment', value:'recurring+onetime-payment'},
@@ -112,8 +114,7 @@ const PlanModal = () => {
         }),
     }
     const colourStyle = {
-        control: styles => ({ ...styles, backgroundColor: localStorage.getItem('mode') }),
-
+        control: styles => ({ ...styles, backgroundColor: localStorage.getItem('mode') })
     }
 
 
@@ -211,7 +212,7 @@ const PlanModal = () => {
                                                         <div className="mt-1 rounded-md shadow-sm -space-y-px">
                                                             <div>
                                                             <label className="block text-sm font-medium text-gray-700"></label>
-                                                            <input  name="planName" id="name" autoComplete="off" className="dark:bg-darkOther-200 focus:ring-other-200 focus:border-other-200 block w-full font-medium text-md rounded-md py-2 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200" 
+                                                            <input  name="planName" id="name" autoComplete="off" className="dark:bg-darkOther-200 focus:outline-none dark:text-white block w-full font-medium text-md rounded-md py-2" 
                                                             placeholder="Member" value={planName} onChange={e => setplanName(e.target.value)} />                                                         
                                                             
                                                             </div>
@@ -224,7 +225,7 @@ const PlanModal = () => {
                                                             <div>
                                                                 <label className="sr-only">type</label>
                                                                 
-                                                                <Select defaultValue={planOptions[0]} styles={colourStyle} placeholder="Plan Type" id="type" value={planType} name="planType" options={planOptions} className="focus:ring-other-200 focus:border-other-200 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md dark:focus:border-darkOther-200 dark:focus:ring-darkOther-200"
+                                                                <Select defaultValue={planOptions[0]} styles={colourStyle} placeholder="Plan Type" id="type" value={planType} name="planType" options={planOptions} className="relative block w-full rounded-none rounded-t-md focus:z-10 font-normal text-md focus:outline-none"
                                                                 onChange={e => setplanType(e.value)} value={planOptions.filter(function(planOptions) {return planOptions.value === planType})}/>
                                                             </div>
                                                         </div>
@@ -243,7 +244,7 @@ const PlanModal = () => {
                                                                 <span className="inline-flex items-center px-3 rounded-l-md border-r-2 border-gray-200 bg-gray-50 text-gray-800 sm:text-sm mr-2 dark:bg-darkOther-100 dark:text-white select-none">
                                                                     every
                                                                 </span>
-                                                                <input name="interval" id="interval" type="text" placeholder="Count" autoComplete="off" className="dark:bg-darkOther-200 block w-full font-medium text-md rounded-md py-2 " value={interval} onChange={e => setinterval(e.target.value)}/>
+                                                                <input name="interval" id="interval" type="text" placeholder="Count" autoComplete="off" className="dark:bg-darkOther-200 block w-full font-medium text-md rounded-md py-2 focus:outline-none dark:text-white" value={interval} onChange={e => setinterval(e.target.value)}/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -255,7 +256,7 @@ const PlanModal = () => {
                                                                 <label className="sr-only select-none">Interval Type</label>
                                                                 
                                                                 <Select defaultValue={intervalTypeOptions[3]} styles={colourStyle} id="type" value={intervalType} name="intervalType" options={intervalTypeOptions} placeholder="Interval" 
-                                                                className="focus:ring-other-200 focus:border-other-200 relative block w-full rounded-none rounded-t-md focus:z-10 font-medium text-md dark:focus:border-darkOther-200 dark:focus:ring-darkOther-200"
+                                                                className="relative block w-full rounded-none rounded-t-md focus:z-10 font-normal text-md"
                                                                 onChange={e => setintervalType(e.value)} value={intervalTypeOptions.filter(function(intervalTypeOptions) {return intervalTypeOptions.value === intervalType})}/>
                                                             </div>
                                                         </div>
@@ -273,7 +274,7 @@ const PlanModal = () => {
                                                 <div className="mt-1 bg-white rounded-md shadow-sm dark:bg-darkOther-200">
                                                     <div>
                                                         <div className="mt-1 relative rounded-md shadow-sm">
-                                                            <input type="text" name="price" id="price" className="dark:bg-darkOther-200 focus:ring-other-200 focus:border-other-200 block w-full font-medium text-md  rounded-md py-2 dark:focus:border-darkOther-200 dark:focus:ring-darkOther-200" 
+                                                            <input type="text" name="price" id="price" className="dark:bg-darkOther-200 focus:outline-none block w-full font-medium text-md  rounded-md py-2 dark:text-white" 
                                                             placeholder="0.00" value={price} autoComplete="off" onChange={e => setprice(e.target.value)}/>
 
                                                             <div className="absolute inset-y-0 right-0 flex items-center">
@@ -291,11 +292,19 @@ const PlanModal = () => {
                                                 <legend className="block text-sm font-medium text-gray-700 text-left dark:text-gray-300 select-none">Expiry</legend>
                                                 <div className="mt-1 bg-white  dark:bg-darkOther-200">
                                                     <div>
-                                                        <div className="mt-1 relative rounded-md shadow-sm text-left ">
+                                                        <div className="mt-1 relative rounded-md shadow-sm text-left dark:text-white" id="calend">
                                                         <DatePicker
                                                             onChange={setExpDate}
                                                             value={expDate}
                                                             calendarAriaLabel={"Select Date"}
+                                                            calendarIcon={<BsCalendar />}
+                                                            clearIcon={<MdClear />}
+                                                            onCalendarClose={() => {
+                                                                document.querySelector('#calend').classList.add('dark:text-white')
+                                                            }}
+                                                            onCalendarOpen={() => {
+                                                                document.querySelector('#calend').classList.remove('dark:text-white')
+                                                            }}
                                                         />
 
                                                         </div>
@@ -310,7 +319,7 @@ const PlanModal = () => {
                                                         <div className="mt-1 rounded-md shadow-sm -space-y-px">
                                                             <div>
                                                                 <label className="sr-only">price</label>
-                                                                <input type="text" className="dark:bg-darkOther-200 focus:ring-other-200 focus:border-other-200 block w-full font-medium text-md  rounded-md py-2 dark:focus:border-darkOther-200 dark:focus:ring-darkOther-200" 
+                                                                <input type="text" className="dark:bg-darkOther-200 focus:outline-none block w-full font-medium text-md rounded-md py-2 dark:text-white" 
                                                                 placeholder="0.00" value={oneTimePrice} autoComplete="off" onChange={e => setOneTimePrice(e.target.value)}/>
                                                                                                                                     
                                                             

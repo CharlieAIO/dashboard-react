@@ -31,6 +31,9 @@ app.use(
     })
 )
 
+app.set('views',path.join(__dirname, ''));
+app.set('view engine','ejs');
+
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(express.static(__dirname + '../../build'));
 app.use(express.json());
@@ -58,7 +61,8 @@ app.use(`/stripe/`,require('./routes/stripe/payment'));
 app.use(`/stripe/`,require('./routes/stripe/renew'));
 
 app.use(`/`,require('./routes/routes.js'));
+app.use(`/`,require('./routes/extra.js'));
 
-checker()
+// checker()
 
 app.listen(process.env.PORT_SERVER, () => console.log(`http://127.0.0.1:${process.env.PORT_SERVER}`))

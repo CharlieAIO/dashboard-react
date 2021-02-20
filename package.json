@@ -51,6 +51,7 @@
     "react-select": "^4.0.2",
     "react-spinners": "^0.10.4",
     "react-stripe-elements": "^6.1.2",
+    "react-tooltip": "^4.2.14",
     "stripe": "^8.132.0",
     "uuid": "^8.3.2",
     "web-vitals": "^0.2.4",

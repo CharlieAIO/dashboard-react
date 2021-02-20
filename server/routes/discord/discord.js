@@ -65,7 +65,7 @@ router.get('/data', async (req, res) => {
                     headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`  || req.headers.authorization,  refresh:req.signedCookies['jwt.refresh']},
                     method:'get',
                 })
-            }catch{}
+            }catch(e){}
 
             return res.json({
                 customerId:cusId,

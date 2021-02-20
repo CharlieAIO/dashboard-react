@@ -9,7 +9,8 @@ import AdminNavigation from '../adminNav';
 import AdminSearchbar from '../adminSearch';
 
 import { FaPlus } from 'react-icons/fa';
-import BounceLoader from "react-spinners/BounceLoader";
+
+
 
 const Home = () => {
     const [totalLicense, setTotalLicense] = useState(0)

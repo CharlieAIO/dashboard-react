@@ -139,7 +139,7 @@ router.post('/bind', authorize(),async (req, res) => {
 /////////////////////////////////////////
 
 // Bind User to Database
-router.post('/update', authorize(),async (req, res) => {
+router.get('/update', authorize(),async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
         try{
             var user = atob(req.query.user)
@@ -153,17 +153,8 @@ router.post('/update', authorize(),async (req, res) => {
                         [`${user.username}#${user.discriminator}`,`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`,user.email,user.id]
                     ) 
     
-                    var results2 = await pool.query(`SELECT * FROM plans WHERE "planId" = '${result.rows[0].plan}'`)
-                    var roles = []
-                    if(results2.rows.length > 0) {
-                        var r = JSON.parse(results2.rows[0].role)
-                        for(var i = 0; i < r.length; i++) {
-                            roles.push(r[i].value)
-                        }
-                    }
-    
                     
-                    return res.status(200).json({response:"bound", roles:roles})
+                    return res.status(200).end()
 
                 } 
                 else {

@@ -64,7 +64,7 @@ const PlanTable = () => {
 
                     <td className="px-6 py-3 text-sm text-gray-800 dark:text-white font-medium dark:bg-darkOther-200">
                         <div className="flex items-center space-x-2">
-                            <span className="flex-shrink-0 text-xs leading-5 font-medium"> {currencyToSymbolMap[plan.currency]}{plan.price} / {plan.intervalType}</span>
+                            <span className="flex-shrink-0 text-xs leading-5 font-medium"> {currencyToSymbolMap[plan.currency]}{plan.price} / {plan.interval || ''}  {plan.intervalType || plan.type}</span>
                         </div>
                     </td>
 
@@ -81,7 +81,8 @@ const PlanTable = () => {
                         <div id={`plans-options-dropdown-${plan.id}`} type="button" className="dark:bg-darkOther-200 hidden mx-3 mr-10 origin-top-right absolute right-7 top-0 w-48 mt-1 rounded-md shadow-lg z-10 bg-white ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="project-options-menu-0">
                             <div className="py-1" role="none">
                             <button  id={`plans-edit-${plan.id}`} className="group flex items-center px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-darkOther-300 dark:text-white" role="menuitem" onClick={() => {
-                            document.querySelector('#plan-modal-edit').classList.contains('hidden') ? document.querySelector('#plan-modal-edit').classList.remove('hidden') : document.querySelector('#plan-modal-edit').classList.add('hidden')
+                            document.querySelector(`#plan-modal-edit-${plan.id}`).classList.contains('hidden') ? document.querySelector(`#plan-modal-edit-${plan.id}`).classList.remove('hidden') : document.querySelector(`#plan-modal-edit-${plan.id}`).classList.add('hidden')
+                            
                             }}>
                             <AiOutlineEdit className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" />
                                 Edit
@@ -95,7 +96,9 @@ const PlanTable = () => {
                         </div>
                     </td>
 
-                    <PlanEditModal {...plan} />
+                    <PlanEditModal {...plan}/>
+
+                    
 
                 </tr>
             )

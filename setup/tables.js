@@ -74,7 +74,7 @@ async function plans() {
         console.log(e)
     }
 }
-plans()
+
 
 // async function plans() {
 //     try{

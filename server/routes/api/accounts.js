@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const {generateNoNumbers} = require('../../utils.js')
+const {generateNoNumbers, pool} = require('../../utils.js')
 const authorize = require('../../auth-middleware')
 const authorize2 = require('../../auth-middleware-2')
 const mongoose = require('mongoose');
 const Account = require('../../models/account')
 const User = require('../../models/user')
 const { v4: uuidv4 } = require('uuid');
-const { pool } = require('../../utils')
 const fs = require('fs');
 const atob = require('atob')
 const Stripe = require('stripe');
@@ -69,7 +68,7 @@ router.get('/data', authorize2(),async (req, res) => {
                             return;
                         }
                         return res.json({
-                            name:data[0].name,
+                            name:data[0].name || 'null',
                             serverImage:data[0].branding.logoUrl,
                             admin:true
                         })
@@ -479,8 +478,8 @@ router.get('/stats', authorize(),async (req, res) => {
                     var totalCustomers = result.rows.length
                     var customersMonth = 0
                     for(var i = 0; i<result.rows.length; i++) {
-                        var date = new Date(result.rows[i].dateCreaed * 1000)
-                        var currentDate = new Date(Math.floor(Date.now() / 1000)  * 1000)
+                        var date = new Date(result.rows[i].dateCreated * 1000)
+                        var currentDate = new Date(Math.floor(Date.now()))
                         var month = ['January','February','March','April','May','June','July','August','September','October','November','December'][date.getMonth()]
                         var currentMonth = ['January','February','March','April','May','June','July','August','September','October','November','December'][currentDate.getMonth()]
                         if(month == currentMonth) {

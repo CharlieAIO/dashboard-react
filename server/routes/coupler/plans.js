@@ -73,4 +73,26 @@ router.get('/delete/:id', async (req,res) => {
     return res.status(200).json(await response.json())
 })
 
+router.post('/update', async (req,res) => {
+    try{
+
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/plans/update`,{
+            headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`, "Content-Type": "application/json" },
+            method:'post',
+            body:JSON.stringify({
+                id:req.body.id,
+                planName:req.body.planName,
+                role:req.body.role,
+                unbinding:req.body.unbinding,
+                expiry:req.body.expiry
+            }),
+        })
+    }catch(e){
+        return res.status(400).end()
+    }
+    var bdy = await response.text()
+    if(response.status == 403) return res.redirect('/')
+    return res.status(200).json(JSON.parse(bdy))
+})
+
 module.exports = router

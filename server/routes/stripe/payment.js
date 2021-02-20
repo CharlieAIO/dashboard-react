@@ -63,10 +63,11 @@ router.post('/checkout', q, async (req, res) => {
                                 customer: customer.id,
                                 collection_method:"charge_automatically"
                             });
+                            console.log(invoice)
                             if(invoice.id) {
                                 const invoicePaid = await stripe.invoices.pay(invoice.id);
-                                if(invoicePaid.amount_due == invoicePaid.amount_paid) {}
-                                else {
+                                console.log(invoicePaid)
+                                if(invoicePaid.amount_due != invoicePaid.amount_paid) {
                                     await stripe.customers.del(customer.id).catch(e => {});
                                     return res.status(400).end()
                                 }
@@ -97,6 +98,7 @@ router.post('/checkout', q, async (req, res) => {
                                     subId = subscription.id
                                 }        
                             }catch(e){
+                                console.log(e)
                                 return res.status(400).end()
                             }
                         }
@@ -137,12 +139,18 @@ router.post('/checkout', q, async (req, res) => {
                                 await stripe.subscriptions.del(subId).catch(e => {});
                                 return res.status(400).end()
                             }
-                        }
+                        }else{}
 
                         await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/restocks/deduct/${req.body.password}`, {
                             headers: {apikey: process.env.API_KEY }
                         })
+                        
+                        console.log(planBody[0].expiry)
+                        var exp;
+                        if (planBody[0].expiry == 'none') exp = 0
+                        else exp = planBody[0].expiry
 
+                        console.log(exp)
                         var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users/add`,{
                             headers:{ apikey: process.env.API_KEY, "Content-Type": "application/json" },
                             method:'post',
@@ -154,10 +162,11 @@ router.post('/checkout', q, async (req, res) => {
                                 email:req.body.email,
                                 customerId:cusId,
                                 subscriptionId:subId,
-                                expiryDate:0,
+                                expiryDate:exp,
                                 machineId:"empty",
                             })
                         })
+                        console.log(response)
                         if(response.ok) {
                             var b = await response.json()
                             sendEmail(b.key, req.body.email)
@@ -168,8 +177,6 @@ router.post('/checkout', q, async (req, res) => {
                             return res.status(400).end()
                         }
                             
-                        
-
                         
                     }
     

@@ -71,33 +71,40 @@ const CheckoutForm = () => {
                 setCheckoutStatus("failed")
             }
 
-            if(localStorage.getItem('ip') == await getClientIp()) setCheckoutStatus("failed")
-            else {
-                setCheckoutStatus("pending")
-                var response = await fetch('/stripe/checkout', {
-                    method:'post',
-                    body:JSON.stringify({
-                        paymentMethod:paymentMethod,
-                        password:localStorage.getItem('pswd'),
-                        email:email,
-                        coupon:coupon
-                    }),
-                    "headers": {
-                        "Content-Type": "application/json"
-                    }
-                })
-                if(response.ok) {
-                    if(response.status == 200) {
-                        localStorage.setItem('ip',await getClientIp())
-                        setCheckoutStatus("success")
-                        //setKey(await response.json().key)
-                    }
-                    else setCheckoutStatus("failed")
+            
+            try{
+                if(JSON.parse(localStorage.getItem('ip')).ip == await getClientIp() && JSON.parse(localStorage.getItem('ip')).restock == localStorage.getItem('pswd')) setCheckoutStatus("failed")
+            }catch{}
 
-                } else {
-
-                    setCheckoutStatus("failed")
+            setCheckoutStatus("pending")
+            var response = await fetch('/stripe/checkout', {
+                method:'post',
+                body:JSON.stringify({
+                    paymentMethod:paymentMethod,
+                    password:localStorage.getItem('pswd'),
+                    email:email,
+                    coupon:coupon
+                }),
+                "headers": {
+                    "Content-Type": "application/json"
                 }
+            })
+            if(response.ok) {
+                if(response.status == 200) {
+                    try{
+                        localStorage.setItem('ip',JSON.stringify({
+                            ip:await getClientIp(),
+                            restock:localStorage.getItem('pswd')
+                        }))
+                    }catch{}
+                    setCheckoutStatus("success")
+                    //setKey(await response.json().key)
+                }
+                else setCheckoutStatus("failed")
+
+            } else {
+
+                setCheckoutStatus("failed")
             }
         }
     };

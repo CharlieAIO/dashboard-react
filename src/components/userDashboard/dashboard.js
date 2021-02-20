@@ -33,7 +33,7 @@ const Dashboard = () => {
             setRenewRequired(res.renewReq)
             setEmail(res.email)
             setKey(res.key)
-            var date = new Date(res.dateJoined)
+            var date = new Date(res.dateJoined * 1000)
             var day = date.getDate();
             var month = ['January','February','March','April','May','June','July','August','September','October','November','December'][date.getMonth()]
             var year = date.getFullYear()
@@ -199,7 +199,7 @@ const Dashboard = () => {
                             </div> 
                     
                                 
-                                : <div class="px-4 py-5 sm:p-6">
+                            :   <div class="px-4 py-5 sm:p-6">
 
                                     <div className="mt-1 relative">
 

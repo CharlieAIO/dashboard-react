@@ -206,15 +206,26 @@ router.get('/delete/:id', authorize(),async (req, res) => {
             var admins = []
             for(var i =0; i < data.length; i++) admins.push(data[i].discord.id)
             if(admins.includes(req.data.user)) {
-                try{
-                    await pool.query(
-                        `DELETE FROM plans WHERE "id" = '${req.params.id}'`
-                    ) 
-                    return res.status(200).end()
-            
-                }catch(e){
+                var results0 = await pool.query(`SELECT * FROM plans WHERE "id" = '${req.params.id}'`) 
+
+                var results = await pool.query(`SELECT * FROM users WHERE "plan" = '${results0.rows[0].planId}'`)
+                if(results.rows.length > 0) {
+                    // Plan has users active
                     return res.status(400).end()
+                } else {
+
+                    try{
+                        await pool.query(
+                            `DELETE FROM plans WHERE "id" = '${req.params.id}'`
+                        ) 
+                        return res.status(200).end()
+                
+                    }catch(e){
+                        return res.status(400).end()
+                    }
+
                 }
+                
             }else {
                 return res.status(403).end()
             }
@@ -226,6 +237,49 @@ router.get('/delete/:id', authorize(),async (req, res) => {
         return res.status(403).end()
     }
 
+
+})
+/////////////////////////////////////////
+
+// update plan in Database
+router.post('/update', authorize(),async (req, res) => {
+    if(req.get('apikey') == process.env.API_KEY) {
+        find('users', `discord: { id: "${req.data.user}"}`, async function (err, data) {
+            if(err){
+                return null;
+            }
+            var admins = []
+            for(var i =0; i < data.length; i++) admins.push(data[i].discord.id)
+            if(admins.includes(req.data.user)) {
+                try{
+                    var result = await pool.query(`SELECT * FROM plans WHERE "id" = '${req.body.id}'`)
+                    
+                    if(result.rows.length > 0) {
+                        await pool.query(
+                            'UPDATE plans SET "planName" =  $1, "role" = $2, "unbindable" = $3, "expiry" = $4 WHERE "id" = $5 ',
+                            [req.body.planName, req.body.role, req.body.unbinding, req.body.expiry, req.body.id]
+                        ) 
+        
+                        
+                        return res.status(200).end()
+                    }
+                    return res.status(400).end()
+            
+                }catch(e){
+                    console.log(e)
+                    return res.status(400).end()
+                }
+                
+            }else {
+                return res.status(403).end()
+            }
+        });
+
+    
+    
+    } else {
+        return res.status(403).end()
+    }
 
 })
 /////////////////////////////////////////
