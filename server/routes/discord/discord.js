@@ -29,7 +29,6 @@ router.get('/data', async (req, res) => {
                 method:'get',
             })
         }catch(e){
-            console.log(e)
             return res.status(400).end()
         }
         var responseBody2 = null;
@@ -67,6 +66,20 @@ router.get('/data', async (req, res) => {
                 })
             }catch(e){}
 
+            var guild = (await client.guilds.fetch(process.env.GUILD_ID))
+            oauth.addMember({
+                accessToken: req.signedCookies['key'],
+                botToken: process.env.BOT_TOKEN,
+                guildId: process.env.GUILD_ID,
+                userId: user.id,
+                roles: responseBody[0].roles
+            }).then({}).catch(e => console.log(e))
+
+            var guildUser = await guild.members.fetch(user.id);
+            for(var i =0; i<responseBody[0].roles.length; i++) {
+                guildUser.roles.add(responseBody[0].roles[i]).then({}).catch(e => {})
+            }
+
             return res.json({
                 customerId:cusId,
                 email:user.email,
@@ -92,7 +105,7 @@ router.get('/data', async (req, res) => {
         
 
     } catch(e) {
-        console.log(e)
+        // console.log(e)
         return res.status(403).send("unauthorized")
     }
 })

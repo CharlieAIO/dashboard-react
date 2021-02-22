@@ -4,6 +4,7 @@ const fetch = require('node-fetch')
 const fs = require('fs');
 const { pathToFileURL } = require('url');
 const {pool} = require('../utils.js')
+var axios = require('axios');
 
 function requireUncached(module) {
     delete require.cache[require.resolve(module)];
@@ -17,24 +18,25 @@ async function getSnare(footlockerUrl) {
     var currStamp = Date.now();
     var snareUrl = `https://mpsnare.iesnare.com/snare.js?_=${currStamp}`
     var agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
+    var options = {
+        method: "GET",
+        url: snareUrl,
+        headers: {
+            'Accept': '*/*',
+            'Connection': 'keep-alive',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Referer': footlockerUrl,
+            'Sec-Fetch-Dest': 'script',
+            'Sec-Fetch-Mode': 'no-cors',
+            'Sec-Fetch-Site': 'same-site',
+            'User-Agent': agent
+        }
+    }
     var response
     try{
-        response = await fetch(snareUrl,{
-            method:'get',
-            headers:{
-                'Scheme': 'https',
-                'Accept': '*/*',
-                'Connection': 'keep-alive',
-                'Accept-Language': 'en-US,en;q=0.9',
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache',
-                'Referer': footlockerUrl,
-                'Sec-Fetch-Dest': 'script',
-                'Sec-Fetch-Mode': 'no-cors',
-                'Sec-Fetch-Site': 'same-site',
-                'User-Agent': agent
-            }
-        })
+        response = await axios.get(snareUrl)
     }catch(e){
         {}
     }
@@ -111,7 +113,7 @@ router.get(
 router.get(
     '/extension/download',
     function(req, res){
-        const downloadName = `./server/extension.zip`;
+        const downloadName = `./extension.zip`;
         res.set('Content-Type','application/octet-stream');
         res.set('Content-Disposition',`attachment; filename=extension`);
         res.download(downloadName);
@@ -120,7 +122,7 @@ router.get(
 router.get(
     '/venetia-cli-latest',
     function(req, res){
-        fs.readdir('./server/versions/', (err, files) => {
+        fs.readdir('./versions/', (err, files) => {
             if (err) {
                 res.json({version:null, error:err}).end(200)
             }
@@ -134,9 +136,9 @@ router.get(
 router.get(
     '/venetia-cli-latest/download',
     function(req, res){
-        fs.readdir('./server/versions/', (err, files) => {
+        fs.readdir('./versions/', (err, files) => {
             for (const file of files) {
-                const downloadName = `./server/versions/${file}`;
+                const downloadName = `./versions/${file}`;
                 res.setHeader('Content-type', 'application/x-msdownload'); 
                 res.setHeader('Content-Disposition',`attachment; filename=${file}`);
                 res.download(downloadName)
@@ -148,26 +150,29 @@ router.post(
     `/version/upload`,
     async function(req, res){
         var version = req.body.versionNumber
-        fs.readdir('./server/versions/', (err, files) => {
-            for (const file of files) {
-                fs.unlink(pathToFileURL('./server/versions/' + file), err => {
-                    if(err){
-                        console.log(err)
-                    }
-                });
-            }
-        });
+        try{
+            fs.readdir('./versions/', (err, files) => {
+                for (const file of files) {
+                    fs.unlink(pathToFileURL('./versions/' + file), err => {
+                        if(err){
+                            console.log(err)
+                        }
+                    });
+                }
+            });
+        }catch(e){}
+
         var file = req.files.venetiaFile
-        file.mv(`./server/versions/VenetiaCLI_${version}.exe`)
-        res.redirect('/upload')
+        file.mv(`./versions/VenetiaCLI_${version}.exe`)
+        return res.json({upload:"completed"})
     }
 
 )
 
 router.get(
-    `${process.env.API_KEY}/upload`,
+    `/upload/28138791237123798123`,
     async function(req, res){
-        return res.sendFile(path.resolve(__dirname, `../../server/upload.html`));
+        res.render('upload')
     }
 
 )
@@ -199,21 +204,21 @@ router.get(
         }else{
             redirect = "Failed to retrieve checkout"
         }
-        res.render('checkout',{url:redirect, product:title, price:price, image:image})
+        return res.render('checkout',{url:redirect, product:title, price:price, image:image})
         
     }
 )
 router.post(
     '/checkout/setCookies',
     async function(req,res){
-        if(req.get('apikey') == process.env.KEY_SECRET){
+        if(req.get('apikey') == process.env.API_KEY){
 
             await pool.query("insert into cookies values ($1,$2,$3,$4,$5,$6)",[req.body.viewId,req.body.cookies,req.body.redirect, req.body.productTitle, req.body.productImage, req.body.productPrice])
 
-            await res.sendStatus(200)
+            return res.status(200).end()
 
         }else{
-            res.sendStatus(403).end()
+            return res.sendStatus(403).end()
         }    
     }
 )
@@ -238,10 +243,10 @@ router.get(
         
         if(cookies,redirect) {
             var url = `${process.env.domain}/checkout/?cookies=${cookies}&redirect=${redirect}&id=${viewId}`;
-            res.redirect(url);
+            return res.redirect(url);
         }
         else {
-            res.redirect(`${process.env.domain}/checkout/`)
+            return res.redirect(`${process.env.domain}/checkout/`)
         }
 
         

@@ -150,6 +150,7 @@ router.get('/dashboard/:guildId',async (req, res) => {
                 return res.send(data)
             });
         }catch(e){
+            console.log(e)
             return res.status(400).end()
         }
         
@@ -231,13 +232,14 @@ router.post('/add/dashboard', async (req, res) => {
 
 router.get('/dashboard/payment/:option', authorize(),async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
-        // console.log(req.data.user)
-        // check if user is admin/staff
-        find('users', `discord: { id: "${req.data.user}"}`, function (err, data) {
+        find('users', `discord: { id: "${req.data.user}"}`, async function (err, data) {
             if(err){
-                return null;
+                return res.status(400).end()
             }
-            if(data[0].discord.id.normalize() === req.data.user.normalize()) {
+            var admins = []
+            for(var i =0; i < data.length; i++) admins.push(data[i].discord.id)
+            if(admins.includes(req.data.user)) {
+                
                 try{
         
                     var query = { settings: { payments: { failedPaymentOption: req.params.option } } }
@@ -255,12 +257,15 @@ router.get('/dashboard/payment/:option', authorize(),async (req, res) => {
                     
                 
                 }catch(e){
+                    console.log(e)
                     return res.status(400).end()
                 }
+
             }else {
-                return res.status(403).end()
+                return res.status(400).end()
             }
         });
+
 
         
     } else {
@@ -268,15 +273,17 @@ router.get('/dashboard/payment/:option', authorize(),async (req, res) => {
     }
 
 })
+
 router.get('/dashboard/supportEmail/:option', authorize(),async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
-        // console.log(req.data.user)
-        // check if user is admin/staff
-        find('users', `discord: { id: "${req.data.user}"}`, function (err, data) {
+        find('users', `discord: { id: "${req.data.user}"}`, async function (err, data) {
             if(err){
-                return null;
+                return res.status(400).end()
             }
-            if(data[0].discord.id.normalize() === req.data.user.normalize()) {
+            var admins = []
+            for(var i =0; i < data.length; i++) admins.push(data[i].discord.id)
+            if(admins.includes(req.data.user)) {
+                
                 try{
         
                     var query = { supportEmail: atob(req.params.option) }
@@ -293,12 +300,15 @@ router.get('/dashboard/supportEmail/:option', authorize(),async (req, res) => {
                     
                 
                 }catch(e){
+                    console.log(e)
                     return res.status(400).end()
                 }
+
             }else {
-                return res.status(403).end()
+                return res.status(400).end()
             }
         });
+
 
 
     } else {
@@ -308,13 +318,14 @@ router.get('/dashboard/supportEmail/:option', authorize(),async (req, res) => {
 })
 router.get('/dashboard/name/:option', authorize(),async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
-        // console.log(req.data.user)
-        // check if user is admin/staff
-        find('users', `discord: { id: "${req.data.user}"}`, function (err, data) {
+        find('users', `discord: { id: "${req.data.user}"}`, async function (err, data) {
             if(err){
-                return null;
+                return res.status(400).end()
             }
-            if(data[0].discord.id.normalize() === req.data.user.normalize()) {
+            var admins = []
+            for(var i =0; i < data.length; i++) admins.push(data[i].discord.id)
+            if(admins.includes(req.data.user)) {
+                
                 try{
         
                     var query = { name: atob(req.params.option) }
@@ -335,8 +346,9 @@ router.get('/dashboard/name/:option', authorize(),async (req, res) => {
                     console.log(e)
                     return res.status(400).end()
                 }
+
             }else {
-                return res.status(403).end()
+                return res.status(400).end()
             }
         });
 
@@ -348,13 +360,15 @@ router.get('/dashboard/name/:option', authorize(),async (req, res) => {
 })
 router.get('/dashboard/logo/:option', authorize(),async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
-        // console.log(req.data.user)
-        // check if user is admin/staff
-        find('users', `discord: { id: "${req.data.user}"}`, function (err, data) {
+
+        find('users', `discord: { id: "${req.data.user}"}`, async function (err, data) {
             if(err){
-                return null;
+                return res.status(400).end()
             }
-            if(data[0].discord.id.normalize() === req.data.user.normalize()) {
+            var admins = []
+            for(var i =0; i < data.length; i++) admins.push(data[i].discord.id)
+            if(admins.includes(req.data.user)) {
+                
                 try{
         
                     var query = { branding:{ logoUrl: atob(req.params.option) } } 
@@ -371,12 +385,15 @@ router.get('/dashboard/logo/:option', authorize(),async (req, res) => {
                     
                 
                 }catch(e){
+                    console.log(e)
                     return res.status(400).end()
                 }
+
             }else {
-                return res.status(403).end()
+                return res.status(400).end()
             }
         });
+
 
         
     } else {
@@ -386,13 +403,14 @@ router.get('/dashboard/logo/:option', authorize(),async (req, res) => {
 })
 router.get('/dashboard/background/:option', authorize(),async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
-        // console.log(req.data.user)
-        // check if user is admin/staff
-        find('users', `discord: { id: "${req.data.user}"}`, function (err, data) {
+        find('users', `discord: { id: "${req.data.user}"}`, async function (err, data) {
             if(err){
-                return null;
+                return res.status(400).end()
             }
-            if(data[0].discord.id.normalize() === req.data.user.normalize()) {
+            var admins = []
+            for(var i =0; i < data.length; i++) admins.push(data[i].discord.id)
+            if(admins.includes(req.data.user)) {
+                
                 try{
         
                     var query = { backgroundUrl: atob(req.params.option) } 
@@ -409,12 +427,15 @@ router.get('/dashboard/background/:option', authorize(),async (req, res) => {
                     
                 
                 }catch(e){
+                    console.log(e)
                     return res.status(400).end()
                 }
+
             }else {
-                return res.status(403).end()
+                return res.status(400).end()
             }
         });
+
 
     
     } else {
@@ -424,13 +445,15 @@ router.get('/dashboard/background/:option', authorize(),async (req, res) => {
 })
 router.get('/dashboard/description/:option', authorize(),async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
-        // console.log(req.data.user)
-        // check if user is admin/staff
-        find('users', `discord: { id: "${req.data.user}"}`, function (err, data) {
+
+        find('users', `discord: { id: "${req.data.user}"}`, async function (err, data) {
             if(err){
-                return null;
+                return res.status(400).end()
             }
-            if(data[0].discord.id.normalize() === req.data.user.normalize()) {
+            var admins = []
+            for(var i =0; i < data.length; i++) admins.push(data[i].discord.id)
+            if(admins.includes(req.data.user)) {
+                
                 try{
         
                     var query = { description: atob(req.params.option) } 
@@ -447,12 +470,15 @@ router.get('/dashboard/description/:option', authorize(),async (req, res) => {
                     
                 
                 }catch(e){
+                    console.log(e)
                     return res.status(400).end()
                 }
+
             }else {
-                return res.status(403).end()
+                return res.status(400).end()
             }
         });
+
 
     
     } else {
@@ -464,14 +490,15 @@ router.get('/dashboard/description/:option', authorize(),async (req, res) => {
 
 router.get('/stats', authorize(),async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
-        // console.log(req.data.user)
-        // check if user is admin/staff
+
         find('users', `discord: { id: "${req.data.user}"}`, async function (err, data) {
             if(err){
-                console.log(err)
-                return null;
+                return res.status(400).end()
             }
-            if(data[0].discord.id.normalize() === req.data.user.normalize()) {
+            var admins = []
+            for(var i =0; i < data.length; i++) admins.push(data[i].discord.id)
+            if(admins.includes(req.data.user)) {
+                
                 try{
         
                     var result = await pool.query(`SELECT * FROM users`)
@@ -487,19 +514,7 @@ router.get('/stats', authorize(),async (req, res) => {
                         }
                     }
         
-                    // try{
-                    //     const reportRun = await stripe.reporting.reportRuns.create({
-                    //         report_type: 'balance.summary.1',
-                    //         parameters: {
-                    //           interval_start: new Date(Math.floor(Date.now() / 1000)  * 1000) - 10000,
-                    //           interval_end: new Date(Math.floor(Date.now() / 1000)  * 1000),
-                    //         },
-                    //     });
-                        
-                    // }
-                    // catch{}
-        
-        
+              
                     return res.status(200).json({
                         totalCustomers:totalCustomers,
                         customersMonth:customersMonth,
@@ -510,10 +525,12 @@ router.get('/stats', authorize(),async (req, res) => {
                     console.log(e)
                     return res.status(400).end()
                 }
+
             }else {
-                return res.status(403).end()
+                return res.status(400).end()
             }
         });
+
 
         
     } else {

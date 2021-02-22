@@ -24,7 +24,7 @@ const AdminNavigation = () =>  {
             setAppImage(responseBody.serverImage)
             setLoaded(true)
         }
-        if(response.status == 403) history.push('/')
+        if(response.status == 403) window.location = '/'
     })
 
     const changeDarkMode = (e) => {

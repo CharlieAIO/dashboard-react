@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 import  { useHistory  } from 'react-router-dom'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { AiOutlineMail } from 'react-icons/ai';
-import { BiCalendar, BiExit } from 'react-icons/bi'
+import { BiCalendar, BiExit, BiReset } from 'react-icons/bi'
 import { FaUserCircle } from 'react-icons/fa'
 import { IoKeyOutline, IoCardOutline } from 'react-icons/io5'
 import UserNav from '../userNav'
-
+import SquareLoader from "react-spinners/SquareLoader";
 import RenewModal from './renewModal'
 
 const Dashboard = () => {
@@ -27,6 +27,8 @@ const Dashboard = () => {
         const res = await fetch('/discord/data');
         res.json()
         .then(res => {
+            if(res.status == 403 || res.status == 400) window.location = '/discord/oauth'
+            else{}
             if(res.key == 'n/a') {
                 history.push('/bind')
             }
@@ -55,7 +57,7 @@ const Dashboard = () => {
             
         })
         .catch(err =>  { 
-            if(res.status == 403) history.push('/bind')
+            if(res.status == 403 || res.status == 400) window.location = '/discord/oauth'
         });
         
     }
@@ -84,6 +86,27 @@ const Dashboard = () => {
             setTimeout(() => {
                 document.querySelector('#unbind').classList.remove('bg-red-500')
                 document.querySelector('#unbind').classList.add('bg-other-900')
+            }, 1500);
+        }
+
+    }
+
+    const reset = async () => {
+        var response = await fetch('/users/reset/' + key)
+
+        if(response.ok) {
+            document.querySelector('#reset').classList.remove('bg-other-900')
+            document.querySelector('#reset').classList.add('bg-green-500')
+            setTimeout(() => {
+                document.querySelector('#reset').classList.remove('bg-green-500')
+                document.querySelector('#reset').classList.add('bg-other-900')
+            }, 1500);
+        } else {
+            document.querySelector('#reset').classList.remove('bg-other-900')
+            document.querySelector('#reset').classList.add('bg-red-500')
+            setTimeout(() => {
+                document.querySelector('#reset').classList.remove('bg-red-500')
+                document.querySelector('#reset').classList.add('bg-other-900')
             }, 1500);
         }
 
@@ -164,7 +187,7 @@ const Dashboard = () => {
 
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4 w-full">
+                                <div className="grid grid-cols-2 rows-2 gap-4 w-full">
                                     <div className="mt-2 relative rounded-md shadow-sm rounded-lg ">
 
                                         <button  name="joined" id="joined" className="bg-other-900 p-3 block w-full sm:text-sm text-white rounded-md font-medium lg:text-lg" onClick={() => unbind()} id="unbind">
@@ -194,6 +217,25 @@ const Dashboard = () => {
                                         </form>
 
                                     </div>
+
+                                    {
+                                        process.env.REACT_APP_TYPE == "BOT" ? 
+
+                                        <div className="mt-2 relative rounded-md shadow-sm rounded-lg col-span-full">
+
+                                            <button type="submit" name="reset" id="reset" className="bg-other-900 p-3 block w-full sm:text-sm text-white rounded-md font-medium lg:text-lg" onClick={() => reset()}>
+                                                <input type="text" name="customerId" hidden value={customerId}/>
+                                            <div className="absolute inset-y-0 flex items-center pointer-events-none">
+                                                
+                                                <BiReset className="h-4 w-auto text-white font-medium" />
+
+                                            </div>
+
+                                            Reset License</button>
+
+
+                                        </div> : <></>
+                                    }
                                 </div>
 
                             </div> 
@@ -248,6 +290,56 @@ const Dashboard = () => {
 
                                         <p  name="joined" id="joined" autoComplete="off" className="focus:ring-other-200 focus:border-other-200 block w-full pl-10 sm:text-sm text-gray-900 rounded-md font-normal lg:text-lg">Loading....</p>
 
+                                    </div>
+
+                                    <div className="grid grid-cols-2 rows-2 gap-4 w-full">
+                                        <div className="mt-2 relative rounded-md shadow-sm rounded-lg ">
+
+                                            <button  name="joined" id="joined" className="bg-other-900 p-3 block w-full sm:text-sm text-white rounded-md font-medium lg:text-lg" onClick={() => unbind()} id="unbind">
+                                                <div className="absolute inset-y-0 flex items-center pointer-events-none">
+                                                    
+                                                    <BiExit className="h-4 w-auto text-white font-medium"/>
+
+                                                </div>
+
+                                            <SquareLoader color={'#ffffff'} loading={true} size={15} /></button>
+
+                                        </div>
+                                        <div className="mt-2 relative rounded-md shadow-sm rounded-lg">
+
+                                            <form method="POST" action='/stripe/customer-portal-sess'>
+
+                                                <button type="submit" name="joined" id="joined" className="bg-other-900 p-3 block w-full sm:text-sm text-white rounded-md font-medium lg:text-lg">
+                                                    <input type="text" name="customerId" hidden value={customerId}/>
+                                                <div className="absolute inset-y-0 flex items-center pointer-events-none">
+                                                    
+                                                    <IoCardOutline className="h-4 w-auto text-white font-medium" />
+
+                                                </div>
+
+                                                <SquareLoader color={'#ffffff'} loading={true} size={15} /></button>
+
+                                            </form>
+
+                                        </div>
+
+                                        <div className="mt-2 relative rounded-md shadow-sm rounded-lg col-span-full">
+
+                                            <form method="POST" action='/stripe/customer-portal-sess'>
+
+                                                <button type="submit" name="joined" id="joined" className="bg-other-900 p-3 block w-full sm:text-sm text-white rounded-md font-medium lg:text-lg">
+                                                    <input type="text" name="customerId" hidden value={customerId}/>
+                                                <div className="absolute inset-y-0 flex items-center pointer-events-none">
+                                                    
+                                                    <BiReset className="h-4 w-auto text-white font-medium" />
+
+                                                </div>
+
+                                                <SquareLoader color={'#ffffff'} loading={true} size={15} /></button>
+
+                                            </form>
+
+                                        </div>
                                     </div>
 
 

@@ -22,8 +22,7 @@ router.get('/', authorize(),async (req, res) => {
         // check if user is admin/staff
         find('users', `discord: { id: "${req.data.user}"}`, async function (err, data) {
             if(err){
-                console.log(err)
-                return null;
+                return res.status(400).end()
             }
             var admins = []
             for(var i =0; i < data.length; i++) admins.push(data[i].discord.id)
@@ -110,7 +109,6 @@ router.get('/data',authorize(), async (req, res) => {
 
 // Add plan to Database
 router.post('/add', authorize(),async (req, res) => {
-    console.log(req)
     if(req.get('apikey') == process.env.API_KEY) {
         // console.log(req.data.user)
         // check if user is admin/staff
@@ -263,7 +261,9 @@ router.post('/update', authorize(),async (req, res) => {
                         
                         return res.status(200).end()
                     }
-                    return res.status(400).end()
+                    else {
+                        return res.status(400).end()
+                    }
             
                 }catch(e){
                     console.log(e)

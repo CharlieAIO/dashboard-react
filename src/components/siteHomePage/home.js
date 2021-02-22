@@ -77,7 +77,7 @@ const Settings = () => {
                     </p>
                     <div className="mt-10 sm:flex sm:justify-center lg:justify-start">
                     <div className="rounded-md shadow">
-                        <a href={'http://127.0.0.1:4000' + '/discord/oauth'} className="select-none dark:bg-darkOther-200 dark:hover:bg-darkOther-300 w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-other-900 md:py-4 md:text-lg md:px-10">
+                        <a href={'/dashboard'} className="select-none dark:bg-darkOther-200 dark:hover:bg-darkOther-300 w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-other-900 md:py-4 md:text-lg md:px-10">
                         Dashboard
                         </a>
                     </div>

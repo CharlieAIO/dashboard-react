@@ -140,7 +140,7 @@ const RestockModal = () => {
                                     <div className="mt-1 bg-white rounded-md shadow-sm dark:bg-darkOther-200">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700"></label>
-                                            <input  name="password" id="password" autoComplete="off" className="dark:bg-darkOther-200 focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 block w-full font-medium text-md rounded-md py-2" placeholder="passsword" onChange={e => setPassword(e.target.value)} />
+                                            <input  name="password" id="password" autoComplete="off" className="dark:bg-darkOther-200 dark:text-white block w-full font-medium text-md rounded-md py-2" placeholder="passsword" onChange={e => setPassword(e.target.value)} />
                                         </div>
                                     </div>
                                 </fieldset>
@@ -150,7 +150,7 @@ const RestockModal = () => {
                                     <div className="mt-1 rounded-md shadow-sm ">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700"></label>
-                                            <input  name="stock"  autoComplete="off" className="dark:bg-darkOther-200 focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 block w-full font-medium text-md rounded-md py-2" placeholder="10" onChange={e => setStock(e.target.value)} />
+                                            <input  name="stock"  autoComplete="off" className="dark:bg-darkOther-200 dark:text-white block w-full font-medium text-md rounded-md py-2" placeholder="10" onChange={e => setStock(e.target.value)} />
                                         </div>
                                     </div>
                                 </fieldset>
@@ -164,7 +164,7 @@ const RestockModal = () => {
                                             <div className="mt-1 rounded-md shadow-sm -space-y-px">
                                                 <div>
                                                     <label className="sr-only select-none">Plan</label>
-                                                    <Select name="restockPlan" value={restockPlan.value} options={plans} styles={colourStyle} className="focus:ring-other-200 focus:border-other-200 dark:focus:ring-darkOther-200 dark:focus:border-darkOther-200 relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md" onChange={(e)=> { 
+                                                    <Select name="restockPlan" value={restockPlan.value} options={plans} styles={colourStyle} className="relative block w-full rounded-none rounded-t-md bg-transparent focus:z-10 font-medium text-md" onChange={(e)=> { 
                                                         setRestockPlan(e.value)
                                                         setPlanName(e.label)
                                                     }}/>

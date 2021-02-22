@@ -53,9 +53,25 @@ const PurchasePage = () => {
         
     }
 
+    async function fetchData2(){
+        const res = await fetch('/discord/data');
+        res.json()
+        .then(res => {
+            if(res.status == 403 || res.status == 400) window.location = '/discord/oauth'
+            else{}
+            
+        })
+        .catch(err =>  { 
+            if(res.status == 403 || res.status == 400) window.location = '/discord/oauth'
+        });
+        
+    }
+
+
     useEffect(() =>{
         const abortController = new AbortController();
         localStorage.setItem('pswd',window.location.search.split('?password=')[1])
+        fetchData2()
         fetchData()
 
         return () => {

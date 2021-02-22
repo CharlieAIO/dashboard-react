@@ -47,7 +47,7 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
     }catch(e){
         console.log("webhook error")
         console.log(req.body)
-        return res.status(404).end('user doesnt exist')
+        return res.json({ received: true });
     }
     
 
@@ -83,6 +83,7 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
                 );
                 var user = await client2.users.fetch(userID.toString())
                 if(user) user.send(embed);
+                return res.json({ received: true });
             }catch{
 
             }
@@ -101,6 +102,7 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
                 );
                 var user = await client2.users.fetch(userID.toString())
                 if(user) user.send(embed);
+                return res.json({ received: true });
             }catch{
 
             }
@@ -120,6 +122,7 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
                 
                 var user = await client2.users.fetch(userID.toString())
                 if(user) user.send(embed);
+                return res.json({ received: true });
             }catch(e){
                 console.log(e)
             }
@@ -138,6 +141,7 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
                 );
                 var user = await client2.users.fetch(userID.toString())
                 if(user) user.send(embed);
+                return res.json({ received: true });
             }catch{
 
             }
@@ -168,6 +172,7 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
                 for(var i =0; i<roles.length; i++) {
                     guildUser.roles.remove(roles[i]).then({}).catch(e => {})
                 }
+                return res.json({ received: true });
             }catch{
 
             }
@@ -186,6 +191,7 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
                 );
                 var user = await client2.users.fetch(userID.toString())
                 if(user) user.send(embed);
+                return res.json({ received: true });
             }catch{
 
             }
@@ -204,7 +210,7 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
                 );
                 var user = await client2.users.fetch(userID.toString())
                 if(user) user.send(embed);
-
+                return res.json({ received: true });
                 //add roles
             }catch{
 
@@ -236,7 +242,7 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
                     if(user) user.send(embed);
 
                 }
-
+                return res.json({ received: true });
             }catch{
 
             }
@@ -283,6 +289,7 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
                         guildUser.roles.remove(roles[i]).then({}).catch( (e) => console.log(e))
                     }
                 }
+                return res.json({ received: true });
             }catch{
 
             }
@@ -290,7 +297,7 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
         //////////////
 
     }
-    res.json({ received: true });
+    return res.json({ received: true });
 })
 
 client2.login(process.env.BOT_TOKEN);

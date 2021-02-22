@@ -25,6 +25,7 @@ module.exports = () => {
         } else {
             jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
                 if(err) {
+                    // console.log(err)
                     if(err.name == 'TokenExpiredError') {
                         var verify = await verifyRefresh(refresh)
 

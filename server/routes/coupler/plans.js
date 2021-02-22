@@ -11,7 +11,10 @@ router.get('/',async (req,res) => {
     }catch{
         return res.status(400).end()
     }
-    return res.status(200).json(await response.json())
+    if(response.status == 403) return res.redirect('/')
+    if(response.status == 200) return res.status(200).json(await response.json())
+    else return res.status(400).end()
+    
 })
 
 
@@ -25,7 +28,9 @@ router.get('/data', async (req,res) => {
         return res.status(400).end()
     }
     if(response.status == 403) return res.redirect('/')
-    return res.status(200).json(await response.json())
+    if(response.status == 200) return res.status(200).json(await response.json())
+    else return res.status(400).end()
+    
 })
 
 router.post('/add', async (req,res) => {

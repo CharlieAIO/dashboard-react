@@ -5,10 +5,11 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cookies = require('cookies');
 const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo')(session)
+// const MongoStore = require('connect-mongo')(session)
 const cookieParser = require('cookie-parser');
 const checker = require('./routes/stripe/checker')
-
+var busboy = require('connect-busboy')
+const fileUpload = require('express-fileupload');
 const app = express();
 
 // mongoose.connect('mongodb://127.0.0.1:27017', {useNewUrlParser:true, useUnifiedTopology: true })
@@ -31,7 +32,7 @@ app.use(
     })
 )
 
-app.set('views',path.join(__dirname, ''));
+app.set('views',__dirname);
 app.set('view engine','ejs');
 
 app.use(cookieParser(process.env.SESSION_SECRET));
@@ -39,7 +40,8 @@ app.use(express.static(__dirname + '../../build'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookies.express());
-
+app.use(busboy());
+app.use(fileUpload());
 
 //rotues
 app.use(`/api/v${process.env.API_VERSION}/users`,require('./routes/api/user'));
@@ -63,6 +65,6 @@ app.use(`/stripe/`,require('./routes/stripe/renew'));
 app.use(`/`,require('./routes/routes.js'));
 app.use(`/`,require('./routes/extra.js'));
 
-// checker()
+checker()
 
 app.listen(process.env.PORT_SERVER, () => console.log(`http://127.0.0.1:${process.env.PORT_SERVER}`))

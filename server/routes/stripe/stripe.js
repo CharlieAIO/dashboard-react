@@ -29,12 +29,15 @@ router.get('/oauth/uri', async (req, res) => {
 
 router.post('/customer-portal-sess', async (req, res) => {
     // Authenticate your user.  
+   try{
     const session = await stripe.billingPortal.sessions.create({
       customer: req.body.customerId,
       return_url: process.env.domain + '/dashboard',
     });
-    res.redirect(session.url);
-
+    return res.redirect(session.url);
+   } catch{
+     return res.redirect('/dashboard').end();
+   }
 });
 
 router.get('/sub/status/:sub', async (req, res) => {

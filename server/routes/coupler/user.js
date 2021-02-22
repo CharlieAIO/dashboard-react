@@ -23,6 +23,7 @@ router.get('/fetch', async (req,res) => {
         return res.status(400).end()
     }
     if(response.status == 403) return res.redirect('/')
+    if(response.status == 400) return res.status(400)
     return res.status(200).json(await response.json())
 })
 
@@ -181,5 +182,23 @@ router.get('/force/unbind/:key', async (req,res) => {
     }
 })
 
+router.get('/reset/:key', async (req,res) => {
+    try{
+        var key = req.params.key
+        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users/machine/reset`,{
+            headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`, "Content-Type": "application/json"},
+            method:'post',
+            body:JSON.stringify({
+                key:key
+            })
+            
+        })
+        if(response.status == 200) return res.status(200).end()
+        else return res.status(400).end()
+    }catch(e){
+        console.log(e)
+        return res.status(400).end()
+    }
+})
 
 module.exports = router

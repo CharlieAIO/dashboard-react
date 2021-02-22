@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const {pool, generate} = require('../../utils.js')
+const {pool, generate, signAccess} = require('../../utils.js')
 const authorize = require('../../auth-middleware')
+const authorize2 = require('../../auth-middleware-2')
 const { v4: uuidv4 } = require('uuid');
 const mongoose = require('mongoose');
 const Stripe = require('stripe');
@@ -23,31 +24,83 @@ function find(name,query,cb) {
 router.get('/', authorize(),async (req, res) => {
     if(req.get('apikey') == process.env.API_KEY) {
 
-        // find('users', `discord: { id: "${req.data.user}"}`, async function (err, data) {
-        //     if(err){
-        //         console.log(err)
-        //         return null;
-        //     }
-        //     if(data[0].discord.id.normalize() === req.data.user.normalize()) {
-        //         try{
-        //             var results;
-        //             if (req.query.id) results = await pool.query(`SELECT * FROM users WHERE "discordId" = ${req.query.id}`)
-        //             else results = await pool.query('SELECT * FROM users')
+        find('users', `discord: { id: "${req.data.user}"}`, async function (err, data) {
+            if(err){
+                return res.status(400).end()
+            }
+            var admins = []
+            for(var i =0; i < data.length; i++) admins.push(data[i].discord.id)
+            if(admins.includes(req.data.user)) {
+                
+                try{
+                    var results;
+                    if (req.query.id) results = await pool.query(`SELECT * FROM users WHERE "discordId" = ${req.query.id}`)
+                    else results = await pool.query('SELECT * FROM users')
+        
+                    var results2 = await pool.query(`SELECT * FROM plans WHERE "planId" = '${results.rows[0].plan}'`)
+                    var roles = []
+                    if(results2.rows.length > 0) {
+                        var r = JSON.parse(results2.rows[0].role)
+                        for(var i = 0; i < r.length; i++) {
+                            roles.push(r[i].value)
+                        }
+                    }
+        
+                    results.rows[0].roles = roles
+        
                     
-        //             return res.status(200).json(results.rows)
-        //         }catch(e){
-        //             return res.status(400).end()
-        //         }
-        //     }else {
-        //         return res.status(403).end()
-        //     }
-        // });
+                    return res.status(200).json(results.rows)
+                }catch(e){
+                    return res.status(400).end()
+                }
+
+            }else {
+                try{
+                    var results = await pool.query(`SELECT * FROM users WHERE "discordId" = ${req.data.user}`)
+                    if(results.rows.length > 0) {
+                        return res.status(400).end()
+                    }
+                    
+                    var results2 = await pool.query(`SELECT * FROM plans WHERE "planId" = '${results.rows[0].plan}'`)
+                    var roles = []
+                    if(results2.rows.length > 0) {
+                        var r = JSON.parse(results2.rows[0].role)
+                        for(var i = 0; i < r.length; i++) {
+                            roles.push(r[i].value)
+                        }
+                    }
+        
+                    results.rows[0].roles = roles
+        
+                    
+                    return res.status(200).json(results.rows)
+                }catch{
+                    return res.status(400).end()
+                }
+            }
+        });
+
+    
+
+        
+    } else {
+        return res.status(403).end()
+    }
+
+})
+
+
+
+
+router.get('/:key',async (req, res) => {
+    if(req.get('apikey') == process.env.API_KEY) {
+
         try{
             var results;
-            if (req.query.id) results = await pool.query(`SELECT * FROM users WHERE "discordId" = ${req.query.id}`)
-            else results = await pool.query('SELECT * FROM users')
+            if (req.params.key) results = await pool.query(`SELECT * FROM users WHERE "key" = '${req.params.key}'`)
+            if(results.rows.length > 0) return res.status(200).json(results.rows[0])
+            else return res.status(400).end()
             
-            return res.status(200).json(results.rows)
         }catch(e){
             return res.status(400).end()
         }
@@ -60,7 +113,7 @@ router.get('/', authorize(),async (req, res) => {
 })
 
 // Add User to Database
-router.post('/add',async (req, res) => {
+router.post('/add', authorize(),async (req, res) => {
 
     if(req.get('apikey') == process.env.API_KEY) {
         // console.log(req.data.user)
@@ -115,9 +168,9 @@ router.post('/bind', authorize(),async (req, res) => {
                             roles.push(r[i].value)
                         }
                     }
-    
-                    
-                    return res.status(200).json({response:"bound", roles:roles})
+                    else {
+                        return res.status(200).json({response:"bound", roles:roles})
+                    }
 
                 } 
                 else {
@@ -267,7 +320,9 @@ router.get('/delete/:id', async (req, res) => {
                     if(deleted.deleted == true) return res.status(200).json({response:"deleted"})
                     else return res.status(400).end()
                 }
-                return res.status(400).end()
+                else {
+                    return res.status(400).end()
+                }
             }
             return res.status(400).end()
     
@@ -332,7 +387,9 @@ router.get('/disable/:id', async (req, res) => {
                 ) 
                 return res.status(200).json({response:"bound"})
             }
-            return res.status(400).end()
+            else {
+                return res.status(400).end()
+            }
     
         }catch(e){
             return res.status(400).end()
@@ -416,7 +473,7 @@ router.post('/renew', authorize(),async (req, res) => {
 
             if(result.rows.length > 0) {
                 await pool.query(
-                    'UPDATE users SET "customerId" = $1, "subscriptionId" =  $2 WHERE "key" = $3 ',
+                    'UPDATE users SET "customerId" = $1, "subscriptionId" =  $2 WHERE "key" = $3',
                     [req.body.cusId, req.body.subId,req.body.key]
                 ) 
 
@@ -432,7 +489,103 @@ router.post('/renew', authorize(),async (req, res) => {
                 
                 return res.status(200).json({response:"renewed", roles:roles})
             }
+            else {
+                return res.status(400).end()
+            }
+    
+        }catch(e){
+            console.log(e)
             return res.status(400).end()
+        }
+    
+    } else {
+        return res.status(403).end()
+    }
+
+})
+/////////////////////////////////////////
+
+
+// Reset machine id in database
+router.post('/machine/reset', authorize(),async (req, res) => {
+    if(req.get('apikey') == process.env.API_KEY) {
+        try{
+            var result = await pool.query(`SELECT * FROM users WHERE "key" = '${req.body.key}'`)
+            if(result.rows.length > 0) {
+                
+                await pool.query(
+                    'UPDATE users SET "machineId" = $1 WHERE "key" = $2',
+                    ['null',req.body.key]
+                )
+                return res.status(200).end()
+            } else {
+                return res.status(400).end()
+            }
+            
+    
+        }catch(e){
+            console.log(e)
+            return res.status(400).end()
+        }
+    
+    } else {
+        return res.status(403).end()
+    }
+
+})
+/////////////////////////////////////////
+
+// Update machine id in database
+router.post('/machine/update',async (req, res) => {
+    if(req.get('apikey') == process.env.API_KEY) {
+        try{
+            var result = await pool.query(`SELECT * FROM users WHERE "key" = '${req.body.key}'`)
+            
+            if(result.rows.length > 0) {
+                if(result.rows[0].machineId == 'null' || result.rows[0].machineId == null || result.rows[0].machineId == '' || result.rows[0].machineId == 'empty') {
+                    await pool.query(
+                        'UPDATE users SET "machineId" =  $1 WHERE "key" = $2',
+                        [req.body.machine,req.body.key]
+                    )
+                    return res.status(200).end()
+                } else {
+                    return res.status(400).end()
+                }
+            }
+            return res.status(400).end()
+    
+        }catch(e){
+            console.log(e)
+            return res.status(400).end()
+        }
+    
+    } else {
+        return res.status(403).end()
+    }
+
+})
+/////////////////////////////////////////
+
+// Check if machine id matches machine id in database
+router.post('/machine/validate', async (req, res) => {
+    if(req.get('apikey') == process.env.API_KEY) {
+        try{
+            var result = await pool.query(`SELECT * FROM users WHERE "key" = '${req.body.key}'`)
+
+            if(result.rows.length > 0) {
+                if(result.rows[0].machineId == req.body.machine) {
+                    return res.status(200).end()
+                }
+                if(result.rows[0].machineId == 'null' || result.rows[0].machineId == null || result.rows[0].machineId == '' || result.rows[0].machineId == 'empty') {
+                    return res.status(201).end()
+                }
+                else {
+                    return res.status(400).end()
+                }
+            }
+            else {
+                return res.status(404).end()
+            }
     
         }catch(e){
             console.log(e)

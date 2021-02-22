@@ -18,6 +18,8 @@ const BindPage = () => {
         const res = await fetch('/discord/data');
         res.json()
         .then(res => {
+            if(res.status == 403 || res.status == 400) window.location = '/discord/oauth'
+            else{}
             setDiscordImage(res.discordImage)
             setName(res.name)
             setDiscrim(res.discrim)
@@ -31,7 +33,7 @@ const BindPage = () => {
             setLoaded(true)
         })
         .catch(err =>  {
-            if(res.status == 403) history.push('/discord/oauth')
+            if(res.status == 403 || res.status == 400) window.location = '/discord/oauth'
         });
         
         
@@ -53,7 +55,7 @@ const BindPage = () => {
         e.preventDefault()
 
         if(key.length > 0) {
-            var response = await fetch('/users/bind', {
+            await fetch('/users/bind', {
                 method:'post',
                 body:JSON.stringify({
                     key:key
@@ -62,14 +64,7 @@ const BindPage = () => {
                     "Content-Type": "application/json"
                 }
             })
-            if(response.ok) {
-                setKey("")
-                history.push('/dashboard')
-
-            
-            }else{
-                return
-            }
+            history.push('/dashboard')
         }
         else{
             return;

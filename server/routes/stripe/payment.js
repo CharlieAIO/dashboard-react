@@ -6,12 +6,14 @@ const stripe = Stripe(process.env.STRIPE_SECRET);
 const fetch = require('node-fetch');
 var queue = require('express-queue');
 
-var q = queue({ activeLimit: 2 })
+var q = queue({ activeLimit: 1, queuedLimit: -1  })
 router.post('/checkout', q, async (req, res) => {
+    // console.log(q)
     var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/restocks/get/${req.body.password}`,{
         headers:{ apikey: process.env.API_KEY},
         method:'get'
     })
+    // console.log(`RESTOCKS GET: ${response.status}`)
     if(response.ok) {
         var cusId = ""
         var subId = ""
@@ -27,7 +29,8 @@ router.post('/checkout', q, async (req, res) => {
                     headers:{ apikey: process.env.API_KEY},
                     method:'get'
                 })
-    
+                
+                console.log(`PLANS GET: ${response2.status}`)
                 if(response2.ok) {
     
                     var planBody = await response2.json() //[0]
@@ -63,10 +66,8 @@ router.post('/checkout', q, async (req, res) => {
                                 customer: customer.id,
                                 collection_method:"charge_automatically"
                             });
-                            console.log(invoice)
                             if(invoice.id) {
                                 const invoicePaid = await stripe.invoices.pay(invoice.id);
-                                console.log(invoicePaid)
                                 if(invoicePaid.amount_due != invoicePaid.amount_paid) {
                                     await stripe.customers.del(customer.id).catch(e => {});
                                     return res.status(400).end()
@@ -145,12 +146,10 @@ router.post('/checkout', q, async (req, res) => {
                             headers: {apikey: process.env.API_KEY }
                         })
                         
-                        console.log(planBody[0].expiry)
                         var exp;
                         if (planBody[0].expiry == 'none') exp = 0
                         else exp = planBody[0].expiry
 
-                        console.log(exp)
                         var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users/add`,{
                             headers:{ apikey: process.env.API_KEY, "Content-Type": "application/json" },
                             method:'post',
@@ -166,7 +165,6 @@ router.post('/checkout', q, async (req, res) => {
                                 machineId:"empty",
                             })
                         })
-                        console.log(response)
                         if(response.ok) {
                             var b = await response.json()
                             sendEmail(b.key, req.body.email)
