@@ -2,7 +2,7 @@ import '../../static/styles/main.css';
 import React, { useState, useEffect } from 'react';
 
 
-const Settings = () => {
+const Home = () => {
     const [name, setName] = useState("")
     const [logo, setLogo] = useState("")
     const [description, setDescription] = useState("")
@@ -102,4 +102,4 @@ const Settings = () => {
 
 }
 
-export default Settings
+export default Home

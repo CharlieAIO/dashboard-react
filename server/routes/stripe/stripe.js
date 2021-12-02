@@ -36,7 +36,7 @@ router.post('/customer-portal-sess', async (req, res) => {
     });
     return res.redirect(session.url);
    } catch{
-     return res.redirect('/dashboard').end();
+     return res.redirect('/dashboard')
    }
 });
 

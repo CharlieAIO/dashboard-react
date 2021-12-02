@@ -57,9 +57,10 @@ router.get('/', authorize(),async (req, res) => {
             }else {
                 try{
                     var results = await pool.query(`SELECT * FROM users WHERE "discordId" = ${req.data.user}`)
-                    if(results.rows.length > 0) {
-                        return res.status(400).end()
-                    }
+                    console.log(results.rows)
+                    
+
+                    
                     
                     var results2 = await pool.query(`SELECT * FROM plans WHERE "planId" = '${results.rows[0].plan}'`)
                     var roles = []
@@ -74,7 +75,8 @@ router.get('/', authorize(),async (req, res) => {
         
                     
                     return res.status(200).json(results.rows)
-                }catch{
+                }catch(e){
+                    console.log(e)
                     return res.status(400).end()
                 }
             }
@@ -114,6 +116,40 @@ router.get('/:key',async (req, res) => {
 
 // Add User to Database
 router.post('/add', authorize(),async (req, res) => {
+
+    if(req.get('apikey') == process.env.API_KEY) {
+        // console.log(req.data.user)
+        // check if user is admin/staff
+        try{
+            var query = []
+            query[0] = generate(30)
+            for(var i in req.body)
+                query.push(req.body [i])
+            
+                query[10] = Math.floor(Date.now() / 1000)  //Date Created
+                query[11] = 0 //Date Joined
+                query[12] = uuidv4()
+                query[13] = false
+    
+            await pool.query(
+                'INSERT INTO users values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)',
+                query
+            ) 
+            return res.status(200).json({response:"added", key:query[0]})
+    
+        }catch(e){
+            return res.status(400).end()
+        }
+
+    } else {
+        return res.status(403).end()
+    }
+
+})
+/////////////////////////////////////////
+
+// Add User to Database
+router.post('/add/2', authorize2(),async (req, res) => {
 
     if(req.get('apikey') == process.env.API_KEY) {
         // console.log(req.data.user)

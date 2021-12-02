@@ -46,11 +46,19 @@ router.get('/data', authorize2(),async (req, res) => {
                         })
                         return;
                     }
-                    return res.json({
-                        name:data[0].name,
-                        serverImage:data[0].branding.logoUrl,
-                        admin:false
-                    })
+                    try {
+                        return res.json({
+                            name:data[0].name,
+                            serverImage:data[0].branding.logoUrl,
+                            admin:false
+                        })
+                    }catch{
+                        return res.json({
+                            name:'',
+                            serverImage:'',
+                            admin:false
+                        })
+                    }
                 });
             }
             var admins = []
@@ -67,11 +75,19 @@ router.get('/data', authorize2(),async (req, res) => {
                             })
                             return;
                         }
-                        return res.json({
-                            name:data[0].name || 'null',
-                            serverImage:data[0].branding.logoUrl,
-                            admin:true
-                        })
+                        try {
+                            return res.json({
+                                name:data[0].name,
+                                serverImage:data[0].branding.logoUrl,
+                                admin:true
+                            })
+                        }catch{
+                            return res.json({
+                                name:'',
+                                serverImage:'',
+                                admin:true
+                            })
+                        }
                     });
                 }catch(e){
                     console.log(e)
@@ -88,11 +104,19 @@ router.get('/data', authorize2(),async (req, res) => {
                         })
                         return;
                     }
-                    return res.json({
-                        name:data[0].name,
-                        serverImage:data[0].branding.logoUrl,
-                        admin:false
-                    })
+                    try {
+                        return res.json({
+                            name:data[0].name,
+                            serverImage:data[0].branding.logoUrl,
+                            admin:false
+                        })
+                    }catch{
+                        return res.json({
+                            name:'',
+                            serverImage:'',
+                            admin:false
+                        })
+                    }
                 });
             }
         });
@@ -108,11 +132,19 @@ router.get('/data', authorize2(),async (req, res) => {
                 })
                 return;
             }
-            return res.json({
-                name:data[0].name,
-                serverImage:data[0].branding.logoUrl,
-                admin:false
-            })
+            try {
+                return res.json({
+                    name:data[0].name,
+                    serverImage:data[0].branding.logoUrl,
+                    admin:false
+                })
+            }catch{
+                return res.json({
+                    name:'',
+                    serverImage:'',
+                    admin:false
+                })
+            }
         });
     }
     
@@ -162,70 +194,6 @@ router.get('/dashboard/:guildId',async (req, res) => {
 })
 
 
-
-// Add Dashboard User account to Database
-router.post('/add/user', async (req, res) => {
-    var body = req.body
-    User.create({
-        userName:`${body.username}#${body.discriminator}`,
-        imageUrl:`https://cdn.discordapp.com/avatars/${body.id}/${body.avatar}.png`,
-        email:body.email,
-        id:uuidv4(),
-        admin:false,
-        staff:body.staff,
-        lastLogin:Date.now(),
-        discord:{
-            accessToken:body.accessToken,
-            avatar:body.avatar,
-            discriminator:body.discriminator,
-            id:body.id,
-            refresh_token:body.refresh_token,
-            username:body.username
-        }
-    }).then( (user) => {
-        return res.status(200).json({message:"success"}).end()
-    }).catch((error) => {
-        console.log(error)
-        return res.status(400).end()
-    })
-})
-/////////////////////////////////////////
-
-
-
-// Add Dashboard account to Database
-router.post('/add/dashboard', async (req, res) => {
-    var dashId = generateNoNumbers(25)
-    Account.create({
-        name:req.body.name,
-        domain:req.body.domain,
-        guild:req.body.guildId,
-        ownerId:req.body.ownerID,
-        stripeAccount:"empty",
-        verificationStatus:"unverified",
-        supportEmail:"support@example.com",
-        id:dashId,
-        settings:{
-            payments:{
-                failedPaymentOption:"1"
-            }
-        },
-        staff:[],
-        branding:{
-            logoUrl:req.body.logoUrl,
-            backgroundUrl:'',
-            description:''
-    
-        }
-    }).then( async  (dash) => {
-        
-        return res.status(200).json({message:"success"}).end()
-    }).catch((error) => {
-        console.log(error)
-        return res.status(400).end()
-    })
-})
-/////////////////////////////////////////
 
 
 
@@ -538,5 +506,76 @@ router.get('/stats', authorize(),async (req, res) => {
     }
 
 })
+
+
+// Add Dashboard User account to Database
+router.post('/add/user', async (req, res) => {
+    var body = req.body
+    User.create({
+        userName:`${body.username}#${body.discriminator}`,
+        imageUrl:`https://cdn.discordapp.com/avatars/${body.id}/${body.avatar}.png`,
+        email:body.email,
+        id:uuidv4(),
+        admin:false,
+        staff:body.staff,
+        lastLogin:Date.now(),
+        discord:{
+            accessToken:body.accessToken,
+            avatar:body.avatar,
+            discriminator:body.discriminator,
+            id:body.id,
+            refresh_token:body.refresh_token,
+            username:body.username
+        }
+    }).then( (user) => {
+        return res.status(200).json({message:"success"}).end()
+    }).catch((error) => {
+        console.log(error)
+        return res.status(400).end()
+    })
+})
+/////////////////////////////////////////
+
+router.get('/all/user/', async (req, res) => {
+    find('users', {}, async function (err, data) {
+        return res.send(data);
+    })
+})
+
+// Add Dashboard account to Database
+router.post('/add/dashboard', async (req, res) => {
+    var dashId = generateNoNumbers(25)
+    Account.create({
+        name:req.body.name,
+        domain:req.body.domain,
+        guild:req.body.guildId,
+        ownerId:req.body.ownerID,
+        stripeAccount:"empty",
+        verificationStatus:"unverified",
+        supportEmail:req.body.email,
+        id:dashId,
+        settings:{
+            payments:{
+                failedPaymentOption:"1"
+            }
+        },
+        staff:[],
+        description:req.body.description,
+        backgroundUrl:req.body.bg,
+        branding:{
+            logoUrl:req.body.logoUrl,
+            backgroundUrl:'',
+            description:''
+    
+        }
+    }).then( async  (dash) => {
+        
+        return res.status(200).json({message:"success"}).end()
+    }).catch((error) => {
+        console.log(error)
+        return res.status(400).end()
+    })
+})
+/////////////////////////////////////////
 
 module.exports = router

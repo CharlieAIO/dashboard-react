@@ -17,16 +17,20 @@ router.get('/user/data', async (req,res) => {
 
 
 router.get('/dashboard', async (req,res) => {
+    console.log(`${process.env.domain}/api/v${process.env.API_VERSION}/accounts/dashboard/${process.env.GUILD_ID}`)
     try{
-        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/accounts/dashboard/${process.env.GUILD_ID}`,{
+        var response = await fetch(`${process.env.domain}/api/v${process.env.API_VERSION}/accounts/dashboard/${process.env.GUILD_ID}`,{
             headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}` },
             method:'get',
         })
     }catch{
         return res.status(400).end()
     }
+    console.log(response)
+    var text = await response.text()
+    console.log(text)
     if(response.status == 403) return res.redirect('/')
-    return res.status(200).json(await response.json())
+    return res.status(200).json(JSON.parse(text))
 })
 
 router.get('/dashboard/name/:option', async (req,res) => {

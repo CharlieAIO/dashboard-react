@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const fetch = require('node-fetch');
+const axios = require('axios');
+
 const currencyToSymbolMap = require('currency-symbol-map/map')
 
 
@@ -39,9 +41,15 @@ router.get('/get/:pswd', async (req,res) => {
     }catch{}
 
     var body = {
-        name:body2[0].name,
-        bg:body2[0].backgroundUrl
+        name:'',
+        bg:''
     }
+    try {
+        body = {
+            name:body2[0].name,
+            bg:body2[0].backgroundUrl
+        }
+    } catch {}
     
     try{
         body.stockRemaining = body1.stockRemaining
@@ -103,20 +111,28 @@ router.get('/data/:pswd', async (req,res) => {
 
 router.post('/add', async (req,res) => {
     try{
-        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/restocks/add`,{
-            headers:{ apikey: process.env.API_KEY, authorization:`Bearer ${req.signedCookies['jwt.access']}`, "Content-Type": "application/json" },
-            method:'post',
-            body:JSON.stringify({
-                password:req.body.password,
-                stock:parseInt(req.body.stock),
-                stockRemaining:parseInt(req.body.stockRemaining),
-                planId:req.body.planId,
-                restockMethod:'regular',
-                id:req.body.id,
-                planName:req.body.planName
-            }),
-        })
-        var body = await response.json()
+        var response = await fetch(
+            `${process.env.domain}/api/v${process.env.API_VERSION}/restocks/add`,
+            {
+                headers:{ 
+                    apikey: process.env.API_KEY,
+                    authorization:`Bearer ${req.signedCookies['jwt.access']}`,
+                    "Content-Type": "application/json" 
+                },
+                method:"POST",
+                body:JSON.stringify({
+                    password:req.body.password,
+                    stock:parseInt(req.body.stock),
+                    stockRemaining:parseInt(req.body.stockRemaining),
+                    planId:req.body.planId,
+                    restockMethod:'regular',
+                    id:req.body.id,
+                    planName:req.body.planName
+                })
+            }
+        )
+
+        var body = await JSON.parse(response.data)
     }catch(e){
         console.log(e)
         return res.status(400).end()

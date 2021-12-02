@@ -1,19 +1,27 @@
 const express = require('express');
 const router = express.Router();
-const {pool, generate, sendEmail} = require('../../utils.js')
+const {pool, generate, sendEmail, signAccess2} = require('../../utils.js')
 const Stripe = require('stripe');
 const stripe = Stripe(process.env.STRIPE_SECRET);
 const fetch = require('node-fetch');
 var queue = require('express-queue');
+const atob = require('atob')
+
+const cookieConfig = {
+    httpOnly: true,
+    secure: false, //true in production
+    // maxAge: 10000000,
+    signed: true
+};
 
 var q = queue({ activeLimit: 1, queuedLimit: -1  })
 router.post('/checkout', q, async (req, res) => {
-    // console.log(q)
+    console.log(req)
     var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/restocks/get/${req.body.password}`,{
         headers:{ apikey: process.env.API_KEY},
         method:'get'
     })
-    // console.log(`RESTOCKS GET: ${response.status}`)
+    console.log(`RESTOCKS GET: ${response.status}`)
     if(response.ok) {
         var cusId = ""
         var subId = ""
@@ -29,8 +37,8 @@ router.post('/checkout', q, async (req, res) => {
                     headers:{ apikey: process.env.API_KEY},
                     method:'get'
                 })
-                
                 console.log(`PLANS GET: ${response2.status}`)
+                
                 if(response2.ok) {
     
                     var planBody = await response2.json() //[0]
@@ -48,7 +56,7 @@ router.post('/checkout', q, async (req, res) => {
                         });
                         cusId = customer.id
                     }catch(e){
-                        // console.log(e)
+                        console.log(e)
                         return res.status(400).end()
                     }
     
@@ -150,8 +158,12 @@ router.post('/checkout', q, async (req, res) => {
                         if (planBody[0].expiry == 'none') exp = 0
                         else exp = planBody[0].expiry
 
-                        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users/add`,{
-                            headers:{ apikey: process.env.API_KEY, "Content-Type": "application/json" },
+                        var accessToken = await signAccess2(req.body.email, req.body.paymentMethod.id)
+                        // res.cookie('jwt.access.payment',accessToken, cookieConfig);
+
+                        var response = await fetch(process.env.domain + `/api/v${process.env.API_VERSION}/users/add/2`,{
+                            // headers:{ apikey: process.env.API_KEY, "Content-Type": "application/json", authorization:`Bearer ${req.signedCookies['jwt.access.payment']}`},
+                            headers:{ apikey: process.env.API_KEY, "Content-Type": "application/json", authorization:`Bearer ${accessToken}`},
                             method:'post',
                             body:JSON.stringify({
                                 plan:planBody[0].planId,

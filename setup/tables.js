@@ -74,7 +74,9 @@ async function plans() {
         console.log(e)
     }
 }
-
+plans()
+user()
+restocks()
 
 // async function plans() {
 //     try{

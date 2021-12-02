@@ -5,6 +5,7 @@ const fs = require('fs');
 const { pathToFileURL } = require('url');
 const {pool} = require('../utils.js')
 var axios = require('axios');
+var TinyURL = require('tinyurl');
 
 function requireUncached(module) {
     delete require.cache[require.resolve(module)];
@@ -222,6 +223,7 @@ router.post(
         }    
     }
 )
+
 router.get(
     '/checkout/retrieve',
     async function(req,res){
@@ -229,6 +231,7 @@ router.get(
 
 
         let results = await pool.query(`select * from cookies where id='${viewId}'`);
+        console.log(results.rows)
         var cookies;
         var redirect;
 
@@ -243,7 +246,16 @@ router.get(
         
         if(cookies,redirect) {
             var url = `${process.env.domain}/checkout/?cookies=${cookies}&redirect=${redirect}&id=${viewId}`;
-            return res.redirect(url);
+            const data = { 'url': url, 'alias': viewId.toString() }
+            TinyURL.shortenWithAlias(data, function(redirect_url, err) {
+            if (err)console.log(err)
+            else {
+                console.log(redirect_url)
+                return res.redirect(redirect_url);
+            }
+            });
+
+
         }
         else {
             return res.redirect(`${process.env.domain}/checkout/`)

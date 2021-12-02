@@ -29,6 +29,7 @@ router.get('/data', async (req, res) => {
                 method:'get',
             })
         }catch(e){
+            console.log(e)
             return res.status(400).end()
         }
         var responseBody2 = null;

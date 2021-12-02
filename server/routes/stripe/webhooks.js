@@ -24,11 +24,14 @@ router.post('/webhook', bodyParser.raw({ type: "*/*" }), async (req, res) => {
     var searchId;
     var query;
     if(req.body.data.object.id) {
-        if(req.body.data.object.payment_method == "payment_method") searchId = req.body.data.object.customer
-        else searchId = req.body.data.object.id
-
+        
         if (req.body.data.object.object == 'subscription') query = 'subscriptionId'
         if (req.body.data.object.object == 'customer') query = 'customerId'
+        if(req.body.data.object.object == "payment_method") query = "customerId"
+        else {}
+
+        if(req.body.data.object.object == "payment_method") searchId =  req.body.data.object.customer
+        else searchId = req.body.data.object.id
     }
     var customer = req.body.data.object.customer;
     var user;

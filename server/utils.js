@@ -13,7 +13,7 @@ const pool = new Pool({
     port: process.env.DB_PORT,
     host: process.env.DB_HOST,
     idleTimeoutMillis: 10000,
-    connectionTimeoutMillis:2000,
+    connectionTimeoutMillis:10000,
     ssl: true
 })
 
@@ -97,6 +97,14 @@ function sendEmail(key,email) {
     
 }
 
+async function signAccess2(email,pm) {
+    return new Promise((resolve) => {
+        resolve(jwt.sign({email:email, pm:pm},process.env.JWT_SECRET,{
+            expiresIn:"15s" //10s when using refresh 
+        }))
+    })
+}
+
 async function signAccess(user,flags) {
     return new Promise((resolve) => {
         resolve(jwt.sign({user:user, flags:flags},process.env.JWT_SECRET,{
@@ -133,6 +141,7 @@ module.exports = {
     sendEmail:sendEmail,
     signAccess:signAccess,
     signRefresh:signRefresh,
-    verifyRefresh:verifyRefresh
+    verifyRefresh:verifyRefresh,
+    signAccess2:signAccess2,
     // checkIfStaff:checkIfStaff
 }

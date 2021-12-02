@@ -3,7 +3,7 @@ const router = express.Router();
 const {pool} = require('../../utils')
 const authorize = require('../../auth-middleware')
 const mongoose = require('mongoose');
-
+const atob = require('atob')
 function find(name,query,cb) {
     mongoose.connection.db.collection(name, function(err, col) {
         if(err) {
@@ -101,7 +101,7 @@ router.get('/get/:password',async (req, res) => {
 
         try{
             var response = await pool.query(
-                `SELECT * FROM restocks WHERE "password" = '${req.params.password}'`
+                `SELECT * FROM restocks WHERE "password" = '${atob(req.params.password)}'`
             ) 
             return res.status(200).json(response.rows[0])
 
@@ -161,10 +161,10 @@ router.get('/deduct/:pswd',async (req, res) => {
         // check if user is admin/staff
 
         try{
-            var restock = await pool.query(`SELECT * FROM restocks WHERE "password" = '${req.params.pswd}'`)
+            var restock = await pool.query(`SELECT * FROM restocks WHERE "password" = '${atob(req.params.pswd)}'`)
             var stock = parseInt(restock.rows[0].stockRemaining) - 1;
             await pool.query(
-                `UPDATE restocks SET "stockRemaining" = ${stock} WHERE "password" = '${req.params.pswd}'`
+                `UPDATE restocks SET "stockRemaining" = ${stock} WHERE "password" = '${atob(req.params.pswd)}'`
             ) 
             return res.status(200).end()
 

@@ -16,7 +16,7 @@ const check = async () => {
     var elapsed = 0;
     var guild = null;
     var roles = []
-    (async function loop() {
+    async function loop() {
         setTimeout(async function () {
             // console.log(`Checks elapsed: ${elapsed}`)
             var response = await pool.query('SELECT * FROM users')
@@ -60,7 +60,8 @@ const check = async () => {
             elapsed ++;
           loop()
         }, 9000);
-    }());
+    };
+    loop()
     
 }
 
